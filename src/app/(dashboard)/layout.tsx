@@ -1,76 +1,43 @@
-'use client'
-
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Calendar, Settings, LogOut, Plus, Clock } from 'lucide-react'
-
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: any
 }) {
-  const router = useRouter()
-  const supabase = createClientComponentClient()
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        router.push('/login')
-      }
-    }
-    getUser()
-  }, [router, supabase.auth])
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/')
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/dashboard" className="flex items-center space-x-2">
-            <Calendar className="h-8 w-8 text-blue-600" />
+          <a href="/dashboard" className="flex items-center space-x-2">
+            <span className="text-2xl">📅</span>
             <h1 className="text-xl font-bold text-gray-900">Calendly MVP</h1>
-          </Link>
+          </a>
           
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/dashboard/event-types" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
-              <Calendar className="h-4 w-4" />
+            <a href="/dashboard/event-types" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
+              <span>📅</span>
               <span>События</span>
-            </Link>
-            <Link href="/dashboard/availability" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
-              <Clock className="h-4 w-4" />
+            </a>
+            <a href="/dashboard/availability" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
+              <span>⏰</span>
               <span>Доступность</span>
-            </Link>
-            <Link href="/dashboard/settings" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
-              <Settings className="h-4 w-4" />
+            </a>
+            <a href="/dashboard/settings" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
+              <span>⚙️</span>
               <span>Настройки</span>
-            </Link>
+            </a>
           </nav>
 
           <div className="flex items-center space-x-4">
-            <Link href="/dashboard/event-types/new">
-              <Button size="sm" className="flex items-center space-x-1">
-                <Plus className="h-4 w-4" />
-                <span>Создать событие</span>
-              </Button>
-            </Link>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={handleLogout}
-              className="flex items-center space-x-1"
-            >
-              <LogOut className="h-4 w-4" />
+            <a href="/dashboard/event-types/new" className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 flex items-center space-x-1">
+              <span>+</span>
+              <span>Создать событие</span>
+            </a>
+            <button className="text-gray-600 hover:text-gray-900 flex items-center space-x-1 px-3 py-1 rounded hover:bg-gray-100">
+              <span>🚪</span>
               <span>Выйти</span>
-            </Button>
+            </button>
           </div>
         </div>
       </header>

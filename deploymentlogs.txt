@@ -1,0 +1,95 @@
+[21:36:25.182] Running build in Washington, D.C., USA (East) – iad1
+[21:36:25.185] Build machine configuration: 2 cores, 8 GB
+[21:36:25.231] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 2dcc392)
+[21:36:25.974] Cloning completed: 743.000ms
+[21:36:27.248] Restored build cache from previous deployment (AVaL7eTSPJLNtUS1ES2zh5aJiKtc)
+[21:36:28.241] Running "vercel build"
+[21:36:28.793] Vercel CLI 43.3.0
+[21:36:29.105] Running "install" command: `npm install`...
+[21:36:32.656] 
+[21:36:32.657] > calendly-mvp@0.1.0 prepare
+[21:36:32.657] > husky install
+[21:36:32.657] 
+[21:36:32.702] husky - Git hooks installed
+[21:36:32.710] 
+[21:36:32.710] up to date, audited 831 packages in 3s
+[21:36:32.710] 
+[21:36:32.711] 212 packages are looking for funding
+[21:36:32.711]   run `npm fund` for details
+[21:36:32.765] 
+[21:36:32.766] 1 critical severity vulnerability
+[21:36:32.766] 
+[21:36:32.766] To address all issues, run:
+[21:36:32.766]   npm audit fix --force
+[21:36:32.766] 
+[21:36:32.766] Run `npm audit` for details.
+[21:36:32.800] Detected Next.js version: 14.0.0
+[21:36:32.800] Running "npm run build"
+[21:36:32.917] 
+[21:36:32.920] > calendly-mvp@0.1.0 build
+[21:36:32.920] > next build
+[21:36:32.920] 
+[21:36:33.586]    ▲ Next.js 14.0.0
+[21:36:33.586] 
+[21:36:33.586]    Creating an optimized production build ...
+[21:36:33.674]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
+[21:36:33.741]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
+[21:36:39.437]  ✓ Compiled successfully
+[21:36:39.437]    Linting and checking validity of types ...
+[21:36:42.733] 
+[21:36:42.734] Failed to compile.
+[21:36:42.734] 
+[21:36:42.734] ./src/app/(dashboard)/page.tsx
+[21:36:42.734] 142:10  Error: 'Link' is not defined.  react/jsx-no-undef
+[21:36:42.735] 143:12  Error: 'Button' is not defined.  react/jsx-no-undef
+[21:36:42.735] 144:14  Error: 'Plus' is not defined.  react/jsx-no-undef
+[21:36:42.735] 152:10  Error: 'Card' is not defined.  react/jsx-no-undef
+[21:36:42.735] 153:12  Error: 'CardHeader' is not defined.  react/jsx-no-undef
+[21:36:42.735] 154:14  Error: 'CardTitle' is not defined.  react/jsx-no-undef
+[21:36:42.735] 155:14  Error: 'Calendar' is not defined.  react/jsx-no-undef
+[21:36:42.735] 157:12  Error: 'CardContent' is not defined.  react/jsx-no-undef
+[21:36:42.735] 163:10  Error: 'Card' is not defined.  react/jsx-no-undef
+[21:36:42.736] 164:12  Error: 'CardHeader' is not defined.  react/jsx-no-undef
+[21:36:42.736] 165:14  Error: 'CardTitle' is not defined.  react/jsx-no-undef
+[21:36:42.736] 166:14  Error: 'Users' is not defined.  react/jsx-no-undef
+[21:36:42.744] 168:12  Error: 'CardContent' is not defined.  react/jsx-no-undef
+[21:36:42.744] 174:10  Error: 'Card' is not defined.  react/jsx-no-undef
+[21:36:42.745] 175:12  Error: 'CardHeader' is not defined.  react/jsx-no-undef
+[21:36:42.745] 176:14  Error: 'CardTitle' is not defined.  react/jsx-no-undef
+[21:36:42.745] 177:14  Error: 'Clock' is not defined.  react/jsx-no-undef
+[21:36:42.745] 179:12  Error: 'CardContent' is not defined.  react/jsx-no-undef
+[21:36:42.745] 187:8  Error: 'Card' is not defined.  react/jsx-no-undef
+[21:36:42.745] 188:10  Error: 'CardHeader' is not defined.  react/jsx-no-undef
+[21:36:42.745] 191:16  Error: 'CardTitle' is not defined.  react/jsx-no-undef
+[21:36:42.745] 192:16  Error: 'CardDescription' is not defined.  react/jsx-no-undef
+[21:36:42.745] 194:14  Error: 'Link' is not defined.  react/jsx-no-undef
+[21:36:42.746] 195:16  Error: 'Button' is not defined.  react/jsx-no-undef
+[21:36:42.746] 197:18  Error: 'ArrowRight' is not defined.  react/jsx-no-undef
+[21:36:42.746] 202:10  Error: 'CardContent' is not defined.  react/jsx-no-undef
+[21:36:42.746] 213:24  Error: 'Calendar' is not defined.  react/jsx-no-undef
+[21:36:42.746] 221:22  Error: 'Button' is not defined.  react/jsx-no-undef
+[21:36:42.746] 222:22  Error: 'Button' is not defined.  react/jsx-no-undef
+[21:36:42.746] 229:16  Error: 'Calendar' is not defined.  react/jsx-no-undef
+[21:36:42.747] 232:16  Error: 'Link' is not defined.  react/jsx-no-undef
+[21:36:42.747] 233:18  Error: 'Button' is not defined.  react/jsx-no-undef
+[21:36:42.747] 242:10  Error: 'Card' is not defined.  react/jsx-no-undef
+[21:36:42.747] 243:12  Error: 'CardHeader' is not defined.  react/jsx-no-undef
+[21:36:42.747] 244:14  Error: 'CardTitle' is not defined.  react/jsx-no-undef
+[21:36:42.747] 245:16  Error: 'Clock' is not defined.  react/jsx-no-undef
+[21:36:42.747] 248:14  Error: 'CardDescription' is not defined.  react/jsx-no-undef
+[21:36:42.749] 252:12  Error: 'CardContent' is not defined.  react/jsx-no-undef
+[21:36:42.749] 253:14  Error: 'Link' is not defined.  react/jsx-no-undef
+[21:36:42.750] 254:16  Error: 'Button' is not defined.  react/jsx-no-undef
+[21:36:42.750] 261:10  Error: 'Card' is not defined.  react/jsx-no-undef
+[21:36:42.750] 262:12  Error: 'CardHeader' is not defined.  react/jsx-no-undef
+[21:36:42.755] 263:14  Error: 'CardTitle' is not defined.  react/jsx-no-undef
+[21:36:42.756] 264:16  Error: 'Users' is not defined.  react/jsx-no-undef
+[21:36:42.758] 267:14  Error: 'CardDescription' is not defined.  react/jsx-no-undef
+[21:36:42.763] 271:12  Error: 'CardContent' is not defined.  react/jsx-no-undef
+[21:36:42.763] 272:14  Error: 'Link' is not defined.  react/jsx-no-undef
+[21:36:42.771] 273:16  Error: 'Button' is not defined.  react/jsx-no-undef
+[21:36:42.772] 
+[21:36:42.772] info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+[21:36:42.829] Error: Command "npm run build" exited with 1
+[21:36:43.381] 
+[21:36:46.239] Exiting build container
