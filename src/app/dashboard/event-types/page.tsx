@@ -88,14 +88,18 @@ export default function EventTypesPage() {
   const testBookingLink = (eventType) => {
     const baseUrl = window.location.origin
     const username = userProfile?.username || 'test-user'
-    const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
     
-    console.log('🔗 Тестируем ссылку:', bookingUrl)
+    // Тестируем оба формата ссылок
+    const oldBookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
+    const newBookingUrl = `${baseUrl}/book/${eventType.slug}`
+    
+    console.log('🔗 Тестируем старую ссылку:', oldBookingUrl)
+    console.log('🔗 Тестируем новую ссылку:', newBookingUrl)
     console.log('📊 Данные события:', eventType)
     console.log('👤 Профиль пользователя:', userProfile)
     
-    // Открываем в новой вкладке
-    window.open(bookingUrl, '_blank')
+    // Открываем новую ссылку в новой вкладке
+    window.open(newBookingUrl, '_blank')
   }
 
   if (isLoading) {
@@ -242,7 +246,7 @@ export default function EventTypesPage() {
                     <div className="flex flex-col items-end space-y-2">
                       {/* Предварительный просмотр ссылки */}
                       <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded max-w-xs truncate">
-                        {userProfile?.username || 'user'}/{eventType.slug}
+                        book/{eventType.slug}
                       </div>
                       
                       <div className="flex flex-col items-end space-y-2">
@@ -254,12 +258,12 @@ export default function EventTypesPage() {
                         </button>
                         
                         <div className="flex items-center space-x-2">
-                          <button 
-                            onClick={() => {
-                              const baseUrl = window.location.origin
-                              const username = userProfile?.username || 'user'
-                              const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
-                              navigator.clipboard.writeText(bookingUrl)
+                                                  <button 
+                          onClick={() => {
+                            const baseUrl = window.location.origin
+                            // Используем новый формат ссылки (только slug)
+                            const bookingUrl = `${baseUrl}/book/${eventType.slug}`
+                            navigator.clipboard.writeText(bookingUrl)
                               
                               // Улучшенное уведомление
                               const button = event.target
