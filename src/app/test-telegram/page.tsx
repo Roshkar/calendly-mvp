@@ -110,8 +110,8 @@ export default function TestTelegramPage() {
           <div className="mt-6 bg-red-50 border border-red-200 rounded p-4">
             <h3 className="font-semibold text-red-800 mb-3">🚨 Возможные ошибки</h3>
             <ul className="list-disc list-inside text-red-700 space-y-1 text-sm">
-              <li><strong>"Username invalid"</strong> - неправильное имя бота или бот не создан</li>
-              <li><strong>"Bot domain invalid"</strong> - домен не настроен через /setdomain</li>
+              <li><strong>&quot;Username invalid&quot;</strong> - неправильное имя бота или бот не создан</li>
+              <li><strong>&quot;Bot domain invalid&quot;</strong> - домен не настроен через /setdomain</li>
               <li><strong>Виджет не загружается</strong> - проблема с интернетом или блокировка скрипта</li>
               <li><strong>Кнопка не появляется</strong> - проверьте консоль браузера на ошибки JavaScript</li>
             </ul>

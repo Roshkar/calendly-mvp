@@ -73,7 +73,7 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
         const telegramPassword = `telegram_${user.id}_${user.hash}`
 
         // Try to sign in first
-        let { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
           email: telegramEmail,
           password: telegramPassword,
         })

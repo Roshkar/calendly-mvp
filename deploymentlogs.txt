@@ -1,51 +1,57 @@
-[01:02:17.440] Running build in Washington, D.C., USA (East) – iad1
-[01:02:17.440] Build machine configuration: 2 cores, 8 GB
-[01:02:17.457] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 0043e50)
-[01:02:18.626] Cloning completed: 1.169s
-[01:02:20.003] Restored build cache from previous deployment (AA79XbGn4obUtB7uVFWSSbyWtpC7)
-[01:02:20.640] Running "vercel build"
-[01:02:21.075] Vercel CLI 43.3.0
-[01:02:21.366] Running "install" command: `npm install`...
-[01:02:25.119] 
-[01:02:25.120] > calendly-mvp@0.1.0 prepare
-[01:02:25.120] > husky install
-[01:02:25.121] 
-[01:02:25.170] husky - Git hooks installed
-[01:02:25.177] 
-[01:02:25.178] up to date, audited 831 packages in 4s
-[01:02:25.178] 
-[01:02:25.179] 212 packages are looking for funding
-[01:02:25.179]   run `npm fund` for details
-[01:02:25.253] 
-[01:02:25.253] 1 critical severity vulnerability
-[01:02:25.254] 
-[01:02:25.254] To address all issues, run:
-[01:02:25.254]   npm audit fix --force
-[01:02:25.254] 
-[01:02:25.255] Run `npm audit` for details.
-[01:02:25.288] Detected Next.js version: 14.0.0
-[01:02:25.288] Running "npm run build"
-[01:02:25.404] 
-[01:02:25.404] > calendly-mvp@0.1.0 build
-[01:02:25.404] > next build
-[01:02:25.404] 
-[01:02:26.095]    ▲ Next.js 14.0.0
-[01:02:26.095] 
-[01:02:26.096]    Creating an optimized production build ...
-[01:02:26.161]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
-[01:02:26.243]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
-[01:02:30.665]  ✓ Compiled successfully
-[01:02:30.673]    Linting and checking validity of types ...
-[01:02:35.123] 
-[01:02:35.124] Failed to compile.
-[01:02:35.124] 
-[01:02:35.125] ./src/app/dashboard/test-bookings/page.tsx
-[01:02:35.125] 243:33  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
-[01:02:35.125] 243:50  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
-[01:02:35.126] 247:37  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
-[01:02:35.126] 247:50  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
-[01:02:35.126] 
-[01:02:35.126] info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
-[01:02:35.248] Error: Command "npm run build" exited with 1
-[01:02:36.050] 
-[01:02:40.278] Exiting build container
+[01:54:09.405] Running build in Washington, D.C., USA (East) – iad1
+[01:54:09.405] Build machine configuration: 2 cores, 8 GB
+[01:54:09.426] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 8d2e180)
+[01:54:09.726] Cloning completed: 300.000ms
+[01:54:10.821] Restored build cache from previous deployment (8srALZL9deXGExm5wETLiR66Ua7Y)
+[01:54:12.571] Running "vercel build"
+[01:54:13.015] Vercel CLI 43.3.0
+[01:54:13.317] Running "install" command: `npm install`...
+[01:54:16.439] 
+[01:54:16.439] > calendly-mvp@0.1.0 prepare
+[01:54:16.440] > husky install
+[01:54:16.440] 
+[01:54:16.488] husky - Git hooks installed
+[01:54:16.495] 
+[01:54:16.496] up to date, audited 831 packages in 3s
+[01:54:16.496] 
+[01:54:16.496] 212 packages are looking for funding
+[01:54:16.497]   run `npm fund` for details
+[01:54:16.551] 
+[01:54:16.551] 1 critical severity vulnerability
+[01:54:16.551] 
+[01:54:16.551] To address all issues, run:
+[01:54:16.551]   npm audit fix --force
+[01:54:16.552] 
+[01:54:16.552] Run `npm audit` for details.
+[01:54:16.586] Detected Next.js version: 14.0.0
+[01:54:16.587] Running "npm run build"
+[01:54:16.701] 
+[01:54:16.701] > calendly-mvp@0.1.0 build
+[01:54:16.701] > next build
+[01:54:16.701] 
+[01:54:17.367]    ▲ Next.js 14.0.0
+[01:54:17.368] 
+[01:54:17.368]    Creating an optimized production build ...
+[01:54:17.432]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
+[01:54:17.510]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
+[01:54:21.980]  ✓ Compiled successfully
+[01:54:21.981]    Linting and checking validity of types ...
+[01:54:26.596] 
+[01:54:26.596] Failed to compile.
+[01:54:26.597] 
+[01:54:26.597] ./src/app/test-telegram/page.tsx
+[01:54:26.598] 103:27  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[01:54:26.598] 103:48  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[01:54:26.598] 113:27  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[01:54:26.598] 113:44  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[01:54:26.598] 114:27  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[01:54:26.598] 114:46  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[01:54:26.598] 
+[01:54:26.598] ./src/components/auth/TelegramAuth.tsx
+[01:54:26.599] 76:21  Warning: 'signInData' is never reassigned. Use 'const' instead.  prefer-const
+[01:54:26.599] 76:40  Warning: 'signInError' is never reassigned. Use 'const' instead.  prefer-const
+[01:54:26.599] 
+[01:54:26.599] info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+[01:54:26.693] Error: Command "npm run build" exited with 1
+[01:54:27.917] 
+[01:54:30.869] Exiting build container
