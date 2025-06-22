@@ -1,7 +1,7 @@
 // @ts-nocheck
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
 export default function BookingPage({ params }: { params: { username: string, eventType: string } }) {
@@ -20,11 +20,7 @@ export default function BookingPage({ params }: { params: { username: string, ev
   const [success, setSuccess] = useState(false)
   const [debugInfo, setDebugInfo] = useState('')
 
-  useEffect(() => {
-    loadEventData()
-  }, [params.username, params.eventType])
-
-  const loadEventData = async () => {
+  const loadEventData = useCallback(async () => {
     try {
       setIsLoading(true)
       setError(null)
@@ -73,7 +69,11 @@ export default function BookingPage({ params }: { params: { username: string, ev
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [params.username, params.eventType])
+
+  useEffect(() => {
+    loadEventData()
+  }, [loadEventData])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -231,7 +231,7 @@ export default function BookingPage({ params }: { params: { username: string, ev
               <div className="text-green-600 text-6xl mb-4">✅</div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Встреча забронирована!</h2>
               <p className="text-gray-600 mb-4">
-                Встреча "{eventData.name}" запланирована на {selectedDate} в {selectedTime}
+                Встреча &quot;{eventData.name}&quot; запланирована на {selectedDate} в {selectedTime}
               </p>
               <p className="text-sm text-gray-500">
                 Подтверждение отправлено на {formData.email}

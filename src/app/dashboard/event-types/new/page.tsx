@@ -66,7 +66,7 @@ export default function NewEventTypePage() {
       setDebugInfo(prev => prev + `✅ User ID: ${user.id}\n`)
 
       // Создаем slug из названия
-      let baseSlug = formData.name
+      const baseSlug = formData.name
         .toLowerCase()
         .replace(/[^a-z0-9\s-]/g, '')
         .replace(/\s+/g, '-')

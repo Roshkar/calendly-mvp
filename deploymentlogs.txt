@@ -1,53 +1,53 @@
-[22:17:25.821] Running build in Washington, D.C., USA (East) – iad1
-[22:17:25.821] Build machine configuration: 2 cores, 8 GB
-[22:17:25.841] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 7796026)
-[22:17:26.125] Cloning completed: 284.000ms
-[22:17:27.969] Restored build cache from previous deployment (FEjiq3ncGWRsCrqdCPtrmf8tj8cq)
-[22:17:28.575] Running "vercel build"
-[22:17:28.997] Vercel CLI 43.3.0
-[22:17:29.273] Running "install" command: `npm install`...
-[22:17:32.337] 
-[22:17:32.337] > calendly-mvp@0.1.0 prepare
-[22:17:32.337] > husky install
-[22:17:32.337] 
-[22:17:32.382] husky - Git hooks installed
-[22:17:32.389] 
-[22:17:32.389] up to date, audited 831 packages in 3s
-[22:17:32.389] 
-[22:17:32.389] 212 packages are looking for funding
-[22:17:32.389]   run `npm fund` for details
-[22:17:32.444] 
-[22:17:32.444] 1 critical severity vulnerability
-[22:17:32.445] 
-[22:17:32.445] To address all issues, run:
-[22:17:32.445]   npm audit fix --force
-[22:17:32.445] 
-[22:17:32.445] Run `npm audit` for details.
-[22:17:32.477] Detected Next.js version: 14.0.0
-[22:17:32.478] Running "npm run build"
-[22:17:32.591] 
-[22:17:32.591] > calendly-mvp@0.1.0 build
-[22:17:32.591] > next build
-[22:17:32.591] 
-[22:17:33.246]    ▲ Next.js 14.0.0
-[22:17:33.247] 
-[22:17:33.247]    Creating an optimized production build ...
-[22:17:33.310]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
-[22:17:33.377]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
-[22:17:38.219]  ✓ Compiled successfully
-[22:17:38.220]    Linting and checking validity of types ...
-[22:17:44.883] Failed to compile.
-[22:17:44.883] 
-[22:17:44.883] ./src/app/dashboard/event-types/new/page.tsx:18:31
-[22:17:44.883] Type error: Parameter 'e' implicitly has an 'any' type.
-[22:17:44.883] 
-[22:17:44.883] [0m [90m 16 |[39m   [36mconst[39m [debugInfo[33m,[39m setDebugInfo] [33m=[39m useState([32m''[39m)[0m
-[22:17:44.884] [0m [90m 17 |[39m[0m
-[22:17:44.884] [0m[31m[1m>[22m[39m[90m 18 |[39m   [36mconst[39m handleSubmit [33m=[39m [36masync[39m (e) [33m=>[39m {[0m
-[22:17:44.884] [0m [90m    |[39m                               [31m[1m^[22m[39m[0m
-[22:17:44.884] [0m [90m 19 |[39m     e[33m.[39mpreventDefault()[0m
-[22:17:44.884] [0m [90m 20 |[39m     [0m
-[22:17:44.884] [0m [90m 21 |[39m     [36mif[39m ([33m![39mformData[33m.[39mname [33m||[39m [33m![39mformData[33m.[39mduration) {[0m
-[22:17:44.953] Error: Command "npm run build" exited with 1
-[22:17:45.318] 
-[22:17:48.310] Exiting build container
+[23:37:41.940] Running build in Washington, D.C., USA (East) – iad1
+[23:37:41.941] Build machine configuration: 2 cores, 8 GB
+[23:37:41.965] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: bc827e4)
+[23:37:42.253] Cloning completed: 288.000ms
+[23:37:44.776] Restored build cache from previous deployment (EuhcxvVxSU9DPnwF6L2wALPxGrrf)
+[23:37:45.413] Running "vercel build"
+[23:37:45.881] Vercel CLI 43.3.0
+[23:37:46.180] Running "install" command: `npm install`...
+[23:37:49.678] 
+[23:37:49.679] > calendly-mvp@0.1.0 prepare
+[23:37:49.680] > husky install
+[23:37:49.680] 
+[23:37:49.727] husky - Git hooks installed
+[23:37:49.734] 
+[23:37:49.735] up to date, audited 831 packages in 3s
+[23:37:49.735] 
+[23:37:49.735] 212 packages are looking for funding
+[23:37:49.735]   run `npm fund` for details
+[23:37:49.789] 
+[23:37:49.790] 1 critical severity vulnerability
+[23:37:49.790] 
+[23:37:49.790] To address all issues, run:
+[23:37:49.790]   npm audit fix --force
+[23:37:49.790] 
+[23:37:49.790] Run `npm audit` for details.
+[23:37:49.824] Detected Next.js version: 14.0.0
+[23:37:49.825] Running "npm run build"
+[23:37:49.962] 
+[23:37:49.962] > calendly-mvp@0.1.0 build
+[23:37:49.963] > next build
+[23:37:49.963] 
+[23:37:50.681]    ▲ Next.js 14.0.0
+[23:37:50.682] 
+[23:37:50.682]    Creating an optimized production build ...
+[23:37:50.746]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
+[23:37:50.810]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
+[23:37:54.615]  ✓ Compiled successfully
+[23:37:54.616]    Linting and checking validity of types ...
+[23:37:58.386] 
+[23:37:58.387] Failed to compile.
+[23:37:58.387] 
+[23:37:58.388] ./src/app/book/[username]/[eventType]/page.tsx
+[23:37:58.388] 25:6  Warning: React Hook useEffect has a missing dependency: 'loadEventData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+[23:37:58.388] 234:25  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[23:37:58.388] 234:42  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[23:37:58.389] 
+[23:37:58.392] ./src/app/dashboard/event-types/new/page.tsx
+[23:37:58.392] 69:11  Warning: 'baseSlug' is never reassigned. Use 'const' instead.  prefer-const
+[23:37:58.392] 
+[23:37:58.392] info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+[23:37:58.463] Error: Command "npm run build" exited with 1
+[23:37:59.089] 
+[23:38:02.011] Exiting build container
