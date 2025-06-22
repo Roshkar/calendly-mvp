@@ -1,28 +1,24 @@
 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
+page-c88d8be9e50cd50e.js:1 🧪 Тест чтения event_types: {testData: Array(1), testError: null}
+page-c88d8be9e50cd50e.js:1 🧪 Текущий пользователь: {user: null, userError: AuthSessionMissingError: Auth session missing!
+    at https://calendly-mvp.vercel.app/_next/static/…}
 881-5b1b27e5e5ff05ff.js:19 
- POST https://kedcllptlvyrdrhbfoqz.supabase.co/rest/v1/bookings?columns=%22event_…%22start_time%22%2C%22end_time%22%2C%22timezone%22%2C%22status%22&select=* 401 (Unauthorized)
-(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
-(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
-fulfilled	@	881-5b1b27e5e5ff05ff.js:19
-Promise.then		
-step	@	881-5b1b27e5e5ff05ff.js:19
-(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
-lib_fetch_awaiter	@	881-5b1b27e5e5ff05ff.js:19
-(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
-then	@	881-5b1b27e5e5ff05ff.js:1
-
-472-a7f077435772ca0e.js:1 Error creating booking: 
-window.console.error	@	472-a7f077435772ca0e.js:1
-handleBooking	@	page-4cbcc2377fe1682b.js:1
-await in handleBooking		
-Hi	@	fd9d1056-9282bc71f5f2296f.js:9
-Ni	@	fd9d1056-9282bc71f5f2296f.js:9
-Oi	@	fd9d1056-9282bc71f5f2296f.js:9
-Nn	@	fd9d1056-9282bc71f5f2296f.js:9
-Zm	@	fd9d1056-9282bc71f5f2296f.js:9
-(anonymous)	@	fd9d1056-9282bc71f5f2296f.js:9
-Ak	@	fd9d1056-9282bc71f5f2296f.js:9
-ll	@	fd9d1056-9282bc71f5f2296f.js:9
-zm	@	fd9d1056-9282bc71f5f2296f.js:9
-xm	@	fd9d1056-9282bc71f5f2296f.js:9
-wm	@	fd9d1056-9282bc71f5f2296f.js:9
+            
+            
+           POST https://kedcllptlvyrdrhbfoqz.supabase.co/rest/v1/bookings?columns=%22event_type_id%22%2C%22invitee_name%22%2C%22invitee_email%22%2C%22start_time%22%2C%22end_time%22%2C%22timezone%22%2C%22status%22&select=* 400 (Bad Request)
+(anonymous) @ 881-5b1b27e5e5ff05ff.js:19
+(anonymous) @ 881-5b1b27e5e5ff05ff.js:19
+fulfilled @ 881-5b1b27e5e5ff05ff.js:19
+Promise.then
+step @ 881-5b1b27e5e5ff05ff.js:19
+(anonymous) @ 881-5b1b27e5e5ff05ff.js:19
+lib_fetch_awaiter @ 881-5b1b27e5e5ff05ff.js:19
+(anonymous) @ 881-5b1b27e5e5ff05ff.js:19
+then @ 881-5b1b27e5e5ff05ff.js:1Understand this error
+page-c88d8be9e50cd50e.js:1 🧪 Тест создания booking: {bookingData: null, bookingError: {…}}bookingData: nullbookingError: code: "22P02"details: nullhint: nullmessage: "invalid input syntax for type uuid: \"test-id\""[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+page-c88d8be9e50cd50e.js:1 🔍 BookingPage (query params) загружена
+page-c88d8be9e50cd50e.js:1 🔍 Event slug: 123
+page-c88d8be9e50cd50e.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
+page-c88d8be9e50cd50e.js:1 🔍 BookingPage (query params) загружена
+page-c88d8be9e50cd50e.js:1 🔍 Event slug: 123
+page-c88d8be9e50cd50e.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123

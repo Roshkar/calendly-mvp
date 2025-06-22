@@ -46,9 +46,17 @@ export default function BookingPage() {
       const { data: { user }, error: userError } = await supabase.auth.getUser()
       console.log('🧪 Текущий пользователь:', { user, userError })
       
-      // Тест 3: Пробуем создать тестовое бронирование
+      // Тест 3: Пробуем создать тестовое бронирование с настоящим UUID
+      // Сначала получаем реальный event_type_id
+      const { data: realEvent } = await supabase
+        .from('event_types')
+        .select('id')
+        .eq('is_active', true)
+        .limit(1)
+        .single()
+      
       const testBooking = {
-        event_type_id: 'test-id',
+        event_type_id: realEvent?.id || '00000000-0000-0000-0000-000000000000',
         invitee_name: 'Test User',
         invitee_email: 'test@example.com',
         start_time: '2024-01-01T10:00:00',
@@ -57,12 +65,20 @@ export default function BookingPage() {
         status: 'confirmed'
       }
       
+      console.log('🧪 Данные для тестового бронирования:', testBooking)
+      
       const { data: bookingData, error: bookingError } = await supabase
         .from('bookings')
         .insert([testBooking])
         .select()
       
       console.log('🧪 Тест создания booking:', { bookingData, bookingError })
+      
+      if (bookingError) {
+        console.log('🧪 Детали ошибки:', bookingError.code, bookingError.message)
+      } else {
+        console.log('🧪 ✅ Тестовое бронирование создано успешно!')
+      }
       
     } catch (err) {
       console.error('🧪 Ошибка теста подключения:', err)
