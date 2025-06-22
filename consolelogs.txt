@@ -1,26 +1,41 @@
 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
-page-38c4aec0e761ddae.js:1 🧪 Тест чтения event_types: {testData: Array(1), testError: null}
-page-38c4aec0e761ddae.js:1 🧪 Текущий пользователь: {user: null, userError: AuthSessionMissingError: Auth session missing!
-    at https://calendly-mvp.vercel.app/_next/static/…}
-page-38c4aec0e761ddae.js:1 🧪 Данные для тестового бронирования: {event_type_id: 'c645f6f3-8187-4ab3-9a4b-21bbe7050cfa', invitee_name: 'Test User', invitee_email: 'test@example.com', start_time: '2024-01-01T10:00:00', end_time: '2024-01-01T11:00:00', …}end_time: "2024-01-01T11:00:00"event_type_id: "c645f6f3-8187-4ab3-9a4b-21bbe7050cfa"invitee_email: "test@example.com"invitee_name: "Test User"start_time: "2024-01-01T10:00:00"status: "confirmed"timezone: "Europe/Moscow"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+page-33a342a691cae868.js:1 🔍 Event data: 
+{id: 'd4629313-bcd3-4ad9-bf0f-e568201b2331', user_id: 'dd58259b-27ff-4d72-8300-f4c1083af2c6', name: '123', slug: '123', description: null, …}
+page-33a342a691cae868.js:1 🔍 User profile: null
+page-33a342a691cae868.js:1 🔍 Form data: 
+{name: 'Faya', email: 'Faya@juju.com', note: 'blabla'}
+page-33a342a691cae868.js:1 🔍 Selected date/time: 2025-06-23 09:00
+page-33a342a691cae868.js:1 🔍 Booking data to insert: 
+{event_type_id: 'd4629313-bcd3-4ad9-bf0f-e568201b2331', invitee_name: 'Faya', invitee_email: 'Faya@juju.com', start_time: '2025-06-23T09:00:00', end_time: '2025-06-23T09:30:00', …}
+page-33a342a691cae868.js:1 🔍 BookingPage (query params) загружена
+page-33a342a691cae868.js:1 🔍 Event slug: 123
+page-33a342a691cae868.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
 881-5b1b27e5e5ff05ff.js:19 
-            
-            
-           POST https://kedcllptlvyrdrhbfoqz.supabase.co/rest/v1/bookings?columns=%22event_type_id%22%2C%22invitee_name%22%2C%22invitee_email%22%2C%22start_time%22%2C%22end_time%22%2C%22timezone%22%2C%22status%22&select=* 401 (Unauthorized)
-(anonymous) @ 881-5b1b27e5e5ff05ff.js:19
-(anonymous) @ 881-5b1b27e5e5ff05ff.js:19
-fulfilled @ 881-5b1b27e5e5ff05ff.js:19
-Promise.then
-step @ 881-5b1b27e5e5ff05ff.js:19
-(anonymous) @ 881-5b1b27e5e5ff05ff.js:19
-lib_fetch_awaiter @ 881-5b1b27e5e5ff05ff.js:19
-(anonymous) @ 881-5b1b27e5e5ff05ff.js:19
-then @ 881-5b1b27e5e5ff05ff.js:1Understand this error
-page-38c4aec0e761ddae.js:1 🧪 Тест создания booking: {bookingData: null, bookingError: {…}}
-page-38c4aec0e761ddae.js:1 🧪 Детали ошибки: 42501 new row violates row-level security policy for table "bookings"
-page-38c4aec0e761ddae.js:1 🔍 BookingPage (query params) загружена
-page-38c4aec0e761ddae.js:1 🔍 Event slug: 123
-page-38c4aec0e761ddae.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
-page-38c4aec0e761ddae.js:1 🔍 BookingPage (query params) загружена
-page-38c4aec0e761ddae.js:1 🔍 Event slug: 123
-page-38c4aec0e761ddae.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
+ POST https://kedcllptlvyrdrhbfoqz.supabase.co/rest/v1/bookings?columns=%22event_…%22start_time%22%2C%22end_time%22%2C%22timezone%22%2C%22status%22&select=* 401 (Unauthorized)
+(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
+(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
+fulfilled	@	881-5b1b27e5e5ff05ff.js:19
+Promise.then		
+step	@	881-5b1b27e5e5ff05ff.js:19
+(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
+lib_fetch_awaiter	@	881-5b1b27e5e5ff05ff.js:19
+(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
+then	@	881-5b1b27e5e5ff05ff.js:1
+page-33a342a691cae868.js:1 🔍 Supabase response: 
+{data: null, bookingError: {…}}
+page-33a342a691cae868.js:1 🔍 Детали ошибки Supabase: 42501 new row violates row-level security policy for table "bookings"
+472-a7f077435772ca0e.js:1 Error creating booking: 
+window.console.error	@	472-a7f077435772ca0e.js:1
+handleBooking	@	page-33a342a691cae868.js:1
+await in handleBooking		
+Hi	@	fd9d1056-9282bc71f5f2296f.js:9
+Ni	@	fd9d1056-9282bc71f5f2296f.js:9
+Oi	@	fd9d1056-9282bc71f5f2296f.js:9
+Nn	@	fd9d1056-9282bc71f5f2296f.js:9
+Zm	@	fd9d1056-9282bc71f5f2296f.js:9
+(anonymous)	@	fd9d1056-9282bc71f5f2296f.js:9
+Ak	@	fd9d1056-9282bc71f5f2296f.js:9
+ll	@	fd9d1056-9282bc71f5f2296f.js:9
+zm	@	fd9d1056-9282bc71f5f2296f.js:9
+xm	@	fd9d1056-9282bc71f5f2296f.js:9
+wm	@	fd9d1056-9282bc71f5f2296f.js:9
