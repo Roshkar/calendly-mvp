@@ -1,76 +1,53 @@
-[21:41:30.603] Running build in Washington, D.C., USA (East) – iad1
-[21:41:30.603] Build machine configuration: 2 cores, 8 GB
-[21:41:30.637] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 65555b6)
-[21:41:31.140] Cloning completed: 502.000ms
-[21:41:32.552] Restored build cache from previous deployment (AVaL7eTSPJLNtUS1ES2zh5aJiKtc)
-[21:41:33.188] Running "vercel build"
-[21:41:33.610] Vercel CLI 43.3.0
-[21:41:33.880] Running "install" command: `npm install`...
-[21:41:37.202] 
-[21:41:37.202] > calendly-mvp@0.1.0 prepare
-[21:41:37.202] > husky install
-[21:41:37.202] 
-[21:41:37.247] husky - Git hooks installed
-[21:41:37.255] 
-[21:41:37.255] up to date, audited 831 packages in 3s
-[21:41:37.256] 
-[21:41:37.256] 212 packages are looking for funding
-[21:41:37.256]   run `npm fund` for details
-[21:41:37.309] 
-[21:41:37.310] 1 critical severity vulnerability
-[21:41:37.310] 
-[21:41:37.310] To address all issues, run:
-[21:41:37.311]   npm audit fix --force
-[21:41:37.311] 
-[21:41:37.311] Run `npm audit` for details.
-[21:41:37.344] Detected Next.js version: 14.0.0
-[21:41:37.345] Running "npm run build"
-[21:41:37.454] 
-[21:41:37.454] > calendly-mvp@0.1.0 build
-[21:41:37.454] > next build
-[21:41:37.454] 
-[21:41:38.133]    ▲ Next.js 14.0.0
-[21:41:38.133] 
-[21:41:38.134]    Creating an optimized production build ...
-[21:41:38.196]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
-[21:41:38.273]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
-[21:41:43.695]  ✓ Compiled successfully
-[21:41:43.696]    Linting and checking validity of types ...
-[21:41:49.336]    Collecting page data ...
-[21:41:50.661]    Generating static pages (0/10) ...
-[21:41:50.890] 
-   Generating static pages (2/10) 
-[21:41:51.018] 
-   Generating static pages (4/10) 
-[21:41:51.212] 
-   Generating static pages (7/10) 
-[21:41:51.572] 
- ✓ Generating static pages (10/10) 
-[21:41:51.832]    Finalizing page optimization ...
-[21:41:51.832]    Collecting build traces ...
-[21:41:57.581] 
-[21:41:57.593] Route (app)                              Size     First Load JS
-[21:41:57.593] ┌ ○ /                                    2.68 kB         148 kB
-[21:41:57.593] ├ ○ /                                    2.68 kB         148 kB
-[21:41:57.593] ├ ○ /_not-found                          875 B          88.6 kB
-[21:41:57.594] ├ ○ /availability                        155 B          87.9 kB
-[21:41:57.594] ├ λ /book/[username]/[eventType]         155 B          87.9 kB
-[21:41:57.594] ├ ○ /event-types                         155 B          87.9 kB
-[21:41:57.594] ├ ○ /event-types/new                     155 B          87.9 kB
-[21:41:57.594] ├ ○ /login                               1.76 kB         147 kB
-[21:41:57.594] ├ ○ /register                            1.96 kB         147 kB
-[21:41:57.594] └ ○ /settings                            155 B          87.9 kB
-[21:41:57.594] + First Load JS shared by all            87.7 kB
-[21:41:57.594]   ├ chunks/472-643e69049ae4e1b5.js       32.4 kB
-[21:41:57.594]   ├ chunks/fd9d1056-864837b19de8d926.js  53.3 kB
-[21:41:57.594]   ├ chunks/main-app-892c3dff08e9cd4c.js  231 B
-[21:41:57.595]   └ chunks/webpack-09ecef7032a9f009.js   1.8 kB
-[21:41:57.595] 
-[21:41:57.595] 
-[21:41:57.595] ○  (Static)   prerendered as static HTML
-[21:41:57.595] λ  (Dynamic)  server-rendered on demand using Node.js
-[21:41:57.596] 
-[21:41:57.732] Traced Next.js server files in: 28.393ms
-[21:41:57.748] Error: ENOENT: no such file or directory, lstat '/vercel/path0/.next/server/app/(dashboard)/page_client-reference-manifest.js'
-[21:41:58.078] 
-[21:42:00.586] Exiting build container
+[22:17:25.821] Running build in Washington, D.C., USA (East) – iad1
+[22:17:25.821] Build machine configuration: 2 cores, 8 GB
+[22:17:25.841] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 7796026)
+[22:17:26.125] Cloning completed: 284.000ms
+[22:17:27.969] Restored build cache from previous deployment (FEjiq3ncGWRsCrqdCPtrmf8tj8cq)
+[22:17:28.575] Running "vercel build"
+[22:17:28.997] Vercel CLI 43.3.0
+[22:17:29.273] Running "install" command: `npm install`...
+[22:17:32.337] 
+[22:17:32.337] > calendly-mvp@0.1.0 prepare
+[22:17:32.337] > husky install
+[22:17:32.337] 
+[22:17:32.382] husky - Git hooks installed
+[22:17:32.389] 
+[22:17:32.389] up to date, audited 831 packages in 3s
+[22:17:32.389] 
+[22:17:32.389] 212 packages are looking for funding
+[22:17:32.389]   run `npm fund` for details
+[22:17:32.444] 
+[22:17:32.444] 1 critical severity vulnerability
+[22:17:32.445] 
+[22:17:32.445] To address all issues, run:
+[22:17:32.445]   npm audit fix --force
+[22:17:32.445] 
+[22:17:32.445] Run `npm audit` for details.
+[22:17:32.477] Detected Next.js version: 14.0.0
+[22:17:32.478] Running "npm run build"
+[22:17:32.591] 
+[22:17:32.591] > calendly-mvp@0.1.0 build
+[22:17:32.591] > next build
+[22:17:32.591] 
+[22:17:33.246]    ▲ Next.js 14.0.0
+[22:17:33.247] 
+[22:17:33.247]    Creating an optimized production build ...
+[22:17:33.310]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
+[22:17:33.377]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
+[22:17:38.219]  ✓ Compiled successfully
+[22:17:38.220]    Linting and checking validity of types ...
+[22:17:44.883] Failed to compile.
+[22:17:44.883] 
+[22:17:44.883] ./src/app/dashboard/event-types/new/page.tsx:18:31
+[22:17:44.883] Type error: Parameter 'e' implicitly has an 'any' type.
+[22:17:44.883] 
+[22:17:44.883] [0m [90m 16 |[39m   [36mconst[39m [debugInfo[33m,[39m setDebugInfo] [33m=[39m useState([32m''[39m)[0m
+[22:17:44.884] [0m [90m 17 |[39m[0m
+[22:17:44.884] [0m[31m[1m>[22m[39m[90m 18 |[39m   [36mconst[39m handleSubmit [33m=[39m [36masync[39m (e) [33m=>[39m {[0m
+[22:17:44.884] [0m [90m    |[39m                               [31m[1m^[22m[39m[0m
+[22:17:44.884] [0m [90m 19 |[39m     e[33m.[39mpreventDefault()[0m
+[22:17:44.884] [0m [90m 20 |[39m     [0m
+[22:17:44.884] [0m [90m 21 |[39m     [36mif[39m ([33m![39mformData[33m.[39mname [33m||[39m [33m![39mformData[33m.[39mduration) {[0m
+[22:17:44.953] Error: Command "npm run build" exited with 1
+[22:17:45.318] 
+[22:17:48.310] Exiting build container
