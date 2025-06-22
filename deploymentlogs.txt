@@ -1,50 +1,46 @@
-[00:07:17.211] Running build in Washington, D.C., USA (East) – iad1
-[00:07:17.211] Build machine configuration: 2 cores, 8 GB
-[00:07:17.248] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 3be0e30)
-[00:07:17.606] Cloning completed: 357.000ms
-[00:07:18.899] Restored build cache from previous deployment (9xZJhiZv8MkVzzoHk2h3KdARNfzt)
-[00:07:19.534] Running "vercel build"
-[00:07:19.968] Vercel CLI 43.3.0
-[00:07:20.279] Running "install" command: `npm install`...
-[00:07:24.188] 
-[00:07:24.189] > calendly-mvp@0.1.0 prepare
-[00:07:24.190] > husky install
-[00:07:24.190] 
-[00:07:24.234] husky - Git hooks installed
-[00:07:24.241] 
-[00:07:24.242] up to date, audited 831 packages in 3s
-[00:07:24.242] 
-[00:07:24.242] 212 packages are looking for funding
-[00:07:24.243]   run `npm fund` for details
-[00:07:24.297] 
-[00:07:24.297] 1 critical severity vulnerability
-[00:07:24.297] 
-[00:07:24.298] To address all issues, run:
-[00:07:24.298]   npm audit fix --force
-[00:07:24.298] 
-[00:07:24.298] Run `npm audit` for details.
-[00:07:24.331] Detected Next.js version: 14.0.0
-[00:07:24.332] Running "npm run build"
-[00:07:24.444] 
-[00:07:24.444] > calendly-mvp@0.1.0 build
-[00:07:24.444] > next build
-[00:07:24.444] 
-[00:07:25.157]    ▲ Next.js 14.0.0
-[00:07:25.158] 
-[00:07:25.158]    Creating an optimized production build ...
-[00:07:25.254] 
-[00:07:25.255] > Build error occurred
-[00:07:25.256] Error: You cannot use different slug names for the same dynamic path ('slug' !== 'username').
-[00:07:25.256]     at handleSlug (/vercel/path0/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
-[00:07:25.256]     at UrlNode._insert (/vercel/path0/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
-[00:07:25.257]     at UrlNode._insert (/vercel/path0/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
-[00:07:25.257]     at UrlNode.insert (/vercel/path0/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
-[00:07:25.257]     at /vercel/path0/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
-[00:07:25.257]     at Array.forEach (<anonymous>)
-[00:07:25.257]     at getSortedRoutes (/vercel/path0/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
-[00:07:25.258]     at /vercel/path0/node_modules/next/dist/build/index.js:472:65
-[00:07:25.258]     at Span.traceFn (/vercel/path0/node_modules/next/dist/trace/trace.js:98:20)
-[00:07:25.258]     at /vercel/path0/node_modules/next/dist/build/index.js:471:89
-[00:07:25.274] Error: Command "npm run build" exited with 1
-[00:07:25.648] 
-[00:07:28.399] Exiting build container
+[00:10:07.681] Running build in Washington, D.C., USA (East) – iad1
+[00:10:07.681] Build machine configuration: 2 cores, 8 GB
+[00:10:07.697] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 996e37e)
+[00:10:08.432] Cloning completed: 735.000ms
+[00:10:09.896] Restored build cache from previous deployment (9xZJhiZv8MkVzzoHk2h3KdARNfzt)
+[00:10:10.585] Running "vercel build"
+[00:10:11.032] Vercel CLI 43.3.0
+[00:10:11.316] Running "install" command: `npm install`...
+[00:10:14.324] 
+[00:10:14.324] > calendly-mvp@0.1.0 prepare
+[00:10:14.325] > husky install
+[00:10:14.325] 
+[00:10:14.371] husky - Git hooks installed
+[00:10:14.379] 
+[00:10:14.379] up to date, audited 831 packages in 3s
+[00:10:14.379] 
+[00:10:14.380] 212 packages are looking for funding
+[00:10:14.380]   run `npm fund` for details
+[00:10:14.435] 
+[00:10:14.435] 1 critical severity vulnerability
+[00:10:14.435] 
+[00:10:14.435] To address all issues, run:
+[00:10:14.435]   npm audit fix --force
+[00:10:14.436] 
+[00:10:14.436] Run `npm audit` for details.
+[00:10:14.467] Detected Next.js version: 14.0.0
+[00:10:14.468] Running "npm run build"
+[00:10:14.584] 
+[00:10:14.584] > calendly-mvp@0.1.0 build
+[00:10:14.587] > next build
+[00:10:14.587] 
+[00:10:15.877]    ▲ Next.js 14.0.0
+[00:10:15.878] 
+[00:10:15.878]    Creating an optimized production build ...
+[00:10:15.943]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
+[00:10:16.073]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
+[00:10:20.014]  ✓ Compiled successfully
+[00:10:20.015]    Linting and checking validity of types ...
+[00:10:25.926] Failed to compile.
+[00:10:25.927] 
+[00:10:25.928] src/app/book/[slug]/page.tsx
+[00:10:25.928] Type error: File '/vercel/path0/src/app/book/[slug]/page.tsx' is not a module.
+[00:10:25.928] 
+[00:10:25.999] Error: Command "npm run build" exited with 1
+[00:10:26.306] 
+[00:10:29.258] Exiting build container
