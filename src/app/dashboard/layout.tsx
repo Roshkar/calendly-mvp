@@ -1,8 +1,41 @@
+// @ts-nocheck
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase/client'
+
 export default function DashboardLayout({
   children,
 }: {
   children: any
 }) {
+  const router = useRouter()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return // Предотвращаем двойной клик
+    
+    setIsLoggingOut(true)
+    
+    try {
+      const { error } = await supabase.auth.signOut()
+      
+      if (error) {
+        console.error('Error signing out:', error)
+        alert('Ошибка при выходе: ' + error.message)
+        setIsLoggingOut(false)
+        return
+      }
+
+      // Перенаправляем на главную страницу
+      router.push('/')
+    } catch (err) {
+      console.error('Unexpected error during logout:', err)
+      alert('Произошла неожиданная ошибка при выходе')
+      setIsLoggingOut(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -34,9 +67,13 @@ export default function DashboardLayout({
               <span>+</span>
               <span>Создать событие</span>
             </a>
-            <button className="text-gray-600 hover:text-gray-900 flex items-center space-x-1 px-3 py-1 rounded hover:bg-gray-100">
-              <span>🚪</span>
-              <span>Выйти</span>
+            <button 
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="text-gray-600 hover:text-gray-900 flex items-center space-x-1 px-3 py-1 rounded hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span>{isLoggingOut ? '⏳' : '🚪'}</span>
+              <span>{isLoggingOut ? 'Выходим...' : 'Выйти'}</span>
             </button>
           </div>
         </div>

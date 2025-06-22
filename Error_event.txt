@@ -1,0 +1,44 @@
+{
+  "event_message": "relation \"public.event_types\" does not exist",
+  "id": "effc69e9-13cc-4d0f-b4bc-8b3585e788ea",
+  "metadata": [
+    {
+      "file": null,
+      "host": "db-kedcllptlvyrdrhbfoqz",
+      "metadata": [],
+      "parsed": [
+        {
+          "application_name": "postgrest",
+          "backend_type": "client backend",
+          "command_tag": "PARSE",
+          "connection_from": "::1:9889",
+          "context": null,
+          "database_name": "postgres",
+          "detail": null,
+          "error_severity": "ERROR",
+          "hint": null,
+          "internal_query": null,
+          "internal_query_pos": null,
+          "leader_pid": null,
+          "location": null,
+          "process_id": 7741,
+          "query": "WITH pgrst_source AS ( SELECT \"public\".\"event_types\".* FROM \"public\".\"event_types\"  WHERE  \"public\".\"event_types\".\"user_id\" = $1  ORDER BY \"public\".\"event_types\".\"created_at\" DESC  LIMIT $2 OFFSET $3 )  SELECT null::bigint AS total_result_set, pg_catalog.count(_postgrest_t) AS page_total, coalesce(json_agg(_postgrest_t), '[]') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM ( SELECT * FROM pgrst_source ) _postgrest_t",
+          "query_id": 0,
+          "query_pos": 61,
+          "session_id": "685858b8.1e3d",
+          "session_line_num": 3,
+          "session_start_time": "2025-06-22 19:25:44 UTC",
+          "sql_state_code": "42P01",
+          "timestamp": "2025-06-22 19:25:44.298 UTC",
+          "transaction_id": 0,
+          "user_name": "authenticator",
+          "virtual_transaction_id": "8/327"
+        }
+      ],
+      "parsed_from": null,
+      "project": null,
+      "source_type": null
+    }
+  ],
+  "timestamp": 1750620344298000
+}
