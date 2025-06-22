@@ -5,9 +5,10 @@ const nextConfig = {
   // trailingSlash: true,
   // images: { unoptimized: true },
   
-  experimental: {
-    serverActions: true,
-  },
+  // Server Actions теперь включены по умолчанию в Next.js 14
+  // experimental: {
+  //   serverActions: true,
+  // },
   images: {
     domains: ['avatars.githubusercontent.com', 'lh3.googleusercontent.com'],
   },
@@ -21,9 +22,9 @@ const nextConfig = {
     ];
   },
   
-  // Конфигурация для Cloudflare Pages
+  // Переменные окружения
   env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
+    CUSTOM_KEY: process.env.CUSTOM_KEY || 'default-value',
   },
   
   // Оптимизация для Cloudflare
