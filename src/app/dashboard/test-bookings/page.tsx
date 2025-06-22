@@ -240,11 +240,11 @@ export default function TestBookingsPage() {
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h3 className="font-semibold text-blue-800 mb-2">💡 Инструкции:</h3>
         <ol className="list-decimal list-inside text-blue-700 space-y-1 text-sm">
-          <li>Сначала запустите "Тест подключения" для проверки доступа к БД</li>
+          <li>Сначала запустите &quot;Тест подключения&quot; для проверки доступа к БД</li>
           <li>Убедитесь, что у вас есть хотя бы одно активное событие</li>
           <li>Создайте тестовое бронирование</li>
           <li>Загрузите бронирования для проверки</li>
-          <li>Перейдите на страницу "Бронирования" в навигации</li>
+          <li>Перейдите на страницу &quot;Бронирования&quot; в навигации</li>
         </ol>
       </div>
     </div>
