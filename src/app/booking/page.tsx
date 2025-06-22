@@ -103,13 +103,18 @@ export default function BookingPage() {
       setIsSubmitting(true)
       setDebugInfo('Создаем бронирование...\n')
 
+      console.log('🔍 Event data:', eventData)
+      console.log('🔍 User profile:', userProfile)
+      console.log('🔍 Form data:', formData)
+      console.log('🔍 Selected date/time:', selectedDate, selectedTime)
+
       const bookingData = {
         event_type_id: eventData.id,
         invitee_name: formData.name,
         invitee_email: formData.email,
         start_time: `${selectedDate}T${selectedTime}:00`,
         end_time: `${selectedDate}T${addMinutes(selectedTime, eventData.duration_minutes)}:00`,
-        timezone: userProfile.timezone || 'Europe/Moscow',
+        timezone: userProfile?.timezone || 'Europe/Moscow',
         status: 'confirmed'
       }
 
