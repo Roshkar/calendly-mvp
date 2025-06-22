@@ -52,7 +52,7 @@ Add these to your `.env.local` file:
 ```env
 # Telegram Bot Configuration
 NEXT_PUBLIC_TELEGRAM_BOT_USERNAME=calendly_mvp_auth_bot
-TELEGRAM_BOT_TOKEN=1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
+TELEGRAM_BOT_TOKEN=7899407653:AAGZYsBYM9ggbIBlH-Y7eUsLu2sv6l8sMDg
 ```
 
 **Important**: 
@@ -112,21 +112,21 @@ The Telegram widget supports these sizes:
 - `medium` - Standard size
 - `large` - Large button (default)
 
-To change the size, update the component:
+Чтобы изменить размер, обновите компонент:
 ```javascript
-script.setAttribute('data-size', 'medium') // or 'small'
+script.setAttribute('data-size', 'medium') // или 'small'
 ```
 
-### Custom Callback
+### Настройка обработчика
 
-You can customize what happens after successful auth:
+Вы можете настроить что происходит после успешной авторизации:
 
 ```javascript
 <TelegramAuth 
   botUsername="your_bot_username"
   onAuth={(user) => {
-    console.log('Telegram user:', user)
-    // Custom logic here
+    console.log('Пользователь Telegram:', user)
+    // Ваша логика здесь
     router.push('/dashboard')
   }}
 />
@@ -138,7 +138,7 @@ You can customize what happens after successful auth:
 
 For production apps, you should verify the Telegram auth hash:
 
-1. **Create an API route** (`/api/auth/telegram/verify`):
+1. **Создайте API маршрут** (`/api/auth/telegram/verify`):
 
 ```javascript
 import crypto from 'crypto'
@@ -147,7 +147,7 @@ export async function POST(request) {
   const userData = await request.json()
   const botToken = process.env.TELEGRAM_BOT_TOKEN
   
-  // Create hash for verification
+  // Создаем хеш для проверки
   const dataCheckString = Object.keys(userData)
     .filter(key => key !== 'hash')
     .sort()
@@ -163,7 +163,7 @@ export async function POST(request) {
 }
 ```
 
-2. **Update the component** to use verification:
+2. **Обновите компонент** для использования проверки:
 
 ```javascript
 const verifyTelegramAuth = async (user) => {
@@ -202,13 +202,13 @@ const verifyTelegramAuth = async (user) => {
 
 ### Debug Mode
 
-Add this to see detailed logs:
+Добавьте это для детальных логов:
 
 ```javascript
-// In TelegramAuth component
-console.log('Telegram auth started')
-console.log('Bot username:', botUsername)
-console.log('Widget container:', document.getElementById('telegram-login-container'))
+// В компоненте TelegramAuth
+console.log('Авторизация Telegram запущена')
+console.log('Имя бота:', botUsername)
+console.log('Контейнер виджета:', document.getElementById('telegram-login-container'))
 ```
 
 ## 📱 Mobile Considerations
@@ -224,8 +224,8 @@ The Telegram widget works on mobile devices, but:
 
 Add these in your Vercel dashboard:
 ```
-NEXT_PUBLIC_TELEGRAM_BOT_USERNAME=your_bot_username
-TELEGRAM_BOT_TOKEN=your_bot_token
+NEXT_PUBLIC_TELEGRAM_BOT_USERNAME=calendly_mvp_auth_bot
+TELEGRAM_BOT_TOKEN=ваш_токен_бота
 ```
 
 ### Domain Configuration
@@ -244,14 +244,14 @@ If you have existing users, they can:
 
 ## 📊 Analytics
 
-Track Telegram auth usage:
+Отслеживайте использование Telegram авторизации:
 ```javascript
-// In onAuth callback
+// В обработчике onAuth
 gtag('event', 'login', {
   method: 'telegram'
 })
 
-// Or with your analytics provider
+// Или с вашим провайдером аналитики
 analytics.track('User Logged In', {
   method: 'telegram',
   telegram_id: user.id
