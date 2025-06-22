@@ -15,6 +15,16 @@ export default function NewEventTypePage() {
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(false)
   const [debugInfo, setDebugInfo] = useState('')
+  const [previewSlug, setPreviewSlug] = useState('')
+
+  // Функция для генерации preview slug
+  const generatePreviewSlug = (name) => {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .trim()
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -56,13 +66,42 @@ export default function NewEventTypePage() {
       setDebugInfo(prev => prev + `✅ User ID: ${user.id}\n`)
 
       // Создаем slug из названия
-      const slug = formData.name
+      let baseSlug = formData.name
         .toLowerCase()
         .replace(/[^a-z0-9\s-]/g, '')
         .replace(/\s+/g, '-')
         .trim()
 
-      setDebugInfo(prev => prev + `✅ Создан slug: ${slug}\n`)
+      // Проверяем уникальность slug
+      setDebugInfo(prev => prev + `Проверяем уникальность slug: ${baseSlug}\n`)
+      
+      let slug = baseSlug
+      let counter = 1
+      let isUnique = false
+      
+      while (!isUnique) {
+        const { data: existingEvent, error: checkError } = await supabase
+          .from('event_types')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('slug', slug)
+          .single()
+
+        if (checkError && checkError.code === 'PGRST116') {
+          // Событие не найдено - slug уникален
+          isUnique = true
+          setDebugInfo(prev => prev + `✅ Slug уникален: ${slug}\n`)
+        } else if (existingEvent) {
+          // Slug уже существует - добавляем счетчик
+          counter++
+          slug = `${baseSlug}-${counter}`
+          setDebugInfo(prev => prev + `Slug занят, пробуем: ${slug}\n`)
+        } else if (checkError) {
+          throw new Error('Ошибка проверки slug: ' + checkError.message)
+        }
+      }
+
+      setDebugInfo(prev => prev + `✅ Финальный slug: ${slug}\n`)
 
       // Преобразуем location в нужный формат
       let location_type = 'online'
@@ -137,10 +176,16 @@ export default function NewEventTypePage() {
   }
 
   const handleChange = (e) => {
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
     }))
+    
+    // Обновляем preview slug при изменении названия
+    if (name === 'name') {
+      setPreviewSlug(generatePreviewSlug(value))
+    }
   }
 
   const testConnection = async () => {
@@ -246,6 +291,14 @@ export default function NewEventTypePage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
+              {previewSlug && (
+                <div className="mt-2 text-xs text-gray-500">
+                  <span className="font-medium">Ссылка будет:</span> 
+                  <span className="bg-gray-100 px-2 py-1 rounded ml-1">
+                    /book/[username]/{previewSlug}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div>

@@ -8,6 +8,7 @@ export default function EventTypesPage() {
   const [eventTypes, setEventTypes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [userProfile, setUserProfile] = useState(null)
 
   useEffect(() => {
     fetchEventTypes()
@@ -23,6 +24,21 @@ export default function EventTypesPage() {
       if (!user) {
         setError('Пожалуйста, войдите в систему')
         return
+      }
+
+      // Загружаем профиль пользователя
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('id', user.id)
+        .single()
+
+      if (profileError) {
+        console.error('Error fetching profile:', profileError)
+        // Используем fallback username из email
+        setUserProfile({ username: user.email.split('@')[0] })
+      } else {
+        setUserProfile(profile)
       }
 
       const { data, error: fetchError } = await supabase
@@ -201,25 +217,42 @@ export default function EventTypesPage() {
                       </div>
                     </div>
                     
-                    <div className="flex items-center space-x-2">
-                      <button 
-                        onClick={() => {
-                          const baseUrl = window.location.origin
-                          const username = 'user' // Здесь должен быть реальный username из профиля
-                          const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
-                          navigator.clipboard.writeText(bookingUrl)
-                          alert('Ссылка скопирована!')
-                        }}
-                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                      >
-                        Копировать ссылку
-                      </button>
-                      <button 
-                        onClick={() => handleDelete(eventType.id, eventType.name)}
-                        className="text-red-600 hover:text-red-800 text-sm font-medium"
-                      >
-                        Удалить
-                      </button>
+                    <div className="flex flex-col items-end space-y-2">
+                      {/* Предварительный просмотр ссылки */}
+                      <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded max-w-xs truncate">
+                        {userProfile?.username || 'user'}/{eventType.slug}
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <button 
+                          onClick={() => {
+                            const baseUrl = window.location.origin
+                            const username = userProfile?.username || 'user'
+                            const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
+                            navigator.clipboard.writeText(bookingUrl)
+                            
+                            // Улучшенное уведомление
+                            const button = event.target
+                            const originalText = button.textContent
+                            button.textContent = '✓ Скопировано!'
+                            button.style.color = '#10b981'
+                            
+                            setTimeout(() => {
+                              button.textContent = originalText
+                              button.style.color = ''
+                            }, 2000)
+                          }}
+                          className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+                        >
+                          📋 Копировать ссылку
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(eventType.id, eventType.name)}
+                          className="text-red-600 hover:text-red-800 text-sm font-medium"
+                        >
+                          🗑️ Удалить
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
