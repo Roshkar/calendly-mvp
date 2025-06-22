@@ -1,57 +1,51 @@
-[00:47:11.296] Running build in Washington, D.C., USA (East) – iad1
-[00:47:11.297] Build machine configuration: 2 cores, 8 GB
-[00:47:11.322] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 2830d86)
-[00:47:11.564] Cloning completed: 241.000ms
-[00:47:12.745] Restored build cache from previous deployment (D91tufAJPPCY2eXpMUuWrhLqjsfw)
-[00:47:13.464] Running "vercel build"
-[00:47:16.638] Vercel CLI 43.3.0
-[00:47:16.937] Running "install" command: `npm install`...
-[00:47:20.081] 
-[00:47:20.082] > calendly-mvp@0.1.0 prepare
-[00:47:20.082] > husky install
-[00:47:20.082] 
-[00:47:20.159] husky - Git hooks installed
-[00:47:20.167] 
-[00:47:20.167] up to date, audited 831 packages in 3s
-[00:47:20.167] 
-[00:47:20.167] 212 packages are looking for funding
-[00:47:20.168]   run `npm fund` for details
-[00:47:20.221] 
-[00:47:20.222] 1 critical severity vulnerability
-[00:47:20.222] 
-[00:47:20.222] To address all issues, run:
-[00:47:20.222]   npm audit fix --force
-[00:47:20.222] 
-[00:47:20.222] Run `npm audit` for details.
-[00:47:20.256] Detected Next.js version: 14.0.0
-[00:47:20.257] Running "npm run build"
-[00:47:20.374] 
-[00:47:20.374] > calendly-mvp@0.1.0 build
-[00:47:20.376] > next build
-[00:47:20.377] 
-[00:47:21.063]    ▲ Next.js 14.0.0
-[00:47:21.064] 
-[00:47:21.064]    Creating an optimized production build ...
-[00:47:21.132]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
-[00:47:21.199]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
-[00:47:25.292]  ✓ Compiled successfully
-[00:47:25.293]    Linting and checking validity of types ...
-[00:47:31.673] Failed to compile.
-[00:47:31.673] 
-[00:47:31.674] ./src/app/admin/migrate/page.tsx:17:15
-[00:47:31.674] Type error: No overload matches this call.
-[00:47:31.674]   Overload 1 of 2, '(relation: "profiles" | "event_types"): PostgrestQueryBuilder<{ Tables: { profiles: { Row: { id: string; username: string; first_name: string | null; last_name: string | null; avatar_url: string | null; timezone: string; created_at: string; updated_at: string; }; Insert: { ...; }; Update: { ...; }; Relationships: []; }; event_types: { ...; }; }; Views: {}; Functions: {}; Enums: {}; CompositeTypes: {}; }, { ...; } | { ...; }, "profiles" | "event_types", [] | [...]>', gave the following error.
-[00:47:31.674]     Argument of type '"bookings"' is not assignable to parameter of type '"profiles" | "event_types"'.
-[00:47:31.674]   Overload 2 of 2, '(relation: never): PostgrestQueryBuilder<{ Tables: { profiles: { Row: { id: string; username: string; first_name: string | null; last_name: string | null; avatar_url: string | null; timezone: string; created_at: string; updated_at: string; }; Insert: { ...; }; Update: { ...; }; Relationships: []; }; event_types: { ...; }; }; Views: {}; Functions: {}; Enums: {}; CompositeTypes: {}; }, never, never, never>', gave the following error.
-[00:47:31.675]     Argument of type '"bookings"' is not assignable to parameter of type 'never'.
-[00:47:31.675] 
-[00:47:31.675] [0m [90m 15 |[39m       [90m// Проверяем текущий статус RLS[39m[0m
-[00:47:31.675] [0m [90m 16 |[39m       [36mconst[39m { data[33m:[39m currentStatus[33m,[39m error[33m:[39m statusError } [33m=[39m [36mawait[39m supabase[0m
-[00:47:31.675] [0m[31m[1m>[22m[39m[90m 17 |[39m         [33m.[39m[36mfrom[39m([32m'bookings'[39m)[0m
-[00:47:31.675] [0m [90m    |[39m               [31m[1m^[22m[39m[0m
-[00:47:31.675] [0m [90m 18 |[39m         [33m.[39mselect([32m'id'[39m)[0m
-[00:47:31.675] [0m [90m 19 |[39m         [33m.[39mlimit([35m1[39m)[0m
-[00:47:31.675] [0m [90m 20 |[39m       [0m
-[00:47:31.739] Error: Command "npm run build" exited with 1
-[00:47:32.226] 
-[00:47:35.247] Exiting build container
+[01:02:17.440] Running build in Washington, D.C., USA (East) – iad1
+[01:02:17.440] Build machine configuration: 2 cores, 8 GB
+[01:02:17.457] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 0043e50)
+[01:02:18.626] Cloning completed: 1.169s
+[01:02:20.003] Restored build cache from previous deployment (AA79XbGn4obUtB7uVFWSSbyWtpC7)
+[01:02:20.640] Running "vercel build"
+[01:02:21.075] Vercel CLI 43.3.0
+[01:02:21.366] Running "install" command: `npm install`...
+[01:02:25.119] 
+[01:02:25.120] > calendly-mvp@0.1.0 prepare
+[01:02:25.120] > husky install
+[01:02:25.121] 
+[01:02:25.170] husky - Git hooks installed
+[01:02:25.177] 
+[01:02:25.178] up to date, audited 831 packages in 4s
+[01:02:25.178] 
+[01:02:25.179] 212 packages are looking for funding
+[01:02:25.179]   run `npm fund` for details
+[01:02:25.253] 
+[01:02:25.253] 1 critical severity vulnerability
+[01:02:25.254] 
+[01:02:25.254] To address all issues, run:
+[01:02:25.254]   npm audit fix --force
+[01:02:25.254] 
+[01:02:25.255] Run `npm audit` for details.
+[01:02:25.288] Detected Next.js version: 14.0.0
+[01:02:25.288] Running "npm run build"
+[01:02:25.404] 
+[01:02:25.404] > calendly-mvp@0.1.0 build
+[01:02:25.404] > next build
+[01:02:25.404] 
+[01:02:26.095]    ▲ Next.js 14.0.0
+[01:02:26.095] 
+[01:02:26.096]    Creating an optimized production build ...
+[01:02:26.161]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
+[01:02:26.243]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
+[01:02:30.665]  ✓ Compiled successfully
+[01:02:30.673]    Linting and checking validity of types ...
+[01:02:35.123] 
+[01:02:35.124] Failed to compile.
+[01:02:35.124] 
+[01:02:35.125] ./src/app/dashboard/test-bookings/page.tsx
+[01:02:35.125] 243:33  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[01:02:35.125] 243:50  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[01:02:35.126] 247:37  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[01:02:35.126] 247:50  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+[01:02:35.126] 
+[01:02:35.126] info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+[01:02:35.248] Error: Command "npm run build" exited with 1
+[01:02:36.050] 
+[01:02:40.278] Exiting build container
