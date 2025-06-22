@@ -52,6 +52,10 @@ export default function DashboardLayout({
               <span>📅</span>
               <span>События</span>
             </a>
+            <a href="/dashboard/bookings" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
+              <span>📋</span>
+              <span>Бронирования</span>
+            </a>
             <a href="/dashboard/availability" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
               <span>⏰</span>
               <span>Доступность</span>

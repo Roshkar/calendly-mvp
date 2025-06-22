@@ -1,41 +1,13 @@
 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
-page-33a342a691cae868.js:1 🔍 Event data: 
-{id: 'd4629313-bcd3-4ad9-bf0f-e568201b2331', user_id: 'dd58259b-27ff-4d72-8300-f4c1083af2c6', name: '123', slug: '123', description: null, …}
+page-33a342a691cae868.js:1 🔍 Event data: {id: 'ad5923ae-d69f-4358-a9f0-8cb3e70ee744', user_id: 'dd58259b-27ff-4d72-8300-f4c1083af2c6', name: '123', slug: '123', description: null, …}color: "#3174ad"created_at: "2025-06-22T21:50:44.589585+00:00"description: nullduration_minutes: 45id: "ad5923ae-d69f-4358-a9f0-8cb3e70ee744"is_active: truelocation_details: "Zoom Meeting"location_type: "online"name: "123"profiles: nullslug: "123"updated_at: "2025-06-22T21:50:44.589585+00:00"user_id: "dd58259b-27ff-4d72-8300-f4c1083af2c6"[[Prototype]]: Object
 page-33a342a691cae868.js:1 🔍 User profile: null
-page-33a342a691cae868.js:1 🔍 Form data: 
-{name: 'Faya', email: 'Faya@juju.com', note: 'blabla'}
+page-33a342a691cae868.js:1 🔍 Form data: {name: 'Faya', email: 'Faya@juju.com', note: 'blabla'}email: "Faya@juju.com"name: "Faya"note: "blabla"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
 page-33a342a691cae868.js:1 🔍 Selected date/time: 2025-06-23 09:00
-page-33a342a691cae868.js:1 🔍 Booking data to insert: 
-{event_type_id: 'd4629313-bcd3-4ad9-bf0f-e568201b2331', invitee_name: 'Faya', invitee_email: 'Faya@juju.com', start_time: '2025-06-23T09:00:00', end_time: '2025-06-23T09:30:00', …}
+page-33a342a691cae868.js:1 🔍 Booking data to insert: {event_type_id: 'ad5923ae-d69f-4358-a9f0-8cb3e70ee744', invitee_name: 'Faya', invitee_email: 'Faya@juju.com', start_time: '2025-06-23T09:00:00', end_time: '2025-06-23T09:45:00', …}end_time: "2025-06-23T09:45:00"event_type_id: "ad5923ae-d69f-4358-a9f0-8cb3e70ee744"invitee_email: "Faya@juju.com"invitee_name: "Faya"start_time: "2025-06-23T09:00:00"status: "confirmed"timezone: "Europe/Moscow"[[Prototype]]: Object
 page-33a342a691cae868.js:1 🔍 BookingPage (query params) загружена
 page-33a342a691cae868.js:1 🔍 Event slug: 123
 page-33a342a691cae868.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
-881-5b1b27e5e5ff05ff.js:19 
- POST https://kedcllptlvyrdrhbfoqz.supabase.co/rest/v1/bookings?columns=%22event_…%22start_time%22%2C%22end_time%22%2C%22timezone%22%2C%22status%22&select=* 401 (Unauthorized)
-(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
-(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
-fulfilled	@	881-5b1b27e5e5ff05ff.js:19
-Promise.then		
-step	@	881-5b1b27e5e5ff05ff.js:19
-(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
-lib_fetch_awaiter	@	881-5b1b27e5e5ff05ff.js:19
-(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
-then	@	881-5b1b27e5e5ff05ff.js:1
-page-33a342a691cae868.js:1 🔍 Supabase response: 
-{data: null, bookingError: {…}}
-page-33a342a691cae868.js:1 🔍 Детали ошибки Supabase: 42501 new row violates row-level security policy for table "bookings"
-472-a7f077435772ca0e.js:1 Error creating booking: 
-window.console.error	@	472-a7f077435772ca0e.js:1
-handleBooking	@	page-33a342a691cae868.js:1
-await in handleBooking		
-Hi	@	fd9d1056-9282bc71f5f2296f.js:9
-Ni	@	fd9d1056-9282bc71f5f2296f.js:9
-Oi	@	fd9d1056-9282bc71f5f2296f.js:9
-Nn	@	fd9d1056-9282bc71f5f2296f.js:9
-Zm	@	fd9d1056-9282bc71f5f2296f.js:9
-(anonymous)	@	fd9d1056-9282bc71f5f2296f.js:9
-Ak	@	fd9d1056-9282bc71f5f2296f.js:9
-ll	@	fd9d1056-9282bc71f5f2296f.js:9
-zm	@	fd9d1056-9282bc71f5f2296f.js:9
-xm	@	fd9d1056-9282bc71f5f2296f.js:9
-wm	@	fd9d1056-9282bc71f5f2296f.js:9
+page-33a342a691cae868.js:1 🔍 Supabase response: {data: Array(1), bookingError: null}bookingError: nulldata: Array(1)0: created_at: "2025-06-22T21:52:29.014674+00:00"end_time: "2025-06-23T09:45:00+00:00"event_type_id: "ad5923ae-d69f-4358-a9f0-8cb3e70ee744"id: "8949d1d8-332e-46c7-bfab-c1930c7f60ea"invitee_email: "Faya@juju.com"invitee_name: "Faya"start_time: "2025-06-23T09:00:00+00:00"status: "confirmed"timezone: "Europe/Moscow"updated_at: "2025-06-22T21:52:29.014674+00:00"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()length: 1[[Prototype]]: Array(0)[[Prototype]]: Object
+page-33a342a691cae868.js:1 🔍 BookingPage (query params) загружена
+page-33a342a691cae868.js:1 🔍 Event slug: 123
+page-33a342a691cae868.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
