@@ -8,6 +8,12 @@ export default function BookingPage({ params }: { params: { username: string, ev
   // Логируем параметры для диагностики
   console.log('🔍 BookingPage загружена с параметрами:', params)
   console.log('🔍 URL:', typeof window !== 'undefined' ? window.location.href : 'SSR')
+  console.log('🔍 Компонент BookingPage рендерится!')
+  
+  // Проверяем, что параметры не пустые
+  if (!params.username || !params.eventType) {
+    console.error('❌ Отсутствуют параметры маршрута:', params)
+  }
   
   const [eventData, setEventData] = useState(null)
   const [userProfile, setUserProfile] = useState(null)
@@ -189,6 +195,13 @@ export default function BookingPage({ params }: { params: { username: string, ev
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
               <p className="mt-4 text-gray-600">Загрузка события...</p>
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded">
+                <p className="text-blue-700 text-sm">
+                  🔍 Страница бронирования загружается<br/>
+                  Username: {params.username}<br/>
+                  Event: {params.eventType}
+                </p>
+              </div>
             </div>
           </div>
         </div>
