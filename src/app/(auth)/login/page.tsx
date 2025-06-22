@@ -119,7 +119,7 @@ export default function LoginPage() {
         {/* Telegram Auth */}
         <div className="mt-6">
           <TelegramAuth 
-            botUsername={process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || "calendly_mvp_bot"} 
+            botUsername={process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'calendly_mvp_bot'} 
             onAuth={(user) => {
               console.log('Telegram user:', user)
               router.push('/dashboard')
