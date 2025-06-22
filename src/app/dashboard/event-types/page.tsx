@@ -85,6 +85,19 @@ export default function EventTypesPage() {
     }
   }
 
+  const testBookingLink = (eventType) => {
+    const baseUrl = window.location.origin
+    const username = userProfile?.username || 'test-user'
+    const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
+    
+    console.log('🔗 Тестируем ссылку:', bookingUrl)
+    console.log('📊 Данные события:', eventType)
+    console.log('👤 Профиль пользователя:', userProfile)
+    
+    // Открываем в новой вкладке
+    window.open(bookingUrl, '_blank')
+  }
+
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -159,6 +172,15 @@ export default function EventTypesPage() {
         </a>
       </div>
 
+      {/* Диагностическая информация */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h3 className="font-semibold text-blue-900 mb-2">🔍 Диагностика профиля</h3>
+        <div className="text-sm text-blue-800">
+          <p><strong>Username:</strong> {userProfile?.username || 'не установлен'}</p>
+          <p><strong>Fallback username:</strong> {userProfile?.username || 'из email не найден'}</p>
+        </div>
+      </div>
+
       <div className="bg-white rounded-lg border">
         <div className="p-6">
           <h2 className="text-lg font-semibold mb-4">Ваши события</h2>
@@ -223,35 +245,44 @@ export default function EventTypesPage() {
                         {userProfile?.username || 'user'}/{eventType.slug}
                       </div>
                       
-                      <div className="flex items-center space-x-2">
+                      <div className="flex flex-col items-end space-y-2">
                         <button 
-                          onClick={() => {
-                            const baseUrl = window.location.origin
-                            const username = userProfile?.username || 'user'
-                            const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
-                            navigator.clipboard.writeText(bookingUrl)
-                            
-                            // Улучшенное уведомление
-                            const button = event.target
-                            const originalText = button.textContent
-                            button.textContent = '✓ Скопировано!'
-                            button.style.color = '#10b981'
-                            
-                            setTimeout(() => {
-                              button.textContent = originalText
-                              button.style.color = ''
-                            }, 2000)
-                          }}
-                          className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+                          onClick={() => testBookingLink(eventType)}
+                          className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
                         >
-                          📋 Копировать ссылку
+                          🧪 Тест ссылки
                         </button>
-                        <button 
-                          onClick={() => handleDelete(eventType.id, eventType.name)}
-                          className="text-red-600 hover:text-red-800 text-sm font-medium"
-                        >
-                          🗑️ Удалить
-                        </button>
+                        
+                        <div className="flex items-center space-x-2">
+                          <button 
+                            onClick={() => {
+                              const baseUrl = window.location.origin
+                              const username = userProfile?.username || 'user'
+                              const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
+                              navigator.clipboard.writeText(bookingUrl)
+                              
+                              // Улучшенное уведомление
+                              const button = event.target
+                              const originalText = button.textContent
+                              button.textContent = '✓ Скопировано!'
+                              button.style.color = '#10b981'
+                              
+                              setTimeout(() => {
+                                button.textContent = originalText
+                                button.style.color = ''
+                              }, 2000)
+                            }}
+                            className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+                          >
+                            📋 Копировать ссылку
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(eventType.id, eventType.name)}
+                            className="text-red-600 hover:text-red-800 text-sm font-medium"
+                          >
+                            🗑️ Удалить
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

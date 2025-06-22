@@ -5,6 +5,10 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
 export default function BookingPage({ params }: { params: { username: string, eventType: string } }) {
+  // Логируем параметры для диагностики
+  console.log('🔍 BookingPage загружена с параметрами:', params)
+  console.log('🔍 URL:', typeof window !== 'undefined' ? window.location.href : 'SSR')
+  
   const [eventData, setEventData] = useState(null)
   const [userProfile, setUserProfile] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -412,6 +416,18 @@ export default function BookingPage({ params }: { params: { username: string, ev
                 </button>
               </form>
             )}
+          </div>
+        </div>
+
+        {/* Диагностическая информация */}
+        <div className="mt-6 bg-blue-50 p-4 rounded-md">
+          <h3 className="font-semibold mb-2">🔍 Диагностическая информация:</h3>
+          <div className="text-sm space-y-1">
+            <p><strong>URL:</strong> {typeof window !== 'undefined' ? window.location.href : 'SSR'}</p>
+            <p><strong>Username:</strong> {params.username}</p>
+            <p><strong>Event Type:</strong> {params.eventType}</p>
+            <p><strong>Статус загрузки:</strong> {isLoading ? 'Загружается...' : 'Загружено'}</p>
+            <p><strong>Ошибка:</strong> {error || 'Нет'}</p>
           </div>
         </div>
 
