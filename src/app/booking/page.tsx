@@ -67,22 +67,18 @@ export default function BookingPage() {
       
       console.log('🧪 Данные для тестового бронирования:', testBooking)
       
-      // Тестируем через API route
-      const testResponse = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(testBooking)
-      })
+      // Прямой тест Supabase
+      const { data: bookingData, error: bookingError } = await supabase
+        .from('bookings')
+        .insert([testBooking])
+        .select()
       
-      const testResult = await testResponse.json()
-      console.log('🧪 Тест создания booking через API:', { status: testResponse.status, result: testResult })
+      console.log('🧪 Тест создания booking:', { bookingData, bookingError })
       
-      if (!testResponse.ok) {
-        console.log('🧪 Детали ошибки API:', testResult.error)
+      if (bookingError) {
+        console.log('🧪 Детали ошибки:', bookingError.code, bookingError.message)
       } else {
-        console.log('🧪 ✅ Тестовое бронирование создано успешно через API!')
+        console.log('🧪 ✅ Тестовое бронирование создано успешно!')
       }
       
     } catch (err) {
@@ -185,20 +181,17 @@ export default function BookingPage() {
 
       console.log('🔍 Booking data to insert:', bookingData)
 
-      // Используем API route вместо прямого обращения к Supabase
-      const response = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bookingData)
-      })
+      // Прямое обращение к Supabase (RLS должен быть исправлен)
+      const { data, error: bookingError } = await supabase
+        .from('bookings')
+        .insert([bookingData])
+        .select()
 
-      const result = await response.json()
-      console.log('🔍 API response:', { response: response.status, result })
+      console.log('🔍 Supabase response:', { data, bookingError })
 
-      if (!response.ok) {
-        throw new Error('Ошибка при создании бронирования: ' + (result.error || response.statusText))
+      if (bookingError) {
+        console.log('🔍 Детали ошибки Supabase:', bookingError.code, bookingError.message)
+        throw new Error('Ошибка при создании бронирования: ' + bookingError.message)
       }
 
       setSuccess(true)
