@@ -68,7 +68,7 @@ export default function BookingPage() {
       console.log('🧪 Данные для тестового бронирования:', testBooking)
       
       // Прямой тест Supabase
-      const { data: bookingData, error: bookingError } = await supabase
+      const { data: bookingData, error: bookingError } = await (supabase as any)
         .from('bookings')
         .insert([testBooking])
         .select()
@@ -182,7 +182,7 @@ export default function BookingPage() {
       console.log('🔍 Booking data to insert:', bookingData)
 
       // Прямое обращение к Supabase (RLS должен быть исправлен)
-      const { data, error: bookingError } = await supabase
+      const { data, error: bookingError } = await (supabase as any)
         .from('bookings')
         .insert([bookingData])
         .select()

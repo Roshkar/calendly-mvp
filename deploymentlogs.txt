@@ -1,60 +1,57 @@
-[00:40:37.034] Running build in Washington, D.C., USA (East) – iad1
-[00:40:37.035] Build machine configuration: 2 cores, 8 GB
-[00:40:37.065] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 99f40e1)
-[00:40:37.308] Cloning completed: 242.000ms
-[00:40:38.751] Restored build cache from previous deployment (ABgWRm3HUSkbJ8CgzkmQNpXYGzx4)
-[00:40:39.386] Running "vercel build"
-[00:40:39.808] Vercel CLI 43.3.0
-[00:40:40.092] Running "install" command: `npm install`...
-[00:40:43.252] 
-[00:40:43.253] > calendly-mvp@0.1.0 prepare
-[00:40:43.253] > husky install
-[00:40:43.253] 
-[00:40:43.302] husky - Git hooks installed
-[00:40:43.309] 
-[00:40:43.309] up to date, audited 831 packages in 3s
-[00:40:43.310] 
-[00:40:43.310] 212 packages are looking for funding
-[00:40:43.310]   run `npm fund` for details
-[00:40:43.362] 
-[00:40:43.363] 1 critical severity vulnerability
-[00:40:43.363] 
-[00:40:43.363] To address all issues, run:
-[00:40:43.363]   npm audit fix --force
-[00:40:43.363] 
-[00:40:43.363] Run `npm audit` for details.
-[00:40:43.394] Detected Next.js version: 14.0.0
-[00:40:43.395] Running "npm run build"
-[00:40:43.502] 
-[00:40:43.502] > calendly-mvp@0.1.0 build
-[00:40:43.503] > next build
-[00:40:43.503] 
-[00:40:44.144]    ▲ Next.js 14.0.0
-[00:40:44.145] 
-[00:40:44.145]    Creating an optimized production build ...
-[00:40:44.205]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
-[00:40:44.273]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
-[00:40:48.918]  ✓ Compiled successfully
-[00:40:48.923]    Linting and checking validity of types ...
-[00:40:54.721]    Collecting page data ...
-[00:40:55.071] Error: supabaseKey is required.
-[00:40:55.072]     at new SupabaseClient (/vercel/path0/.next/server/chunks/712.js:6:99157)
-[00:40:55.072]     at createClient (/vercel/path0/.next/server/chunks/712.js:6:102319)
-[00:40:55.073]     at 9322 (/vercel/path0/.next/server/app/api/bookings/route.js:1:1285)
-[00:40:55.073]     at __webpack_require__ (/vercel/path0/.next/server/webpack-runtime.js:1:146)
-[00:40:55.073]     at __webpack_exec__ (/vercel/path0/.next/server/app/api/bookings/route.js:1:2779)
-[00:40:55.073]     at /vercel/path0/.next/server/app/api/bookings/route.js:1:2806
-[00:40:55.073]     at __webpack_require__.X (/vercel/path0/.next/server/webpack-runtime.js:1:1610)
-[00:40:55.074]     at /vercel/path0/.next/server/app/api/bookings/route.js:1:2792
-[00:40:55.074]     at Object.<anonymous> (/vercel/path0/.next/server/app/api/bookings/route.js:1:2848)
-[00:40:55.074]     at Module._compile (node:internal/modules/cjs/loader:1730:14)
-[00:40:55.074] 
-[00:40:55.075] > Build error occurred
-[00:40:55.075] Error: Failed to collect page data for /api/bookings
-[00:40:55.075]     at /vercel/path0/node_modules/next/dist/build/utils.js:1211:15
-[00:40:55.075]     at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
-[00:40:55.075]   type: 'Error'
-[00:40:55.075] }
-[00:40:55.120] Error: Command "npm run build" exited with 1
-[00:40:55.429] 
-[00:40:58.270] Exiting build container
+[00:47:11.296] Running build in Washington, D.C., USA (East) – iad1
+[00:47:11.297] Build machine configuration: 2 cores, 8 GB
+[00:47:11.322] Cloning github.com/Roshkar/calendly-mvp (Branch: main, Commit: 2830d86)
+[00:47:11.564] Cloning completed: 241.000ms
+[00:47:12.745] Restored build cache from previous deployment (D91tufAJPPCY2eXpMUuWrhLqjsfw)
+[00:47:13.464] Running "vercel build"
+[00:47:16.638] Vercel CLI 43.3.0
+[00:47:16.937] Running "install" command: `npm install`...
+[00:47:20.081] 
+[00:47:20.082] > calendly-mvp@0.1.0 prepare
+[00:47:20.082] > husky install
+[00:47:20.082] 
+[00:47:20.159] husky - Git hooks installed
+[00:47:20.167] 
+[00:47:20.167] up to date, audited 831 packages in 3s
+[00:47:20.167] 
+[00:47:20.167] 212 packages are looking for funding
+[00:47:20.168]   run `npm fund` for details
+[00:47:20.221] 
+[00:47:20.222] 1 critical severity vulnerability
+[00:47:20.222] 
+[00:47:20.222] To address all issues, run:
+[00:47:20.222]   npm audit fix --force
+[00:47:20.222] 
+[00:47:20.222] Run `npm audit` for details.
+[00:47:20.256] Detected Next.js version: 14.0.0
+[00:47:20.257] Running "npm run build"
+[00:47:20.374] 
+[00:47:20.374] > calendly-mvp@0.1.0 build
+[00:47:20.376] > next build
+[00:47:20.377] 
+[00:47:21.063]    ▲ Next.js 14.0.0
+[00:47:21.064] 
+[00:47:21.064]    Creating an optimized production build ...
+[00:47:21.132]  ⚠ Custom webpack configuration is detected. When using a custom webpack configuration, the Webpack build worker is disabled by default. To force enable it, set the "experimental.webpackBuildWorker" option to "true". Read more: https://nextjs.org/docs/messages/webpack-build-worker-opt-out
+[00:47:21.199]  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
+[00:47:25.292]  ✓ Compiled successfully
+[00:47:25.293]    Linting and checking validity of types ...
+[00:47:31.673] Failed to compile.
+[00:47:31.673] 
+[00:47:31.674] ./src/app/admin/migrate/page.tsx:17:15
+[00:47:31.674] Type error: No overload matches this call.
+[00:47:31.674]   Overload 1 of 2, '(relation: "profiles" | "event_types"): PostgrestQueryBuilder<{ Tables: { profiles: { Row: { id: string; username: string; first_name: string | null; last_name: string | null; avatar_url: string | null; timezone: string; created_at: string; updated_at: string; }; Insert: { ...; }; Update: { ...; }; Relationships: []; }; event_types: { ...; }; }; Views: {}; Functions: {}; Enums: {}; CompositeTypes: {}; }, { ...; } | { ...; }, "profiles" | "event_types", [] | [...]>', gave the following error.
+[00:47:31.674]     Argument of type '"bookings"' is not assignable to parameter of type '"profiles" | "event_types"'.
+[00:47:31.674]   Overload 2 of 2, '(relation: never): PostgrestQueryBuilder<{ Tables: { profiles: { Row: { id: string; username: string; first_name: string | null; last_name: string | null; avatar_url: string | null; timezone: string; created_at: string; updated_at: string; }; Insert: { ...; }; Update: { ...; }; Relationships: []; }; event_types: { ...; }; }; Views: {}; Functions: {}; Enums: {}; CompositeTypes: {}; }, never, never, never>', gave the following error.
+[00:47:31.675]     Argument of type '"bookings"' is not assignable to parameter of type 'never'.
+[00:47:31.675] 
+[00:47:31.675] [0m [90m 15 |[39m       [90m// Проверяем текущий статус RLS[39m[0m
+[00:47:31.675] [0m [90m 16 |[39m       [36mconst[39m { data[33m:[39m currentStatus[33m,[39m error[33m:[39m statusError } [33m=[39m [36mawait[39m supabase[0m
+[00:47:31.675] [0m[31m[1m>[22m[39m[90m 17 |[39m         [33m.[39m[36mfrom[39m([32m'bookings'[39m)[0m
+[00:47:31.675] [0m [90m    |[39m               [31m[1m^[22m[39m[0m
+[00:47:31.675] [0m [90m 18 |[39m         [33m.[39mselect([32m'id'[39m)[0m
+[00:47:31.675] [0m [90m 19 |[39m         [33m.[39mlimit([35m1[39m)[0m
+[00:47:31.675] [0m [90m 20 |[39m       [0m
+[00:47:31.739] Error: Command "npm run build" exited with 1
+[00:47:32.226] 
+[00:47:35.247] Exiting build container
