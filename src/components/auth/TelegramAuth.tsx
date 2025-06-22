@@ -27,19 +27,32 @@ interface TelegramAuthProps {
 
 export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps) {
   useEffect(() => {
+    console.log('🤖 Инициализация Telegram Auth с ботом:', botUsername)
+    
     // Load Telegram Login Widget script
     const script = document.createElement('script')
     script.src = 'https://telegram.org/js/telegram-widget.js?22'
     script.setAttribute('data-telegram-login', botUsername)
     script.setAttribute('data-size', 'large')
-    script.setAttribute('data-onauth', 'onTelegramAuth(user)')
+    script.setAttribute('data-onauth', 'window.onTelegramAuth')
     script.setAttribute('data-request-access', 'write')
     script.async = true
+
+    // Add script load handlers
+    script.onload = () => {
+      console.log('✅ Telegram widget script загружен')
+    }
+    script.onerror = () => {
+      console.error('❌ Ошибка загрузки Telegram widget script')
+    }
 
     // Add the script to the page
     const container = document.getElementById('telegram-login-container')
     if (container) {
       container.appendChild(script)
+      console.log('📦 Telegram script добавлен в контейнер')
+    } else {
+      console.error('❌ Контейнер telegram-login-container не найден')
     }
 
     // Global callback function for Telegram auth
@@ -122,6 +135,25 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
     // For now, we'll do basic validation
     const requiredFields = ['id', 'first_name', 'auth_date', 'hash']
     return requiredFields.every(field => user[field] !== undefined)
+  }
+
+  // Show setup instructions if bot username is not configured
+  if (!botUsername || botUsername === 'calendly_mvp_bot') {
+    return (
+      <div className="telegram-auth">
+        <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
+          <div className="text-center">
+            <div className="text-2xl mb-2">⚠️</div>
+            <p className="text-sm text-yellow-800 font-medium mb-2">
+              Telegram бот не настроен
+            </p>
+            <p className="text-xs text-yellow-700">
+              Для активации создайте бота через @BotFather
+            </p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
