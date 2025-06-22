@@ -1,7 +1,7 @@
 // @ts-nocheck
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
 declare global {
@@ -26,51 +26,50 @@ interface TelegramAuthProps {
 }
 
 export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const scriptRef = useRef<HTMLScriptElement | null>(null)
+
   useEffect(() => {
     console.log('🤖 Инициализация Telegram Auth с ботом:', botUsername)
+    console.log('🔍 Переменная окружения NEXT_PUBLIC_TELEGRAM_BOT_USERNAME:', process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME)
     
-    // Load Telegram Login Widget script
-    const script = document.createElement('script')
-    script.src = 'https://telegram.org/js/telegram-widget.js?22'
-    script.setAttribute('data-telegram-login', botUsername)
-    script.setAttribute('data-size', 'large')
-    script.setAttribute('data-onauth', 'window.onTelegramAuth')
-    script.setAttribute('data-request-access', 'write')
-    script.async = true
-
-    // Add script load handlers
-    script.onload = () => {
-      console.log('✅ Telegram widget script загружен')
-    }
-    script.onerror = () => {
-      console.error('❌ Ошибка загрузки Telegram widget script')
+    // Cleanup previous script if exists
+    if (scriptRef.current && scriptRef.current.parentNode) {
+      scriptRef.current.parentNode.removeChild(scriptRef.current)
+      scriptRef.current = null
     }
 
-    // Add the script to the page
-    const container = document.getElementById('telegram-login-container')
-    if (container) {
-      container.appendChild(script)
-      console.log('📦 Telegram script добавлен в контейнер')
-    } else {
-      console.error('❌ Контейнер telegram-login-container не найден')
+    // Clear container
+    if (containerRef.current) {
+      containerRef.current.innerHTML = ''
     }
 
-    // Global callback function for Telegram auth
+    // Skip if bot not configured properly
+    if (!botUsername || botUsername === 'calendly_mvp_bot') {
+      console.log('⚠️ Бот не настроен, показываем предупреждение')
+      return
+    }
+
+    // Global callback function for Telegram auth - define before script load
     window.onTelegramAuth = async (user: TelegramUser) => {
       try {
-        console.log('Telegram auth data:', user)
+        console.log('🎉 Получены данные от Telegram:', user)
         
-        // Verify the authentication data (optional but recommended)
+        // Verify the authentication data
         const isValid = await verifyTelegramAuth(user)
         if (!isValid) {
+          console.error('❌ Неверные данные авторизации Telegram')
           alert('Ошибка: неверные данные авторизации Telegram')
           return
         }
 
+        console.log('✅ Данные Telegram прошли проверку')
+
         // Create or sign in user with Supabase using email/password approach
-        // Since Telegram doesn't provide email, we'll use Telegram ID as identifier
         const telegramEmail = `telegram_${user.id}@telegram.local`
         const telegramPassword = `telegram_${user.id}_${user.hash}`
+
+        console.log('🔐 Попытка входа с email:', telegramEmail)
 
         // Try to sign in first
         const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
@@ -80,6 +79,8 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
 
         // If user doesn't exist, create account
         if (signInError && signInError.message.includes('Invalid login credentials')) {
+          console.log('👤 Пользователь не найден, создаем новый аккаунт')
+          
           const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
             email: telegramEmail,
             password: telegramPassword,
@@ -96,45 +97,96 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
           })
 
           if (signUpError) {
-            console.error('Supabase signup error:', signUpError)
+            console.error('❌ Ошибка создания аккаунта Supabase:', signUpError)
             alert('Ошибка создания аккаунта: ' + signUpError.message)
             return
           }
 
-          console.log('New Telegram user created:', signUpData)
+          console.log('✅ Новый пользователь Telegram создан:', signUpData)
         } else if (signInError) {
-          console.error('Supabase signin error:', signInError)
+          console.error('❌ Ошибка входа Supabase:', signInError)
           alert('Ошибка входа: ' + signInError.message)
           return
+        } else {
+          console.log('✅ Успешный вход существующего пользователя:', signInData)
         }
 
-        console.log('Telegram auth successful')
+        console.log('🎉 Авторизация Telegram завершена успешно')
         
         if (onAuth) {
           onAuth(user)
         }
         
       } catch (err) {
-        console.error('Telegram auth error:', err)
-        alert('Произошла ошибка при входе через Telegram')
+        console.error('💥 Ошибка в процессе авторизации Telegram:', err)
+        alert('Произошла ошибка при входе через Telegram: ' + (err as Error).message)
       }
+    }
+
+    // Load Telegram Login Widget script
+    const script = document.createElement('script')
+    script.src = 'https://telegram.org/js/telegram-widget.js?22'
+    script.setAttribute('data-telegram-login', botUsername)
+    script.setAttribute('data-size', 'large')
+    script.setAttribute('data-onauth', 'onTelegramAuth')
+    script.setAttribute('data-request-access', 'write')
+    script.async = true
+    scriptRef.current = script
+
+    // Add script load handlers
+    script.onload = () => {
+      console.log('✅ Telegram widget script загружен успешно')
+    }
+    
+    script.onerror = (error) => {
+      console.error('❌ Ошибка загрузки Telegram widget script:', error)
+    }
+
+    // Add the script to the container
+    if (containerRef.current) {
+      containerRef.current.appendChild(script)
+      console.log('📦 Telegram script добавлен в контейнер')
+    } else {
+      console.error('❌ Контейнер не найден')
     }
 
     return () => {
       // Cleanup
-      if (container && script.parentNode) {
-        script.parentNode.removeChild(script)
+      if (scriptRef.current && scriptRef.current.parentNode) {
+        scriptRef.current.parentNode.removeChild(scriptRef.current)
+        scriptRef.current = null
       }
-      delete window.onTelegramAuth
+      if (window.onTelegramAuth) {
+        delete window.onTelegramAuth
+      }
+      console.log('🧹 Telegram Auth cleanup выполнен')
     }
   }, [botUsername, onAuth])
 
-  // Simple verification function (you should implement proper hash verification in production)
+  // Simple verification function
   const verifyTelegramAuth = async (user: TelegramUser): Promise<boolean> => {
-    // In production, you should verify the hash using your bot token
-    // For now, we'll do basic validation
+    console.log('🔍 Проверка данных Telegram пользователя...')
+    
+    // Basic validation
     const requiredFields = ['id', 'first_name', 'auth_date', 'hash']
-    return requiredFields.every(field => user[field] !== undefined)
+    const isValid = requiredFields.every(field => {
+      const hasField = user[field] !== undefined && user[field] !== null
+      if (!hasField) {
+        console.error(`❌ Отсутствует обязательное поле: ${field}`)
+      }
+      return hasField
+    })
+
+    // Check auth_date (should be recent - within last hour)
+    const now = Math.floor(Date.now() / 1000)
+    const timeDiff = now - user.auth_date
+    if (timeDiff > 3600) { // 1 hour
+      console.error('❌ Данные авторизации устарели')
+      return false
+    }
+
+    console.log(isValid ? '✅ Данные валидны' : '❌ Данные не прошли проверку')
+    return isValid
   }
 
   // Show setup instructions if bot username is not configured
@@ -147,8 +199,11 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
             <p className="text-sm text-yellow-800 font-medium mb-2">
               Telegram бот не настроен
             </p>
-            <p className="text-xs text-yellow-700">
+            <p className="text-xs text-yellow-700 mb-2">
               Для активации создайте бота через @BotFather
+            </p>
+            <p className="text-xs text-gray-600">
+              Текущий botUsername: {botUsername}
             </p>
           </div>
         </div>
@@ -158,8 +213,13 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
 
   return (
     <div className="telegram-auth">
-      <div id="telegram-login-container" className="flex justify-center">
+      <div 
+        ref={containerRef}
+        id="telegram-login-container" 
+        className="flex justify-center min-h-[50px] items-center"
+      >
         {/* Telegram widget will be inserted here */}
+        <div className="text-sm text-gray-500">Загрузка Telegram виджета...</div>
       </div>
       
       <div className="mt-4 text-center">
@@ -168,6 +228,9 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
         </p>
         <p className="text-xs text-gray-500 mt-1">
           Нажмите кнопку выше для авторизации
+        </p>
+        <p className="text-xs text-gray-400 mt-1">
+          Бот: @{botUsername}
         </p>
       </div>
     </div>
