@@ -1,92 +1,335 @@
+'use client'
+
+import { useState } from 'react'
+import { supabase } from '@/lib/supabase/client'
+
 export default function NewEventTypePage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    duration: '',
+    location: ''
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(false)
+  const [debugInfo, setDebugInfo] = useState('')
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    if (!formData.name || !formData.duration) {
+      setError('Пожалуйста, заполните все обязательные поля')
+      return
+    }
+
+    setIsSubmitting(true)
+    setError(null)
+    setDebugInfo('Начинаем создание события...\n')
+
+    try {
+      // Проверяем подключение к Supabase
+      setDebugInfo(prev => prev + 'Проверяем Supabase подключение...\n')
+      
+      if (!supabase) {
+        throw new Error('Supabase клиент не инициализирован')
+      }
+      
+      setDebugInfo(prev => prev + '✅ Supabase клиент инициализирован\n')
+
+      // Проверяем аутентификацию
+      setDebugInfo(prev => prev + 'Проверяем аутентификацию...\n')
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      
+      if (userError) {
+        setDebugInfo(prev => prev + `❌ Ошибка аутентификации: ${userError.message}\n`)
+        throw new Error(`Ошибка аутентификации: ${userError.message}`)
+      }
+
+      if (!user) {
+        setDebugInfo(prev => prev + '❌ Пользователь не авторизован\n')
+        throw new Error('Пожалуйста, войдите в систему')
+      }
+
+      setDebugInfo(prev => prev + `✅ Пользователь авторизован: ${user.email}\n`)
+      setDebugInfo(prev => prev + `✅ User ID: ${user.id}\n`)
+
+      // Создаем slug из названия
+      const slug = formData.name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .trim()
+
+      setDebugInfo(prev => prev + `✅ Создан slug: ${slug}\n`)
+
+      // Преобразуем location в нужный формат
+      let location_type = 'online'
+      let location_details = ''
+      
+      if (formData.location === 'zoom') {
+        location_type = 'online'
+        location_details = 'Zoom Meeting'
+      } else if (formData.location === 'google-meet') {
+        location_type = 'online'
+        location_details = 'Google Meet'
+      } else if (formData.location === 'phone') {
+        location_type = 'phone'
+      } else if (formData.location === 'office') {
+        location_type = 'in_person'
+        location_details = 'Office'
+      }
+
+      setDebugInfo(prev => prev + `✅ Настроено место: ${location_type} - ${location_details}\n`)
+
+      // Подготавливаем данные для вставки
+      const eventData = {
+        user_id: user.id,
+        name: formData.name,
+        slug,
+        description: formData.description || null,
+        duration_minutes: parseInt(formData.duration),
+        location_type,
+        location_details: location_details || null,
+        color: '#3174ad',
+        is_active: true
+      }
+
+      setDebugInfo(prev => prev + `✅ Данные подготовлены: ${JSON.stringify(eventData, null, 2)}\n`)
+
+      // Вставляем в базу данных
+      setDebugInfo(prev => prev + 'Вставляем в базу данных...\n')
+      
+      const { data, error: insertError } = await supabase
+        .from('event_types')
+        .insert([eventData])
+        .select()
+
+      if (insertError) {
+        setDebugInfo(prev => prev + `❌ Ошибка вставки: ${insertError.message}\n`)
+        setDebugInfo(prev => prev + `❌ Детали: ${JSON.stringify(insertError, null, 2)}\n`)
+        throw new Error(`Ошибка при создании события: ${insertError.message}`)
+      }
+
+      setDebugInfo(prev => prev + `✅ Событие создано: ${JSON.stringify(data, null, 2)}\n`)
+
+      setSuccess(true)
+      setFormData({
+        name: '',
+        description: '',
+        duration: '',
+        location: ''
+      })
+      
+      // Перенаправляем через 3 секунды
+      setTimeout(() => {
+        window.location.href = '/dashboard/event-types'
+      }, 3000)
+
+    } catch (err) {
+      console.error('Error creating event:', err)
+      setError(err.message || 'Произошла ошибка при создании события')
+      setDebugInfo(prev => prev + `❌ Финальная ошибка: ${err.message}\n`)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
+  }
+
+  const testConnection = async () => {
+    setDebugInfo('Тестируем подключение к Supabase...\n')
+    
+    try {
+      if (!supabase) {
+        setDebugInfo(prev => prev + '❌ Supabase клиент не найден\n')
+        return
+      }
+
+      const { data: { user }, error } = await supabase.auth.getUser()
+      
+      if (error) {
+        setDebugInfo(prev => prev + `❌ Ошибка аутентификации: ${error.message}\n`)
+        return
+      }
+
+      if (!user) {
+        setDebugInfo(prev => prev + '❌ Пользователь не авторизован\n')
+        return
+      }
+
+      setDebugInfo(prev => prev + `✅ Подключение работает\n`)
+      setDebugInfo(prev => prev + `✅ Пользователь: ${user.email}\n`)
+
+      // Тестируем доступ к таблице
+      const { data, error: tableError } = await supabase
+        .from('event_types')
+        .select('count')
+        .eq('user_id', user.id)
+
+      if (tableError) {
+        setDebugInfo(prev => prev + `❌ Ошибка доступа к таблице: ${tableError.message}\n`)
+      } else {
+        setDebugInfo(prev => prev + `✅ Доступ к таблице event_types работает\n`)
+      }
+
+    } catch (err) {
+      setDebugInfo(prev => prev + `❌ Ошибка тестирования: ${err.message}\n`)
+    }
+  }
+
+  if (success) {
+    return (
+      <div className="max-w-2xl mx-auto space-y-6">
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+          <div className="text-green-600 text-6xl mb-4">✅</div>
+          <h2 className="text-2xl font-bold text-green-900 mb-2">Событие создано!</h2>
+          <p className="text-green-700">Перенаправляем на страницу со списком событий...</p>
+        </div>
+        
+        {debugInfo && (
+          <div className="bg-gray-100 p-4 rounded-md">
+            <h3 className="font-semibold mb-2">Журнал создания:</h3>
+            <pre className="whitespace-pre-wrap text-sm">{debugInfo}</pre>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Создать новое событие</h1>
         <p className="text-gray-600">Настройте параметры вашего события</p>
       </div>
 
-      <div className="bg-white rounded-lg border p-6">
-        <form className="space-y-6">
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-              Название события *
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              placeholder="Например: Встреча 1-на-1"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+      {/* Кнопка тестирования */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h3 className="font-semibold text-blue-900 mb-2">🔧 Диагностика</h3>
+        <button
+          type="button"
+          onClick={testConnection}
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm"
+        >
+          Проверить подключение к Supabase
+        </button>
+      </div>
 
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              Описание
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              rows={4}
-              placeholder="Опишите цель встречи..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Форма */}
+        <div className="bg-white rounded-lg border p-6">
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md">
+              <strong>Ошибка:</strong> {error}
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                Название события *
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Например: Встреча 1-на-1"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
 
-          <div>
-            <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
-              Длительность *
-            </label>
-            <select
-              id="duration"
-              name="duration"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            >
-              <option value="">Выберите длительность</option>
-              <option value="15">15 минут</option>
-              <option value="30">30 минут</option>
-              <option value="45">45 минут</option>
-              <option value="60">1 час</option>
-              <option value="90">1.5 часа</option>
-              <option value="120">2 часа</option>
-            </select>
-          </div>
+            <div>
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+                Описание
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                rows={3}
+                placeholder="Опишите цель встречи..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-          <div>
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-              Место проведения
-            </label>
-            <select
-              id="location"
-              name="location"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Выберите место</option>
-              <option value="zoom">Zoom встреча</option>
-              <option value="google-meet">Google Meet</option>
-              <option value="phone">Телефонный звонок</option>
-              <option value="office">В офисе</option>
-            </select>
-          </div>
+            <div>
+              <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
+                Длительность *
+              </label>
+              <select
+                id="duration"
+                name="duration"
+                value={formData.duration}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">Выберите длительность</option>
+                <option value="15">15 минут</option>
+                <option value="30">30 минут</option>
+                <option value="45">45 минут</option>
+                <option value="60">1 час</option>
+                <option value="90">1.5 часа</option>
+                <option value="120">2 часа</option>
+              </select>
+            </div>
 
-          <div className="flex justify-between pt-6">
-            <a
-              href="/dashboard/event-types"
-              className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200"
-            >
-              Отмена
-            </a>
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              Создать событие
-            </button>
+            <div>
+              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                Место проведения
+              </label>
+              <select
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Выберите место</option>
+                <option value="zoom">Zoom встреча</option>
+                <option value="google-meet">Google Meet</option>
+                <option value="phone">Телефонный звонок</option>
+                <option value="office">В офисе</option>
+              </select>
+            </div>
+
+            <div className="flex justify-between pt-6">
+              <button
+                type="button"
+                onClick={() => window.location.href = '/dashboard/event-types'}
+                className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200"
+                disabled={isSubmitting}
+              >
+                Отмена
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Создание...' : 'Создать событие'}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Журнал отладки */}
+        {debugInfo && (
+          <div className="bg-gray-100 p-4 rounded-md">
+            <h3 className="font-semibold mb-2">📋 Журнал выполнения:</h3>
+            <pre className="whitespace-pre-wrap text-sm overflow-auto max-h-96">{debugInfo}</pre>
           </div>
-        </form>
+        )}
       </div>
     </div>
   )

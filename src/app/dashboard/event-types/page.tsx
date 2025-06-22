@@ -1,4 +1,131 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase/client'
+
 export default function EventTypesPage() {
+  const [eventTypes, setEventTypes] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    fetchEventTypes()
+  }, [])
+
+  const fetchEventTypes = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) {
+        setError('Пожалуйста, войдите в систему')
+        return
+      }
+
+      const { data, error: fetchError } = await supabase
+        .from('event_types')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+
+      if (fetchError) {
+        console.error('Error fetching event types:', fetchError)
+        setError('Ошибка загрузки событий: ' + fetchError.message)
+        return
+      }
+
+      setEventTypes(data || [])
+    } catch (err) {
+      console.error('Error:', err)
+      setError('Произошла ошибка при загрузке событий')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleDelete = async (id, name) => {
+    if (window.confirm(`Вы уверены, что хотите удалить "${name}"?`)) {
+      try {
+        const { error: deleteError } = await supabase
+          .from('event_types')
+          .delete()
+          .eq('id', id)
+
+        if (deleteError) {
+          alert('Ошибка при удалении события: ' + deleteError.message)
+          return
+        }
+
+        // Обновляем список
+        setEventTypes(prev => prev.filter(et => et.id !== id))
+        alert('Событие удалено')
+      } catch (err) {
+        console.error('Error deleting:', err)
+        alert('Ошибка при удалении события')
+      }
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Типы событий</h1>
+            <p className="text-gray-600">Управляйте своими типами встреч</p>
+          </div>
+          <a 
+            href="/dashboard/event-types/new"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+          >
+            <span>+</span>
+            <span>Создать событие</span>
+          </a>
+        </div>
+        <div className="bg-white rounded-lg border p-6">
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Загрузка...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Типы событий</h1>
+            <p className="text-gray-600">Управляйте своими типами встреч</p>
+          </div>
+          <a 
+            href="/dashboard/event-types/new"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+          >
+            <span>+</span>
+            <span>Создать событие</span>
+          </a>
+        </div>
+        <div className="bg-white rounded-lg border p-6">
+          <div className="text-center py-12">
+            <div className="text-red-600 text-lg font-medium">Ошибка загрузки</div>
+            <p className="text-gray-600 mt-2">{error}</p>
+            <button 
+              onClick={fetchEventTypes}
+              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Попробовать снова
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -19,19 +146,85 @@ export default function EventTypesPage() {
         <div className="p-6">
           <h2 className="text-lg font-semibold mb-4">Ваши события</h2>
           
-          <div className="text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              📅
+          {eventTypes.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                📅
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Нет событий</h3>
+              <p className="text-gray-600 mb-4">Создайте свое первое событие для начала работы</p>
+              <a 
+                href="/dashboard/event-types/new"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+              >
+                Создать событие
+              </a>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Нет событий</h3>
-            <p className="text-gray-600 mb-4">Создайте свое первое событие для начала работы</p>
-            <a 
-              href="/dashboard/event-types/new"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-            >
-              Создать событие
-            </a>
-          </div>
+          ) : (
+            <div className="space-y-4">
+              {eventTypes.map((eventType) => (
+                <div key={eventType.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-3">
+                        <div 
+                          className="w-4 h-4 rounded-full" 
+                          style={{ backgroundColor: eventType.color }}
+                        ></div>
+                        <h3 className="text-lg font-medium text-gray-900">{eventType.name}</h3>
+                      </div>
+                      
+                      {eventType.description && (
+                        <p className="text-gray-600 mt-2">{eventType.description}</p>
+                      )}
+                      
+                      <div className="flex items-center space-x-4 mt-3 text-sm text-gray-500">
+                        <span>📅 {eventType.duration_minutes} мин</span>
+                        <span>
+                          {eventType.location_type === 'online' && '💻 Онлайн'}
+                          {eventType.location_type === 'in_person' && '🏢 Лично'}
+                          {eventType.location_type === 'phone' && '📞 Телефон'}
+                        </span>
+                        {eventType.location_details && (
+                          <span>• {eventType.location_details}</span>
+                        )}
+                      </div>
+                      
+                      <div className="mt-3">
+                        <div className="flex items-center space-x-2">
+                          <div className={`w-2 h-2 rounded-full ${eventType.is_active ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                          <span className="text-sm text-gray-600">
+                            {eventType.is_active ? 'Активно' : 'Неактивно'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <button 
+                        onClick={() => {
+                          const baseUrl = window.location.origin
+                          const username = 'user' // Здесь должен быть реальный username из профиля
+                          const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
+                          navigator.clipboard.writeText(bookingUrl)
+                          alert('Ссылка скопирована!')
+                        }}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      >
+                        Копировать ссылку
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(eventType.id, eventType.name)}
+                        className="text-red-600 hover:text-red-800 text-sm font-medium"
+                      >
+                        Удалить
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
