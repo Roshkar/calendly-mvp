@@ -1,12 +1,12 @@
-🔗 Тестируем ссылку: https://calendly-mvp.vercel.app/book/steralin09/123
-page-eac728f571f783e2.js:1 📊 Данные события: 
-{id: '21d6fcdb-743d-4424-99e0-44242ef291da', user_id: 'dd58259b-27ff-4d72-8300-f4c1083af2c6', name: '123', slug: '123', description: null, …}
+🔗 Тестируем новую ссылку: https://calendly-mvp.vercel.app/book/123
+page-bc17680aeeb0276b.js:1 📊 Данные события: 
+Object
 color
 : 
 "#3174ad"
 created_at
 : 
-"2025-06-22T20:57:10.888259+00:00"
+"2025-06-22T21:16:15.443902+00:00"
 description
 : 
 null
@@ -15,7 +15,7 @@ duration_minutes
 30
 id
 : 
-"21d6fcdb-743d-4424-99e0-44242ef291da"
+"fb91061d-0bdb-4d07-9293-47bbf01e0b4e"
 is_active
 : 
 true
@@ -33,7 +33,7 @@ slug
 "123"
 updated_at
 : 
-"2025-06-22T20:57:10.888259+00:00"
+"2025-06-22T21:16:15.443902+00:00"
 user_id
 : 
 "dd58259b-27ff-4d72-8300-f4c1083af2c6"

@@ -89,17 +89,15 @@ export default function EventTypesPage() {
     const baseUrl = window.location.origin
     const username = userProfile?.username || 'test-user'
     
-    // Тестируем оба формата ссылок
-    const oldBookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
-    const newBookingUrl = `${baseUrl}/book/${eventType.slug}`
+    // Тестируем query параметры (обходной путь)
+    const queryBookingUrl = `${baseUrl}/booking?event=${eventType.slug}`
     
-    console.log('🔗 Тестируем старую ссылку:', oldBookingUrl)
-    console.log('🔗 Тестируем новую ссылку:', newBookingUrl)
+    console.log('🔗 Тестируем ссылку с query параметрами:', queryBookingUrl)
     console.log('📊 Данные события:', eventType)
     console.log('👤 Профиль пользователя:', userProfile)
     
-    // Открываем новую ссылку в новой вкладке
-    window.open(newBookingUrl, '_blank')
+    // Открываем ссылку в новой вкладке
+    window.open(queryBookingUrl, '_blank')
   }
 
   if (isLoading) {
@@ -246,7 +244,7 @@ export default function EventTypesPage() {
                     <div className="flex flex-col items-end space-y-2">
                       {/* Предварительный просмотр ссылки */}
                       <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded max-w-xs truncate">
-                        book/{eventType.slug}
+                        booking?event={eventType.slug}
                       </div>
                       
                       <div className="flex flex-col items-end space-y-2">
@@ -261,8 +259,8 @@ export default function EventTypesPage() {
                                                   <button 
                           onClick={() => {
                             const baseUrl = window.location.origin
-                            // Используем новый формат ссылки (только slug)
-                            const bookingUrl = `${baseUrl}/book/${eventType.slug}`
+                            // Используем query параметры для обхода проблем с маршрутизацией
+                            const bookingUrl = `${baseUrl}/booking?event=${eventType.slug}`
                             navigator.clipboard.writeText(bookingUrl)
                               
                               // Улучшенное уведомление
