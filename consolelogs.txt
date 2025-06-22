@@ -1,11 +1,12 @@
 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
-page-c88d8be9e50cd50e.js:1 🧪 Тест чтения event_types: {testData: Array(1), testError: null}
-page-c88d8be9e50cd50e.js:1 🧪 Текущий пользователь: {user: null, userError: AuthSessionMissingError: Auth session missing!
+page-38c4aec0e761ddae.js:1 🧪 Тест чтения event_types: {testData: Array(1), testError: null}
+page-38c4aec0e761ddae.js:1 🧪 Текущий пользователь: {user: null, userError: AuthSessionMissingError: Auth session missing!
     at https://calendly-mvp.vercel.app/_next/static/…}
+page-38c4aec0e761ddae.js:1 🧪 Данные для тестового бронирования: {event_type_id: 'c645f6f3-8187-4ab3-9a4b-21bbe7050cfa', invitee_name: 'Test User', invitee_email: 'test@example.com', start_time: '2024-01-01T10:00:00', end_time: '2024-01-01T11:00:00', …}end_time: "2024-01-01T11:00:00"event_type_id: "c645f6f3-8187-4ab3-9a4b-21bbe7050cfa"invitee_email: "test@example.com"invitee_name: "Test User"start_time: "2024-01-01T10:00:00"status: "confirmed"timezone: "Europe/Moscow"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
 881-5b1b27e5e5ff05ff.js:19 
             
             
-           POST https://kedcllptlvyrdrhbfoqz.supabase.co/rest/v1/bookings?columns=%22event_type_id%22%2C%22invitee_name%22%2C%22invitee_email%22%2C%22start_time%22%2C%22end_time%22%2C%22timezone%22%2C%22status%22&select=* 400 (Bad Request)
+           POST https://kedcllptlvyrdrhbfoqz.supabase.co/rest/v1/bookings?columns=%22event_type_id%22%2C%22invitee_name%22%2C%22invitee_email%22%2C%22start_time%22%2C%22end_time%22%2C%22timezone%22%2C%22status%22&select=* 401 (Unauthorized)
 (anonymous) @ 881-5b1b27e5e5ff05ff.js:19
 (anonymous) @ 881-5b1b27e5e5ff05ff.js:19
 fulfilled @ 881-5b1b27e5e5ff05ff.js:19
@@ -15,10 +16,11 @@ step @ 881-5b1b27e5e5ff05ff.js:19
 lib_fetch_awaiter @ 881-5b1b27e5e5ff05ff.js:19
 (anonymous) @ 881-5b1b27e5e5ff05ff.js:19
 then @ 881-5b1b27e5e5ff05ff.js:1Understand this error
-page-c88d8be9e50cd50e.js:1 🧪 Тест создания booking: {bookingData: null, bookingError: {…}}bookingData: nullbookingError: code: "22P02"details: nullhint: nullmessage: "invalid input syntax for type uuid: \"test-id\""[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
-page-c88d8be9e50cd50e.js:1 🔍 BookingPage (query params) загружена
-page-c88d8be9e50cd50e.js:1 🔍 Event slug: 123
-page-c88d8be9e50cd50e.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
-page-c88d8be9e50cd50e.js:1 🔍 BookingPage (query params) загружена
-page-c88d8be9e50cd50e.js:1 🔍 Event slug: 123
-page-c88d8be9e50cd50e.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
+page-38c4aec0e761ddae.js:1 🧪 Тест создания booking: {bookingData: null, bookingError: {…}}
+page-38c4aec0e761ddae.js:1 🧪 Детали ошибки: 42501 new row violates row-level security policy for table "bookings"
+page-38c4aec0e761ddae.js:1 🔍 BookingPage (query params) загружена
+page-38c4aec0e761ddae.js:1 🔍 Event slug: 123
+page-38c4aec0e761ddae.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
+page-38c4aec0e761ddae.js:1 🔍 BookingPage (query params) загружена
+page-38c4aec0e761ddae.js:1 🔍 Event slug: 123
+page-38c4aec0e761ddae.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123

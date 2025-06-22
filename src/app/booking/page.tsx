@@ -67,17 +67,22 @@ export default function BookingPage() {
       
       console.log('🧪 Данные для тестового бронирования:', testBooking)
       
-      const { data: bookingData, error: bookingError } = await supabase
-        .from('bookings')
-        .insert([testBooking])
-        .select()
+      // Тестируем через API route
+      const testResponse = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testBooking)
+      })
       
-      console.log('🧪 Тест создания booking:', { bookingData, bookingError })
+      const testResult = await testResponse.json()
+      console.log('🧪 Тест создания booking через API:', { status: testResponse.status, result: testResult })
       
-      if (bookingError) {
-        console.log('🧪 Детали ошибки:', bookingError.code, bookingError.message)
+      if (!testResponse.ok) {
+        console.log('🧪 Детали ошибки API:', testResult.error)
       } else {
-        console.log('🧪 ✅ Тестовое бронирование создано успешно!')
+        console.log('🧪 ✅ Тестовое бронирование создано успешно через API!')
       }
       
     } catch (err) {
@@ -180,15 +185,20 @@ export default function BookingPage() {
 
       console.log('🔍 Booking data to insert:', bookingData)
 
-      const { data, error: bookingError } = await supabase
-        .from('bookings')
-        .insert([bookingData])
-        .select()
+      // Используем API route вместо прямого обращения к Supabase
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingData)
+      })
 
-      console.log('🔍 Supabase response:', { data, bookingError })
+      const result = await response.json()
+      console.log('🔍 API response:', { response: response.status, result })
 
-      if (bookingError) {
-        throw new Error('Ошибка при создании бронирования: ' + bookingError.message)
+      if (!response.ok) {
+        throw new Error('Ошибка при создании бронирования: ' + (result.error || response.statusText))
       }
 
       setSuccess(true)
