@@ -1,0 +1,8 @@
+# SPA fallback for client-side routing
+/*    /index.html   200
+
+# Redirect dashboard to event-types
+/dashboard   /dashboard/event-types   302
+
+# API redirects (если используются)
+/api/*   /api/404   404 

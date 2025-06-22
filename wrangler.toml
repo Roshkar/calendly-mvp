@@ -1,0 +1,26 @@
+name = "calendly-mvp"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[env.production]
+name = "calendly-mvp-production"
+
+[env.preview]
+name = "calendly-mvp-preview"
+
+# Для Pages Functions (если нужны серверные функции)
+[[pages_build_output_dir]]
+name = "out"
+
+[build]
+command = "npm run build"
+
+[vars]
+# Переменные окружения (не секретные)
+NODE_ENV = "production"
+
+# Cloudflare Pages конфигурация
+[pages]
+build_output_dir = "out"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"] 
