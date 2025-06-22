@@ -28,11 +28,55 @@ export default function BookingPage() {
   const [success, setSuccess] = useState(false)
   const [debugInfo, setDebugInfo] = useState('')
 
+  // Тест подключения к Supabase
+  const testSupabaseConnection = async () => {
+    try {
+      console.log('🧪 Тестируем Supabase подключение...')
+      
+      // Тест 1: Простой запрос без авторизации
+      const { data: testData, error: testError } = await supabase
+        .from('event_types')
+        .select('id, name, is_active')
+        .eq('is_active', true)
+        .limit(1)
+      
+      console.log('🧪 Тест чтения event_types:', { testData, testError })
+      
+      // Тест 2: Проверяем текущего пользователя
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      console.log('🧪 Текущий пользователь:', { user, userError })
+      
+      // Тест 3: Пробуем создать тестовое бронирование
+      const testBooking = {
+        event_type_id: 'test-id',
+        invitee_name: 'Test User',
+        invitee_email: 'test@example.com',
+        start_time: '2024-01-01T10:00:00',
+        end_time: '2024-01-01T11:00:00',
+        timezone: 'Europe/Moscow',
+        status: 'confirmed'
+      }
+      
+      const { data: bookingData, error: bookingError } = await supabase
+        .from('bookings')
+        .insert([testBooking])
+        .select()
+      
+      console.log('🧪 Тест создания booking:', { bookingData, bookingError })
+      
+    } catch (err) {
+      console.error('🧪 Ошибка теста подключения:', err)
+    }
+  }
+
   const loadEventData = useCallback(async () => {
     try {
       setIsLoading(true)
       setError(null)
       setDebugInfo('Загружаем данные события по query параметру...\n')
+
+      // Запускаем тест подключения
+      await testSupabaseConnection()
 
       if (!eventSlug) {
         throw new Error('Не указан параметр события в URL')
@@ -118,10 +162,14 @@ export default function BookingPage() {
         status: 'confirmed'
       }
 
+      console.log('🔍 Booking data to insert:', bookingData)
+
       const { data, error: bookingError } = await supabase
         .from('bookings')
         .insert([bookingData])
         .select()
+
+      console.log('🔍 Supabase response:', { data, bookingError })
 
       if (bookingError) {
         throw new Error('Ошибка при создании бронирования: ' + bookingError.message)
@@ -187,7 +235,8 @@ export default function BookingPage() {
               <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded">
                 <p className="text-green-700 text-sm">
                   🎉 Страница бронирования загружается (query params)<br/>
-                  Event: {eventSlug || 'не указан'}
+                  Event: {eventSlug || 'не указан'}<br/>
+                  🧪 Тестируем Supabase подключение...
                 </p>
               </div>
             </div>
@@ -412,6 +461,7 @@ export default function BookingPage() {
             <p><strong>Статус:</strong> {isLoading ? 'Загружается...' : 'Загружено'}</p>
             <p><strong>Ошибка:</strong> {error || 'Нет'}</p>
             <p><strong>Маршрут:</strong> Query параметры (обходной путь)</p>
+            <p><strong>🧪 Supabase тесты:</strong> Смотрите консоль браузера</p>
           </div>
         </div>
 

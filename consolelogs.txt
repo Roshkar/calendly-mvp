@@ -1,84 +1,28 @@
-🔗 Тестируем новую ссылку: https://calendly-mvp.vercel.app/book/123
-page-bc17680aeeb0276b.js:1 📊 Данные события: 
-Object
-color
-: 
-"#3174ad"
-created_at
-: 
-"2025-06-22T21:16:15.443902+00:00"
-description
-: 
-null
-duration_minutes
-: 
-30
-id
-: 
-"fb91061d-0bdb-4d07-9293-47bbf01e0b4e"
-is_active
-: 
-true
-location_details
-: 
-"Google Meet"
-location_type
-: 
-"online"
-name
-: 
-"123"
-slug
-: 
-"123"
-updated_at
-: 
-"2025-06-22T21:16:15.443902+00:00"
-user_id
-: 
-"dd58259b-27ff-4d72-8300-f4c1083af2c6"
-[[Prototype]]
-: 
-Object
-constructor
-: 
-ƒ Object()
-hasOwnProperty
-: 
-ƒ hasOwnProperty()
-isPrototypeOf
-: 
-ƒ isPrototypeOf()
-propertyIsEnumerable
-: 
-ƒ propertyIsEnumerable()
-toLocaleString
-: 
-ƒ toLocaleString()
-toString
-: 
-ƒ toString()
-valueOf
-: 
-ƒ valueOf()
-__defineGetter__
-: 
-ƒ __defineGetter__()
-__defineSetter__
-: 
-ƒ __defineSetter__()
-__lookupGetter__
-: 
-ƒ __lookupGetter__()
-__lookupSetter__
-: 
-ƒ __lookupSetter__()
-__proto__
-: 
-(...)
-get __proto__
-: 
-ƒ __proto__()
-set __proto__
-: 
-ƒ __proto__()
+🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
+881-5b1b27e5e5ff05ff.js:19 
+ POST https://kedcllptlvyrdrhbfoqz.supabase.co/rest/v1/bookings?columns=%22event_…%22start_time%22%2C%22end_time%22%2C%22timezone%22%2C%22status%22&select=* 401 (Unauthorized)
+(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
+(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
+fulfilled	@	881-5b1b27e5e5ff05ff.js:19
+Promise.then		
+step	@	881-5b1b27e5e5ff05ff.js:19
+(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
+lib_fetch_awaiter	@	881-5b1b27e5e5ff05ff.js:19
+(anonymous)	@	881-5b1b27e5e5ff05ff.js:19
+then	@	881-5b1b27e5e5ff05ff.js:1
+
+472-a7f077435772ca0e.js:1 Error creating booking: 
+window.console.error	@	472-a7f077435772ca0e.js:1
+handleBooking	@	page-4cbcc2377fe1682b.js:1
+await in handleBooking		
+Hi	@	fd9d1056-9282bc71f5f2296f.js:9
+Ni	@	fd9d1056-9282bc71f5f2296f.js:9
+Oi	@	fd9d1056-9282bc71f5f2296f.js:9
+Nn	@	fd9d1056-9282bc71f5f2296f.js:9
+Zm	@	fd9d1056-9282bc71f5f2296f.js:9
+(anonymous)	@	fd9d1056-9282bc71f5f2296f.js:9
+Ak	@	fd9d1056-9282bc71f5f2296f.js:9
+ll	@	fd9d1056-9282bc71f5f2296f.js:9
+zm	@	fd9d1056-9282bc71f5f2296f.js:9
+xm	@	fd9d1056-9282bc71f5f2296f.js:9
+wm	@	fd9d1056-9282bc71f5f2296f.js:9
