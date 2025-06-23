@@ -15,22 +15,35 @@ export default function GoogleAuth({ onSuccess, onError }: GoogleAuthProps) {
     setIsLoading(true)
     
     try {
+      // Определяем правильный redirect URL в зависимости от окружения
+      const redirectTo = typeof window !== 'undefined' 
+        ? `${window.location.origin}/dashboard`
+        : 'https://calendly-mvp.vercel.app/dashboard'
+
+      console.log('🔄 Инициируем Google авторизацию...')
+      console.log('📍 Redirect URL:', redirectTo)
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`
+          redirectTo: redirectTo,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
         }
       })
 
       if (error) {
-        console.error('Google auth error:', error)
+        console.error('❌ Google auth error:', error)
         onError?.(error.message)
       } else {
+        console.log('✅ Google auth initiated successfully')
         // Success will be handled by redirect
         onSuccess?.()
       }
     } catch (err) {
-      console.error('Unexpected error:', err)
+      console.error('💥 Unexpected error:', err)
       onError?.('Произошла неожиданная ошибка')
     } finally {
       setIsLoading(false)
@@ -46,7 +59,7 @@ export default function GoogleAuth({ onSuccess, onError }: GoogleAuthProps) {
       {isLoading ? (
         <div className="flex items-center">
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 mr-2"></div>
-          Подключение...
+          Подключение к Google...
         </div>
       ) : (
         <div className="flex items-center">
