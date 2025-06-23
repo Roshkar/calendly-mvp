@@ -220,40 +220,244 @@ export default function TestTelegramPage() {
       
       if (!response.ok) {
         addLog(`❌ HTTP ошибка: ${response.status}`)
-        addLog(`Текст ошибки: ${response.statusText}`)
+        const text = await response.text()
+        addLog(`Ответ сервера: ${text}`)
         return
       }
       
       const result = await response.json()
-      addLog('📋 Результат верификации:')
-      addLog(`  verified: ${result.verified}`)
-      addLog(`  valid: ${result.valid}`)
-      addLog(`  message: ${result.message}`)
+      addLog(`📋 Результат верификации: ${JSON.stringify(result, null, 2)}`)
       
       if (result.verified) {
-        if (result.hashValid !== undefined) {
-          addLog(`  hashValid: ${result.hashValid}`)
-          addLog(`  timeValid: ${result.timeValid}`)
-          addLog(`  timeDiff: ${result.timeDiff} сек`)
+        if (result.botTokenConfigured) {
+          addLog('✅ Bot token настроен и работает')
+        } else {
+          addLog('⚠️ Bot token не настроен, используется базовая проверка')
         }
-        
-        if (result.verified && !result.valid) {
-          addLog('⚠️ Это нормально для тестовых данных - хеш не совпадает')
-        }
-        
-        addLog('✅ API верификации работает!')
-        addLog('💡 TELEGRAM_BOT_TOKEN настроен правильно')
-      } else {
-        addLog('⚠️ Серверная верификация недоступна')
-        addLog('💡 Возможно TELEGRAM_BOT_TOKEN не задан')
       }
       
     } catch (error) {
-      addLog(`❌ Ошибка при тестировании: ${error}`)
-      addLog('💡 Проверьте что API маршрут создан')
+      addLog(`❌ Ошибка при тестировании bot token: ${error}`)
     }
     
-    addLog('===============================')
+    addLog('=============================')
+  }
+
+  const diagnoseTelegramWidget = () => {
+    addLog('🔍 === ДИАГНОСТИКА TELEGRAM ВИДЖЕТА ===')
+    
+    // 1. Проверяем переменные окружения
+    addLog('1️⃣ Проверка переменных:')
+    addLog(`   NEXT_PUBLIC_TELEGRAM_BOT_USERNAME: ${envVars.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'НЕ ЗАДАНА'}`)
+    
+    if (!envVars.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || envVars.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME === 'calendly_mvp_bot') {
+      addLog('   ❌ Переменная не настроена или содержит дефолтное значение')
+      addLog('   💡 Решение: Настройте NEXT_PUBLIC_TELEGRAM_BOT_USERNAME в Vercel')
+      return
+    }
+    
+    // 2. Проверяем загрузку скрипта
+    addLog('2️⃣ Проверка скрипта Telegram:')
+    const scripts = document.querySelectorAll('script[src*="telegram-widget.js"]')
+    addLog(`   Количество Telegram скриптов: ${scripts.length}`)
+    
+    if (scripts.length === 0) {
+      addLog('   ❌ Telegram скрипт не найден')
+      addLog('   💡 Возможная причина: Ошибка загрузки компонента TelegramAuth')
+    } else {
+      scripts.forEach((script, index) => {
+        addLog(`   Скрипт ${index + 1}:`)
+        addLog(`     src: ${script.src}`)
+        addLog(`     data-telegram-login: ${script.getAttribute('data-telegram-login')}`)
+        addLog(`     data-onauth: ${script.getAttribute('data-onauth')}`)
+      })
+    }
+    
+    // 3. Проверяем контейнер и iframe
+    addLog('3️⃣ Проверка виджета в DOM:')
+    const container = document.getElementById('telegram-login-container')
+    if (!container) {
+      addLog('   ❌ Контейнер telegram-login-container не найден')
+    } else {
+      addLog('   ✅ Контейнер найден')
+      const iframe = container.querySelector('iframe')
+      if (!iframe) {
+        addLog('   ❌ Telegram iframe не создан')
+        addLog('   💡 Возможные причины:')
+        addLog('     - Неправильное имя бота')
+        addLog('     - Бот не существует')
+        addLog('     - Домен не настроен в @BotFather')
+      } else {
+        addLog('   ✅ Telegram iframe найден')
+        addLog(`     Размеры: ${iframe.offsetWidth}x${iframe.offsetHeight}`)
+        addLog(`     Видимость: ${iframe.style.display !== 'none' ? 'видимый' : 'скрытый'}`)
+        
+        // Проверяем содержимое iframe (если возможно)
+        try {
+          addLog(`     src: ${iframe.src}`)
+          if (iframe.src.includes('oauth.telegram.org')) {
+            addLog('   ✅ iframe указывает на правильный URL Telegram')
+          }
+        } catch (e) {
+          addLog('     src: недоступен (CORS)')
+        }
+      }
+    }
+    
+    // 4. Проверяем callback функцию
+    addLog('4️⃣ Проверка callback функции:')
+    if (typeof window.onTelegramAuth === 'function') {
+      addLog('   ✅ window.onTelegramAuth определена')
+    } else {
+      addLog('   ❌ window.onTelegramAuth не определена')
+      addLog('   💡 Это может означать что TelegramAuth компонент не загрузился')
+    }
+    
+    // 5. Проверяем текущий домен
+    addLog('5️⃣ Проверка домена:')
+    const domain = window.location.hostname
+    addLog(`   Текущий домен: ${domain}`)
+    
+    if (domain === 'localhost') {
+      addLog('   ⚠️ Localhost - убедитесь что localhost:3000 настроен в @BotFather')
+    } else if (domain.includes('vercel.app')) {
+      addLog('   ✅ Vercel домен')
+      addLog(`   💡 Убедитесь что ${domain} настроен в @BotFather командой /setdomain`)
+    }
+    
+    // 6. Итоговые рекомендации
+    addLog('6️⃣ Рекомендации для решения проблемы:')
+    addLog('   📱 Откройте @BotFather в Telegram')
+    addLog('   🤖 Убедитесь что бот создан и активен')
+    addLog(`   🌐 Выполните /setdomain и укажите: ${domain}`)
+    addLog('   🔄 Перезагрузите страницу после настройки домена')
+    
+    addLog('=====================================')
+  }
+
+  const diagnoseNetworkIssue = () => {
+    addLog('🚨 === ДИАГНОСТИКА ПРОБЛЕМЫ С NETWORK ===')
+    addLog('Проблема: При нажатии "Отправить" номер телефона нет активности в Network')
+    addLog('')
+    
+    // 1. Проверяем iframe и его содержимое
+    addLog('1️⃣ Анализ Telegram iframe:')
+    const iframe = document.querySelector('#telegram-login-container iframe')
+    
+    if (!iframe) {
+      addLog('   ❌ КРИТИЧЕСКАЯ ОШИБКА: Telegram iframe не найден!')
+      addLog('   💡 Это означает что виджет вообще не загрузился')
+      addLog('   🔧 Решение: Проверьте настройки бота и переменные окружения')
+      return
+    }
+    
+    addLog('   ✅ Telegram iframe найден')
+    addLog(`   📏 Размеры: ${iframe.offsetWidth}x${iframe.offsetHeight}`)
+    
+    // Проверяем размеры - если слишком маленькие, виджет может не работать
+    if (iframe.offsetWidth < 200 || iframe.offsetHeight < 30) {
+      addLog('   ⚠️ ВНИМАНИЕ: Размеры iframe подозрительно малы')
+      addLog('   💡 Возможно виджет не загрузился полностью')
+    } else {
+      addLog('   ✅ Размеры iframe нормальные')
+    }
+    
+    // 2. Проверяем URL iframe
+    addLog('2️⃣ Анализ URL iframe:')
+    try {
+      const iframeSrc = iframe.src
+      addLog(`   URL: ${iframeSrc}`)
+      
+      if (!iframeSrc.includes('oauth.telegram.org')) {
+        addLog('   ❌ ОШИБКА: iframe НЕ указывает на oauth.telegram.org')
+        addLog('   💡 Это означает что виджет не подключен к Telegram')
+      } else {
+        addLog('   ✅ iframe правильно указывает на oauth.telegram.org')
+        
+        // Проверяем параметры в URL
+        const url = new URL(iframeSrc)
+        const botParam = url.searchParams.get('bot_id') || url.pathname.split('/').pop()
+        addLog(`   🤖 Бот в URL: ${botParam}`)
+        
+        if (botParam !== botUsername) {
+          addLog('   ⚠️ ВНИМАНИЕ: Бот в URL не совпадает с настройками')
+          addLog(`   Ожидается: ${botUsername}`)
+          addLog(`   В URL: ${botParam}`)
+        }
+      }
+    } catch (e) {
+      addLog('   ❌ Не удалось получить URL iframe (CORS)')
+    }
+    
+    // 3. Проверяем события iframe
+    addLog('3️⃣ Проверка взаимодействия с iframe:')
+    
+    // Добавляем обработчик событий для iframe
+    const checkIframeEvents = () => {
+      addLog('   🔍 Устанавливаем мониторинг событий iframe...')
+      
+      // Слушаем postMessage события от iframe
+      const messageHandler = (event) => {
+        if (event.origin.includes('telegram.org')) {
+          addLog(`   📨 Получено сообщение от Telegram: ${JSON.stringify(event.data)}`)
+        }
+      }
+      
+      window.addEventListener('message', messageHandler)
+      
+      // Убираем обработчик через 30 секунд
+      setTimeout(() => {
+        window.removeEventListener('message', messageHandler)
+        addLog('   ⏰ Мониторинг событий iframe завершен')
+      }, 30000)
+      
+      addLog('   ✅ Мониторинг событий установлен на 30 секунд')
+      addLog('   💡 Теперь попробуйте ввести номер телефона - события появятся здесь')
+    }
+    
+    checkIframeEvents()
+    
+    // 4. Проверяем домен и настройки
+    addLog('4️⃣ Проверка настроек домена:')
+    const currentDomain = window.location.hostname
+    addLog(`   🌐 Текущий домен: ${currentDomain}`)
+    
+    // 5. Возможные причины отсутствия network активности
+    addLog('5️⃣ Возможные причины отсутствия Network активности:')
+    addLog('   🔹 Домен не настроен в @BotFather (/setdomain)')
+    addLog('   🔹 Бот заблокирован или неактивен')
+    addLog('   🔹 Неправильное имя бота в настройках')
+    addLog('   🔹 Telegram блокирует запросы с вашего IP')
+    addLog('   🔹 Проблемы с CORS политикой')
+    addLog('   🔹 Iframe не может связаться с Telegram серверами')
+    
+    // 6. Пошаговое решение
+    addLog('6️⃣ Пошаговое решение:')
+    addLog('   1️⃣ Откройте @BotFather в Telegram')
+    addLog('   2️⃣ Отправьте /mybots и найдите своего бота')
+    addLog('   3️⃣ Убедитесь что бот активен (не показывает "Bot disabled")')
+    addLog('   4️⃣ Отправьте /setdomain')
+    addLog('   5️⃣ Выберите вашего бота')
+    addLog(`   6️⃣ Введите точно: ${currentDomain}`)
+    addLog('   7️⃣ Дождитесь подтверждения от BotFather')
+    addLog('   8️⃣ Перезагрузите эту страницу')
+    addLog('   9️⃣ Попробуйте авторизацию снова')
+    
+    // 7. Дополнительная проверка
+    addLog('7️⃣ Дополнительная проверка через 10 секунд:')
+    setTimeout(() => {
+      const newIframe = document.querySelector('#telegram-login-container iframe')
+      if (newIframe && newIframe.src) {
+        addLog('   ✅ iframe все еще присутствует')
+        addLog(`   📏 Актуальные размеры: ${newIframe.offsetWidth}x${newIframe.offsetHeight}`)
+      } else {
+        addLog('   ❌ iframe исчез или изменился')
+      }
+    }, 10000)
+    
+    addLog('')
+    addLog('🎯 ГЛАВНОЕ: Если нет Network активности, проблема в настройках @BotFather!')
+    addLog('===============================================')
   }
 
   const isConfigured = botUsername && botUsername !== 'calendly_mvp_bot'
@@ -331,6 +535,18 @@ export default function TestTelegramPage() {
                   className="bg-pink-600 text-white px-3 py-2 rounded hover:bg-pink-700 text-sm"
                 >
                   🔐 Bot Token
+                </button>
+                <button
+                  onClick={diagnoseTelegramWidget}
+                  className="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 text-sm"
+                >
+                  🚨 Полная диагностика
+                </button>
+                <button
+                  onClick={diagnoseNetworkIssue}
+                  className="bg-yellow-600 text-white px-3 py-2 rounded hover:bg-yellow-700 text-sm"
+                >
+                  🚨 Диагностика Network
                 </button>
                 <button
                   onClick={clearLogs}

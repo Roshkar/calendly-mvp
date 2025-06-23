@@ -114,22 +114,28 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
           }
 
           console.log('✅ Новый пользователь Telegram создан:', signUpData)
+          
+          // Успешная регистрация - вызываем callback
+          console.log('🎉 Регистрация Telegram завершена успешно!')
+          if (onAuth) {
+            console.log('📞 Вызываем callback функцию onAuth для нового пользователя')
+            onAuth(user)
+          }
+          
         } else if (signInError) {
+          // Любая другая ошибка входа - не обрабатываем данные пользователя
           console.error('❌ Ошибка входа Supabase:', signInError)
           alert('Ошибка входа: ' + signInError.message)
           return
         } else {
+          // Успешный вход существующего пользователя
           console.log('✅ Успешный вход существующего пользователя:', signInData)
-        }
-
-        console.log('🎉 Авторизация Telegram завершена успешно!')
-        
-        // Call the onAuth callback
-        if (onAuth) {
-          console.log('📞 Вызываем callback функцию onAuth')
-          onAuth(user)
-        } else {
-          console.log('⚠️ Callback функция onAuth не предоставлена')
+          
+          console.log('🎉 Авторизация Telegram завершена успешно!')
+          if (onAuth) {
+            console.log('📞 Вызываем callback функцию onAuth для существующего пользователя')
+            onAuth(user)
+          }
         }
         
       } catch (err) {
