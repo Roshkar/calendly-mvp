@@ -193,6 +193,69 @@ export default function TestTelegramPage() {
     addLog('=====================================')
   }
 
+  const testBotToken = async () => {
+    addLog('🔐 === ТЕСТ BOT TOKEN ===')
+    
+    // Test with mock data
+    const mockUser = {
+      id: 123456789,
+      first_name: 'Test',
+      last_name: 'User',
+      username: 'testuser',
+      photo_url: '',
+      auth_date: Math.floor(Date.now() / 1000),
+      hash: 'test_hash_123'
+    }
+    
+    try {
+      addLog('📤 Отправляем тестовые данные на верификацию...')
+      
+      const response = await fetch('/api/auth/telegram/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(mockUser)
+      })
+      
+      if (!response.ok) {
+        addLog(`❌ HTTP ошибка: ${response.status}`)
+        addLog(`Текст ошибки: ${response.statusText}`)
+        return
+      }
+      
+      const result = await response.json()
+      addLog('📋 Результат верификации:')
+      addLog(`  verified: ${result.verified}`)
+      addLog(`  valid: ${result.valid}`)
+      addLog(`  message: ${result.message}`)
+      
+      if (result.verified) {
+        if (result.hashValid !== undefined) {
+          addLog(`  hashValid: ${result.hashValid}`)
+          addLog(`  timeValid: ${result.timeValid}`)
+          addLog(`  timeDiff: ${result.timeDiff} сек`)
+        }
+        
+        if (result.verified && !result.valid) {
+          addLog('⚠️ Это нормально для тестовых данных - хеш не совпадает')
+        }
+        
+        addLog('✅ API верификации работает!')
+        addLog('💡 TELEGRAM_BOT_TOKEN настроен правильно')
+      } else {
+        addLog('⚠️ Серверная верификация недоступна')
+        addLog('💡 Возможно TELEGRAM_BOT_TOKEN не задан')
+      }
+      
+    } catch (error) {
+      addLog(`❌ Ошибка при тестировании: ${error}`)
+      addLog('💡 Проверьте что API маршрут создан')
+    }
+    
+    addLog('===============================')
+  }
+
   const isConfigured = botUsername && botUsername !== 'calendly_mvp_bot'
 
   return (
@@ -262,6 +325,12 @@ export default function TestTelegramPage() {
                   className="bg-indigo-600 text-white px-3 py-2 rounded hover:bg-indigo-700 text-sm"
                 >
                   🌐 Домен
+                </button>
+                <button
+                  onClick={testBotToken}
+                  className="bg-pink-600 text-white px-3 py-2 rounded hover:bg-pink-700 text-sm"
+                >
+                  🔐 Bot Token
                 </button>
                 <button
                   onClick={clearLogs}

@@ -1,13 +1,25 @@
-🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
-page-33a342a691cae868.js:1 🔍 Event data: {id: 'ad5923ae-d69f-4358-a9f0-8cb3e70ee744', user_id: 'dd58259b-27ff-4d72-8300-f4c1083af2c6', name: '123', slug: '123', description: null, …}color: "#3174ad"created_at: "2025-06-22T21:50:44.589585+00:00"description: nullduration_minutes: 45id: "ad5923ae-d69f-4358-a9f0-8cb3e70ee744"is_active: truelocation_details: "Zoom Meeting"location_type: "online"name: "123"profiles: nullslug: "123"updated_at: "2025-06-22T21:50:44.589585+00:00"user_id: "dd58259b-27ff-4d72-8300-f4c1083af2c6"[[Prototype]]: Object
-page-33a342a691cae868.js:1 🔍 User profile: null
-page-33a342a691cae868.js:1 🔍 Form data: {name: 'Faya', email: 'Faya@juju.com', note: 'blabla'}email: "Faya@juju.com"name: "Faya"note: "blabla"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
-page-33a342a691cae868.js:1 🔍 Selected date/time: 2025-06-23 09:00
-page-33a342a691cae868.js:1 🔍 Booking data to insert: {event_type_id: 'ad5923ae-d69f-4358-a9f0-8cb3e70ee744', invitee_name: 'Faya', invitee_email: 'Faya@juju.com', start_time: '2025-06-23T09:00:00', end_time: '2025-06-23T09:45:00', …}end_time: "2025-06-23T09:45:00"event_type_id: "ad5923ae-d69f-4358-a9f0-8cb3e70ee744"invitee_email: "Faya@juju.com"invitee_name: "Faya"start_time: "2025-06-23T09:00:00"status: "confirmed"timezone: "Europe/Moscow"[[Prototype]]: Object
-page-33a342a691cae868.js:1 🔍 BookingPage (query params) загружена
-page-33a342a691cae868.js:1 🔍 Event slug: 123
-page-33a342a691cae868.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
-page-33a342a691cae868.js:1 🔍 Supabase response: {data: Array(1), bookingError: null}bookingError: nulldata: Array(1)0: created_at: "2025-06-22T21:52:29.014674+00:00"end_time: "2025-06-23T09:45:00+00:00"event_type_id: "ad5923ae-d69f-4358-a9f0-8cb3e70ee744"id: "8949d1d8-332e-46c7-bfab-c1930c7f60ea"invitee_email: "Faya@juju.com"invitee_name: "Faya"start_time: "2025-06-23T09:00:00+00:00"status: "confirmed"timezone: "Europe/Moscow"updated_at: "2025-06-22T21:52:29.014674+00:00"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()length: 1[[Prototype]]: Array(0)[[Prototype]]: Object
-page-33a342a691cae868.js:1 🔍 BookingPage (query params) загружена
-page-33a342a691cae868.js:1 🔍 Event slug: 123
-page-33a342a691cae868.js:1 🔍 URL: https://calendly-mvp.vercel.app/booking?event=123
+Current URL: https://calendly-mvp.vercel.app/login
+page-1547e80aaaed0c38.js:1 User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+page-1547e80aaaed0c38.js:1 🧹 Очищаем контейнер
+page-1547e80aaaed0c38.js:1 📝 Определяем глобальную callback функцию
+page-1547e80aaaed0c38.js:1 🧪 Проверяем callback функцию: function
+page-1547e80aaaed0c38.js:1 📦 Загружаем Telegram widget script...
+page-1547e80aaaed0c38.js:1 📦 Telegram script добавлен в контейнер
+page-1547e80aaaed0c38.js:1 🎯 Контейнер ID: telegram-login-container
+page-1547e80aaaed0c38.js:1 ✅ Telegram widget script загружен успешно
+page-1547e80aaaed0c38.js:1 🔍 Проверяем загруженные объекты Telegram:
+page-1547e80aaaed0c38.js:1 window.TelegramLoginWidget: undefined
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
+picture-in-picture.js:262 Fetch finished loading: GET "chrome-extension://jffbochibkahlbbmanpmndnhmeliecah/config.json".
+(anonymous) @ picture-in-picture.js:262
+page-1547e80aaaed0c38.js:1 🎯 Telegram iframe найден: true
+page-1547e80aaaed0c38.js:1 📏 Размеры iframe: 219 x 40
+page-1547e80aaaed0c38.js:1 🧪 === ТЕСТ CALLBACK ФУНКЦИИ ===
+page-1547e80aaaed0c38.js:1 window.onTelegramAuth тип: function
+page-1547e80aaaed0c38.js:1 window.onTelegramAuth существует: true
+page-1547e80aaaed0c38.js:1 ✅ Callback функция доступна глобально

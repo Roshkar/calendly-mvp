@@ -224,11 +224,11 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
     console.log('🔍 === ПРОВЕРКА ДАННЫХ TELEGRAM ===')
     console.log('Проверяемые данные:', JSON.stringify(user, null, 2))
     
-    // Basic validation
+    // Basic client-side validation first
     const requiredFields = ['id', 'first_name', 'auth_date', 'hash']
     const missingFields: string[] = []
     
-    const isValid = requiredFields.every(field => {
+    const hasAllFields = requiredFields.every(field => {
       const hasField = user[field] !== undefined && user[field] !== null
       if (!hasField) {
         missingFields.push(field)
@@ -254,7 +254,7 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
       return false
     }
 
-    // Additional validation
+    // Additional client validation
     if (typeof user.id !== 'number' || user.id <= 0) {
       console.error('❌ Неверный ID пользователя')
       return false
@@ -265,8 +265,49 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
       return false
     }
 
-    console.log('✅ Все проверки пройдены успешно')
-    return true
+    console.log('✅ Базовые проверки пройдены')
+
+    // Server-side verification with bot token
+    try {
+      console.log('🔐 Отправляем данные на серверную верификацию...')
+      
+      const response = await fetch('/api/auth/telegram/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user)
+      })
+
+      if (!response.ok) {
+        console.error('❌ Ошибка HTTP при верификации:', response.status)
+        // Fallback to client validation if server verification fails
+        console.log('⚠️ Используем клиентскую проверку как fallback')
+        return true
+      }
+
+      const verificationResult = await response.json()
+      console.log('📋 Результат серверной верификации:', verificationResult)
+
+      if (verificationResult.verified) {
+        if (verificationResult.valid) {
+          console.log('✅ Серверная верификация УСПЕШНА')
+          return true
+        } else {
+          console.error('❌ Серверная верификация ПРОВАЛЕНА')
+          console.error('Причина:', verificationResult.message)
+          return false
+        }
+      } else {
+        console.log('⚠️ Серверная верификация недоступна, используем базовую проверку')
+        return true
+      }
+
+    } catch (error) {
+      console.error('❌ Ошибка при серверной верификации:', error)
+      console.log('⚠️ Используем клиентскую проверку как fallback')
+      return true // Fallback to client validation
+    }
   }
 
   // Show setup instructions if bot username is not configured
