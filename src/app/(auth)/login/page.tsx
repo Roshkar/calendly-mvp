@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase/client'
-import TelegramAuth from '@/components/auth/TelegramAuth'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -103,29 +102,6 @@ export default function LoginPage() {
             </Link>
           </div>
         </form>
-
-        {/* Divider */}
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gray-50 text-gray-500">Или войдите через</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Telegram Auth */}
-        <div className="mt-6">
-          <TelegramAuth 
-            botUsername={process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'calendly_mvp_bot'} 
-            onAuth={(user) => {
-              console.log('Telegram user:', user)
-              router.push('/dashboard')
-            }}
-          />
-        </div>
       </div>
     </div>
   )
