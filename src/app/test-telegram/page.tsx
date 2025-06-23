@@ -460,6 +460,77 @@ export default function TestTelegramPage() {
     addLog('===============================================')
   }
 
+  const deepIframeAnalysis = () => {
+    addLog('🔬 === ГЛУБОКИЙ АНАЛИЗ IFRAME ===')
+    
+    const iframe = document.querySelector('#telegram-login-container iframe')
+    if (!iframe) {
+      addLog('❌ iframe не найден')
+      return
+    }
+    
+    addLog('📊 Детальная информация об iframe:')
+    addLog(`   🔗 src: ${iframe.src}`)
+    addLog(`   📏 clientWidth: ${iframe.clientWidth}`)
+    addLog(`   📏 clientHeight: ${iframe.clientHeight}`)
+    addLog(`   📏 offsetWidth: ${iframe.offsetWidth}`)
+    addLog(`   📏 offsetHeight: ${iframe.offsetHeight}`)
+    addLog(`   👁️ style.display: ${iframe.style.display || 'default'}`)
+    addLog(`   👁️ style.visibility: ${iframe.style.visibility || 'default'}`)
+    addLog(`   🎯 id: ${iframe.id || 'нет'}`)
+    addLog(`   🏷️ className: ${iframe.className || 'нет'}`)
+    
+    // Проверяем родительские элементы
+    addLog('📦 Родительские элементы:')
+    let parent = iframe.parentElement
+    let level = 1
+    while (parent && level <= 3) {
+      addLog(`   Уровень ${level}: ${parent.tagName} (id: ${parent.id || 'нет'}, class: ${parent.className || 'нет'})`)
+      parent = parent.parentElement
+      level++
+    }
+    
+    // Проверяем атрибуты iframe
+    addLog('🏷️ Все атрибуты iframe:')
+    for (let i = 0; i < iframe.attributes.length; i++) {
+      const attr = iframe.attributes[i]
+      addLog(`   ${attr.name}: ${attr.value}`)
+    }
+    
+    // Мониторинг изменений iframe
+    addLog('👀 Устанавливаем наблюдение за изменениями iframe...')
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes') {
+          addLog(`   🔄 Изменен атрибут iframe: ${mutation.attributeName}`)
+        }
+      })
+    })
+    
+    observer.observe(iframe, { attributes: true, attributeOldValue: true })
+    
+    // Останавливаем наблюдение через 60 секунд
+    setTimeout(() => {
+      observer.disconnect()
+      addLog('   ⏰ Наблюдение за iframe завершено')
+    }, 60000)
+    
+    // Пытаемся получить доступ к содержимому iframe (если возможно)
+    try {
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+      if (iframeDoc) {
+        addLog('   ✅ Доступ к содержимому iframe получен')
+        addLog(`   📄 title: ${iframeDoc.title}`)
+        addLog(`   🌐 URL: ${iframeDoc.URL}`)
+      }
+    } catch (e) {
+      addLog('   ❌ Доступ к содержимому iframe заблокирован (CORS)')
+      addLog(`   Ошибка: ${e.message}`)
+    }
+    
+    addLog('=====================================')
+  }
+
   const isConfigured = botUsername && botUsername !== 'calendly_mvp_bot'
 
   return (
@@ -547,6 +618,12 @@ export default function TestTelegramPage() {
                   className="bg-yellow-600 text-white px-3 py-2 rounded hover:bg-yellow-700 text-sm"
                 >
                   🚨 Диагностика Network
+                </button>
+                <button
+                  onClick={deepIframeAnalysis}
+                  className="bg-purple-600 text-white px-3 py-2 rounded hover:bg-purple-700 text-sm"
+                >
+                  🔬 Глубокий анализ iframe
                 </button>
                 <button
                   onClick={clearLogs}
