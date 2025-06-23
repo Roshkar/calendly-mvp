@@ -60,7 +60,10 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
     console.log('📝 Определяем глобальную callback функцию')
     window.onTelegramAuth = async (user: TelegramUser) => {
       console.log('🎉 === CALLBACK ФУНКЦИЯ ВЫЗВАНА ===')
+      console.log('🎉 === TELEGRAM АВТОРИЗАЦИЯ УСПЕШНА ===')
       console.log('Полученные данные от Telegram:', JSON.stringify(user, null, 2))
+      console.log('Время получения:', new Date().toLocaleString())
+      console.log('URL страницы:', window.location.href)
       
       try {
         // Verify the authentication data
@@ -120,6 +123,10 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
           if (onAuth) {
             console.log('📞 Вызываем callback функцию onAuth для нового пользователя')
             onAuth(user)
+          } else {
+            console.log('⚠️ Callback функция onAuth НЕ предоставлена!')
+            console.log('🔄 Перенаправляем на дашборд...')
+            window.location.href = '/dashboard'
           }
           
         } else if (signInError) {
@@ -135,6 +142,10 @@ export default function TelegramAuth({ botUsername, onAuth }: TelegramAuthProps)
           if (onAuth) {
             console.log('📞 Вызываем callback функцию onAuth для существующего пользователя')
             onAuth(user)
+          } else {
+            console.log('⚠️ Callback функция onAuth НЕ предоставлена!')
+            console.log('🔄 Перенаправляем на дашборд...')
+            window.location.href = '/dashboard'
           }
         }
         
