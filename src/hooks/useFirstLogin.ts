@@ -71,7 +71,7 @@ export function useFirstLogin() {
       try {
         const { error } = await supabase
           .from('profiles')
-          .update({ onboarding_completed: true })
+          .update({ onboarding_completed: true } as any)
           .eq('id', user.id)
 
         if (error) {
@@ -99,7 +99,7 @@ export function useFirstLogin() {
       try {
         await supabase
           .from('profiles')
-          .update({ onboarding_completed: false })
+          .update({ onboarding_completed: false } as any)
           .eq('id', user.id)
       } catch (dbError) {
         console.error('Database reset failed, using localStorage only:', dbError)
