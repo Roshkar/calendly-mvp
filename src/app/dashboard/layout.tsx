@@ -4,6 +4,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
+import { useFirstLogin } from '@/hooks/useFirstLogin'
+import GuidedOnboarding from '@/components/ui/guided-onboarding'
 
 export default function DashboardLayout({
   children,
@@ -12,6 +14,18 @@ export default function DashboardLayout({
 }) {
   const router = useRouter()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  
+  // Хук для определения первого логина
+  const { isFirstLogin, isLoading, markOnboardingCompleted, resetOnboarding } = useFirstLogin()
+
+  // Обработчики онбординга
+  const handleOnboardingComplete = async () => {
+    await markOnboardingCompleted()
+  }
+
+  const handleOnboardingSkip = async () => {
+    await markOnboardingCompleted()
+  }
 
   const handleLogout = async () => {
     if (isLoggingOut) return // Предотвращаем двойной клик
@@ -71,6 +85,19 @@ export default function DashboardLayout({
               <span>+</span>
               <span>Создать событие</span>
             </a>
+            
+            {/* Кнопка сброса онбординга (только для разработки) */}
+            {process.env.NODE_ENV === 'development' && (
+              <button 
+                onClick={resetOnboarding}
+                className="text-orange-600 hover:text-orange-700 flex items-center space-x-1 px-2 py-1 rounded hover:bg-orange-50 transition-colors text-xs"
+                title="Сбросить онбординг (только для разработки)"
+              >
+                <span>🔄</span>
+                <span>Сброс</span>
+              </button>
+            )}
+            
             <button 
               onClick={handleLogout}
               disabled={isLoggingOut}
@@ -87,6 +114,14 @@ export default function DashboardLayout({
       <main className="container mx-auto px-4 py-8">
         {children}
       </main>
+
+      {/* Guided Onboarding для первого логина */}
+      {!isLoading && isFirstLogin && (
+        <GuidedOnboarding
+          onComplete={handleOnboardingComplete}
+          onSkip={handleOnboardingSkip}
+        />
+      )}
     </div>
   )
 } 
