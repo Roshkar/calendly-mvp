@@ -39,10 +39,13 @@ export function useFirstLogin() {
 
       if (error) {
         console.log('Profile not found or error:', error.message)
-        // Если ошибка - считаем что первый логин
+        // Если ошибка (включая отсутствие поля) - считаем что первый логин
         setIsFirstLogin(true)
       } else {
-        const isCompleted = profile?.onboarding_completed === true
+        // Безопасный доступ к полю с fallback
+        const isCompleted = profile && typeof profile === 'object' && 'onboarding_completed' in profile 
+          ? profile.onboarding_completed === true 
+          : false
         setIsFirstLogin(!isCompleted)
         
         // Синхронизируем с localStorage
@@ -64,17 +67,21 @@ export function useFirstLogin() {
       
       if (!user) return
 
-      // Обновляем в базе данных
-      const { error } = await supabase
-        .from('profiles')
-        .update({ onboarding_completed: true })
-        .eq('id', user.id)
+      // Пробуем обновить в базе данных (может не работать если поле не существует)
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ onboarding_completed: true })
+          .eq('id', user.id)
 
-      if (error) {
-        console.error('Error updating onboarding status:', error)
+        if (error) {
+          console.error('Error updating onboarding status (DB field may not exist):', error)
+        }
+      } catch (dbError) {
+        console.error('Database update failed, using localStorage only:', dbError)
       }
 
-      // Обновляем localStorage
+      // Обновляем localStorage (всегда работает)
       localStorage.setItem(`onboarding_completed_${user.id}`, 'true')
       setIsFirstLogin(false)
     } catch (error) {
@@ -88,13 +95,17 @@ export function useFirstLogin() {
       
       if (!user) return
 
-      // Обновляем в базе данных
-      await supabase
-        .from('profiles')
-        .update({ onboarding_completed: false })
-        .eq('id', user.id)
+      // Пробуем обновить в базе данных (может не работать если поле не существует)
+      try {
+        await supabase
+          .from('profiles')
+          .update({ onboarding_completed: false })
+          .eq('id', user.id)
+      } catch (dbError) {
+        console.error('Database reset failed, using localStorage only:', dbError)
+      }
 
-      // Удаляем из localStorage
+      // Удаляем из localStorage (всегда работает)
       localStorage.removeItem(`onboarding_completed_${user.id}`)
       setIsFirstLogin(true)
     } catch (error) {

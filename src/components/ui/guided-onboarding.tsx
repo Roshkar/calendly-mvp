@@ -246,6 +246,17 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
     }
   }, [currentStep, currentTourStep, pathname, router])
 
+  // Обработчики действий
+  const handleComplete = useCallback(() => {
+    setIsVisible(false)
+    onComplete()
+  }, [onComplete])
+
+  const handleSkip = useCallback(() => {
+    setIsVisible(false)
+    onSkip()
+  }, [onSkip])
+
   // Автовоспроизведение
   useEffect(() => {
     if (isAutoPlay) {
@@ -264,7 +275,7 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
       clearInterval(autoPlayInterval)
       setAutoPlayInterval(null)
     }
-  }, [isAutoPlay, currentStep])
+  }, [isAutoPlay, currentStep, autoPlayInterval, handleComplete])
 
   const handleNext = () => {
     if (currentStep < tourSteps.length - 1) {
@@ -278,16 +289,6 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1)
     }
-  }
-
-  const handleComplete = () => {
-    setIsVisible(false)
-    onComplete()
-  }
-
-  const handleSkip = () => {
-    setIsVisible(false)
-    onSkip()
   }
 
   const toggleAutoPlay = () => {
