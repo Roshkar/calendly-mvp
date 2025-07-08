@@ -44,7 +44,7 @@ export function useFirstLogin() {
       } else {
         // Безопасный доступ к полю с fallback
         const isCompleted = profile && typeof profile === 'object' && 'onboarding_completed' in profile 
-          ? profile.onboarding_completed === true 
+          ? (profile as any).onboarding_completed === true 
           : false
         setIsFirstLogin(!isCompleted)
         
