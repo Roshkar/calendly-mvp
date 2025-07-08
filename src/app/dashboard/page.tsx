@@ -117,9 +117,6 @@ export default function DashboardPage() {
           <a href="/dashboard/test-bookings" className="bg-yellow-200 text-yellow-800 px-3 py-1 rounded text-sm hover:bg-yellow-300">
             Тест бронирований
           </a>
-          <a href="/test-telegram" className="bg-yellow-200 text-yellow-800 px-3 py-1 rounded text-sm hover:bg-yellow-300">
-            Тест Telegram
-          </a>
         </div>
       </div>
     </div>
