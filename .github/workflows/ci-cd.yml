@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main, develop]
+    branches: [disabled] # Временно отключено
   pull_request:
-    branches: [main]
+    branches: [disabled] # Временно отключено
 
 env:
   NODE_VERSION: '20'
