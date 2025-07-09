@@ -152,6 +152,7 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
   const [isVisible, setIsVisible] = useState(true)
   const [targetElement, setTargetElement] = useState<HTMLElement | null>(null)
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 })
+  const [tooltipWidth, setTooltipWidth] = useState(320)
   const [isAutoPlay, setIsAutoPlay] = useState(false)
   const [autoPlayInterval, setAutoPlayInterval] = useState<NodeJS.Timeout | null>(null)
   
@@ -193,44 +194,101 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
     tryFind()
   }, [])
 
-  // Вычисление позиции тултипа
-  const calculateTooltipPosition = useCallback((element: HTMLElement, position: string) => {
+  // Улучшенное вычисление позиции тултипа с адаптивным позиционированием
+  const calculateTooltipPosition = useCallback((element: HTMLElement, preferredPosition: string) => {
     const rect = element.getBoundingClientRect()
-    const tooltipWidth = 320
-    const tooltipHeight = 150
-    const padding = 20
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+    const scrollX = window.scrollX
+    const scrollY = window.scrollY
+    
+    // Адаптивная ширина тултипа
+    const maxTooltipWidth = Math.min(320, viewportWidth * 0.9)
+    const tooltipHeight = 200 // Примерная высота с запасом
+    const padding = 16
+    const arrowSize = 10
+
+    // Сохраняем вычисленную ширину в состояние
+    setTooltipWidth(maxTooltipWidth)
 
     let top = 0
     let left = 0
+    let actualPosition = preferredPosition
 
-    switch (position) {
-      case 'top':
-        top = rect.top - tooltipHeight - padding
-        left = rect.left + (rect.width / 2) - (tooltipWidth / 2)
-        break
-      case 'bottom':
-        top = rect.bottom + padding
-        left = rect.left + (rect.width / 2) - (tooltipWidth / 2)
-        break
-      case 'left':
-        top = rect.top + (rect.height / 2) - (tooltipHeight / 2)
-        left = rect.left - tooltipWidth - padding
-        break
-      case 'right':
-        top = rect.top + (rect.height / 2) - (tooltipHeight / 2)
-        left = rect.right + padding
-        break
+    // Функция для проверки помещается ли тултип в позиции
+    const checkFitsInPosition = (pos: string, calcTop: number, calcLeft: number) => {
+      switch (pos) {
+        case 'top':
+          return calcTop >= padding && calcLeft >= padding && calcLeft + maxTooltipWidth <= viewportWidth - padding
+        case 'bottom':
+          return calcTop + tooltipHeight <= viewportHeight - padding && calcLeft >= padding && calcLeft + maxTooltipWidth <= viewportWidth - padding
+        case 'left':
+          return calcLeft >= padding && calcTop >= padding && calcTop + tooltipHeight <= viewportHeight - padding
+        case 'right':
+          return calcLeft + maxTooltipWidth <= viewportWidth - padding && calcTop >= padding && calcTop + tooltipHeight <= viewportHeight - padding
+        default:
+          return false
+      }
     }
 
-    // Убеждаемся что тултип не выходит за границы экрана
-    if (left < padding) left = padding
-    if (left + tooltipWidth > window.innerWidth - padding) {
-      left = window.innerWidth - tooltipWidth - padding
+    // Функция для вычисления позиции по направлению
+    const calculatePosition = (pos: string) => {
+      let calcTop = 0
+      let calcLeft = 0
+
+      switch (pos) {
+        case 'top':
+          calcTop = rect.top + scrollY - tooltipHeight - arrowSize
+          calcLeft = rect.left + scrollX + (rect.width / 2) - (maxTooltipWidth / 2)
+          break
+        case 'bottom':
+          calcTop = rect.bottom + scrollY + arrowSize
+          calcLeft = rect.left + scrollX + (rect.width / 2) - (maxTooltipWidth / 2)
+          break
+        case 'left':
+          calcTop = rect.top + scrollY + (rect.height / 2) - (tooltipHeight / 2)
+          calcLeft = rect.left + scrollX - maxTooltipWidth - arrowSize
+          break
+        case 'right':
+          calcTop = rect.top + scrollY + (rect.height / 2) - (tooltipHeight / 2)
+          calcLeft = rect.right + scrollX + arrowSize
+          break
+      }
+
+      return { top: calcTop, left: calcLeft }
     }
-    if (top < padding) top = padding
-    if (top + tooltipHeight > window.innerHeight - padding) {
-      top = window.innerHeight - tooltipHeight - padding
+
+    // Пробуем предпочтительную позицию
+    let position = calculatePosition(preferredPosition)
+    
+    // Если не помещается, пробуем другие позиции в порядке приоритета
+    if (!checkFitsInPosition(preferredPosition, position.top, position.left)) {
+      const alternativePositions = ['bottom', 'top', 'right', 'left'].filter(p => p !== preferredPosition)
+      
+      for (const altPos of alternativePositions) {
+        const altPosition = calculatePosition(altPos)
+        if (checkFitsInPosition(altPos, altPosition.top, altPosition.left)) {
+          position = altPosition
+          actualPosition = altPos
+          break
+        }
+      }
     }
+
+    // Финальная корректировка позиции чтобы точно не выйти за границы
+    top = Math.max(padding, Math.min(position.top, viewportHeight - tooltipHeight - padding))
+    left = Math.max(padding, Math.min(position.left, viewportWidth - maxTooltipWidth - padding))
+
+    // Для мобильных устройств (меньше 768px) центрируем по горизонтали
+    if (viewportWidth < 768) {
+      left = (viewportWidth - maxTooltipWidth) / 2
+      // На мобильных всегда показываем внизу экрана
+      if (rect.bottom + tooltipHeight + padding > viewportHeight) {
+        top = viewportHeight - tooltipHeight - padding - 20
+      }
+    }
+
+    console.log(`📍 Позиционирование тултипа: ${preferredPosition} → ${actualPosition}, top: ${top}, left: ${left}, width: ${maxTooltipWidth}`)
 
     setTooltipPosition({ top, left })
   }, [])
@@ -248,6 +306,21 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
       })
     }
   }, [targetElement, currentTourStep.position, calculateTooltipPosition])
+
+  // Эффект для обработки изменения размера окна
+  useEffect(() => {
+    const handleResize = () => {
+      if (targetElement) {
+        calculateTooltipPosition(targetElement, currentTourStep.position)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [targetElement, currentTourStep.position, calculateTooltipPosition])
+
+  // Проверяем мобильное устройство
+  const isMobile = tooltipWidth < 400
 
   // Эффект для поиска элемента при смене шага или страницы
   useEffect(() => {
@@ -348,85 +421,87 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
 
       {/* Тултип */}
       <div
-        className="fixed z-50 bg-white rounded-lg shadow-xl border border-gray-200 p-6 pointer-events-auto"
+        className="fixed z-50 bg-white rounded-lg shadow-xl border border-gray-200 pointer-events-auto"
         style={{
           top: tooltipPosition.top,
           left: tooltipPosition.left,
-          width: '320px',
+          width: tooltipWidth,
           maxWidth: '90vw'
         }}
       >
-        {/* Заголовок */}
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">
-            {currentTourStep.title}
-          </h3>
-          <button
-            onClick={handleSkip}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        {/* Описание */}
-        <p className="text-gray-600 mb-6 text-sm leading-relaxed">
-          {currentTourStep.description}
-        </p>
-
-        {/* Прогресс */}
-        <div className="flex items-center mb-4">
-          <div className="flex-1 bg-gray-200 rounded-full h-2">
-            <div
-              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${((currentStep + 1) / tourSteps.length) * 100}%` }}
-            />
-          </div>
-          <span className="ml-3 text-sm text-gray-500">
-            {currentStep + 1} / {tourSteps.length}
-          </span>
-        </div>
-
-        {/* Управление */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={toggleAutoPlay}
-              className={`flex items-center space-x-1 px-3 py-1 rounded-md text-sm transition-colors ${
-                isAutoPlay 
-                  ? 'bg-blue-100 text-blue-700' 
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {isAutoPlay ? <Pause size={14} /> : <Play size={14} />}
-              <span>{isAutoPlay ? 'Пауза' : 'Авто'}</span>
-            </button>
-            
+        <div className={`${isMobile ? 'p-4' : 'p-6'}`}>
+          {/* Заголовок */}
+          <div className="flex items-center justify-between mb-4">
+            <h3 className={`font-semibold text-gray-900 ${isMobile ? 'text-base' : 'text-lg'}`}>
+              {currentTourStep.title}
+            </h3>
             <button
               onClick={handleSkip}
-              className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 ml-2"
             >
-              Пропустить
+              <X size={isMobile ? 18 : 20} />
             </button>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={handlePrev}
-              disabled={currentStep === 0}
-              className="flex items-center space-x-1 px-3 py-2 text-sm text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              <ArrowLeft size={14} />
-              <span>Назад</span>
-            </button>
-            
-            <button
-              onClick={handleNext}
-              className="flex items-center space-x-1 px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
-            >
-              <span>{currentStep === tourSteps.length - 1 ? 'Завершить' : 'Далее'}</span>
-              {currentStep !== tourSteps.length - 1 && <ArrowRight size={14} />}
-            </button>
+          {/* Описание */}
+          <p className={`text-gray-600 mb-6 leading-relaxed ${isMobile ? 'text-sm' : 'text-sm'}`}>
+            {currentTourStep.description}
+          </p>
+
+          {/* Прогресс */}
+          <div className="flex items-center mb-4">
+            <div className="flex-1 bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${((currentStep + 1) / tourSteps.length) * 100}%` }}
+              />
+            </div>
+            <span className={`ml-3 text-gray-500 ${isMobile ? 'text-xs' : 'text-sm'}`}>
+              {currentStep + 1} / {tourSteps.length}
+            </span>
+          </div>
+
+          {/* Управление */}
+          <div className={`flex items-center ${isMobile ? 'flex-col gap-3' : 'justify-between'}`}>
+            <div className={`flex items-center space-x-2 ${isMobile ? 'order-2' : ''}`}>
+              <button
+                onClick={toggleAutoPlay}
+                className={`flex items-center space-x-1 px-3 py-1 rounded-md transition-colors ${isMobile ? 'text-xs' : 'text-sm'} ${
+                  isAutoPlay 
+                    ? 'bg-blue-100 text-blue-700' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {isAutoPlay ? <Pause size={isMobile ? 12 : 14} /> : <Play size={isMobile ? 12 : 14} />}
+                <span>{isAutoPlay ? 'Пауза' : 'Авто'}</span>
+              </button>
+              
+              <button
+                onClick={handleSkip}
+                className={`text-gray-500 hover:text-gray-700 transition-colors ${isMobile ? 'text-xs' : 'text-sm'}`}
+              >
+                Пропустить
+              </button>
+            </div>
+
+            <div className={`flex items-center space-x-2 ${isMobile ? 'order-1 w-full justify-between' : ''}`}>
+              <button
+                onClick={handlePrev}
+                disabled={currentStep === 0}
+                className={`flex items-center space-x-1 px-3 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${isMobile ? 'text-xs flex-1 justify-center' : 'text-sm'}`}
+              >
+                <ArrowLeft size={isMobile ? 12 : 14} />
+                <span>Назад</span>
+              </button>
+              
+              <button
+                onClick={handleNext}
+                className={`flex items-center space-x-1 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors ${isMobile ? 'text-xs flex-1 justify-center' : 'text-sm'}`}
+              >
+                <span>{currentStep === tourSteps.length - 1 ? 'Завершить' : 'Далее'}</span>
+                {currentStep !== tourSteps.length - 1 && <ArrowRight size={isMobile ? 12 : 14} />}
+              </button>
+            </div>
           </div>
         </div>
       </div>
