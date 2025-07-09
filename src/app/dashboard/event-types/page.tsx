@@ -105,12 +105,13 @@ export default function EventTypesPage() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Типы событий</h1>
+            <h1 className="text-2xl font-bold text-gray-900" data-onboarding="event-types-title">Типы событий</h1>
             <p className="text-gray-600">Управляйте своими типами встреч</p>
           </div>
           <a 
             href="/dashboard/event-types/new"
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+            data-onboarding="new-event-button"
           >
             <span>+</span>
             <span>Создать событие</span>
@@ -131,12 +132,13 @@ export default function EventTypesPage() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Типы событий</h1>
+            <h1 className="text-2xl font-bold text-gray-900" data-onboarding="event-types-title">Типы событий</h1>
             <p className="text-gray-600">Управляйте своими типами встреч</p>
           </div>
           <a 
             href="/dashboard/event-types/new"
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+            data-onboarding="new-event-button"
           >
             <span>+</span>
             <span>Создать событие</span>
@@ -162,12 +164,13 @@ export default function EventTypesPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Типы событий</h1>
+          <h1 className="text-2xl font-bold text-gray-900" data-onboarding="event-types-title">Типы событий</h1>
           <p className="text-gray-600">Управляйте своими типами встреч</p>
         </div>
         <a 
           href="/dashboard/event-types/new"
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+          data-onboarding="new-event-button"
         >
           <span>+</span>
           <span>Создать событие</span>

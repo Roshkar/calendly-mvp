@@ -5,17 +5,17 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Добро пожаловать!</h1>
+          <h1 className="text-3xl font-bold text-gray-900" data-onboarding="welcome-title">Добро пожаловать!</h1>
           <p className="text-gray-600 mt-2">Управляйте своими событиями и встречами</p>
         </div>
-        <a href="/dashboard/event-types/new" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2">
+        <a href="/dashboard/event-types/new" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2" data-onboarding="create-event-button">
           <span>+</span>
           <span>Создать событие</span>
         </a>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6" data-onboarding="stats-cards">
         <div className="bg-white rounded-lg border shadow-sm p-6">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium">Всего событий</span>

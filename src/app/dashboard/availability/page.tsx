@@ -208,10 +208,10 @@ export default function AvailabilityPage() {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Доступность</h1>
-          <p className="text-gray-600">Настройте свои рабочие часы и дни</p>
+          <h1 className="text-2xl font-bold text-gray-900" data-onboarding="availability-title">Доступность</h1>
+          <p className="text-gray-600">Настройте свои рабочие часы</p>
         </div>
-        <div className="bg-white rounded-lg border p-6">
+        <div className="bg-white rounded-lg border p-6" data-onboarding="availability-settings">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
             <p className="mt-4 text-gray-600">Загрузка настроек...</p>
@@ -224,7 +224,7 @@ export default function AvailabilityPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Доступность</h1>
+        <h1 className="text-2xl font-bold text-gray-900" data-onboarding="availability-title">Доступность</h1>
         <p className="text-gray-600">Настройте свои рабочие часы и дни</p>
       </div>
 
@@ -240,7 +240,7 @@ export default function AvailabilityPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border p-6">
+      <div className="bg-white rounded-lg border p-6" data-onboarding="availability-settings">
         <h2 className="text-lg font-semibold mb-6">Рабочие часы</h2>
         
         <div className="space-y-4">

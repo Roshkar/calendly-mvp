@@ -9,6 +9,7 @@ interface TourStep {
   title: string
   description: string
   target: string // CSS селектор
+  fallback?: string // Резервный селектор
   page: string // путь к странице
   position: 'top' | 'bottom' | 'left' | 'right'
   showNavigation?: boolean
@@ -20,7 +21,8 @@ const tourSteps: TourStep[] = [
     id: 'welcome',
     title: 'Добро пожаловать в Calendly MVP!',
     description: 'Давайте проведем быструю экскурсию по всем возможностям системы планирования встреч.',
-    target: 'h1',
+    target: '[data-onboarding="welcome-title"]',
+    fallback: 'h1',
     page: '/dashboard',
     position: 'bottom'
   },
@@ -28,7 +30,8 @@ const tourSteps: TourStep[] = [
     id: 'create-event',
     title: 'Создание событий',
     description: 'Нажмите здесь, чтобы создать новый тип события для ваших встреч.',
-    target: 'a[href="/dashboard/event-types/new"]',
+    target: '[data-onboarding="create-event-button"]',
+    fallback: 'a[href="/dashboard/event-types/new"]',
     page: '/dashboard',
     position: 'bottom'
   },
@@ -36,7 +39,8 @@ const tourSteps: TourStep[] = [
     id: 'stats-cards',
     title: 'Статистика',
     description: 'Здесь отображается статистика ваших событий и встреч.',
-    target: '.grid.grid-cols-1.md\\:grid-cols-3',
+    target: '[data-onboarding="stats-cards"]',
+    fallback: '.grid.grid-cols-1.md\\:grid-cols-3 ',
     page: '/dashboard',
     position: 'bottom'
   },
@@ -46,7 +50,8 @@ const tourSteps: TourStep[] = [
     id: 'event-types-page',
     title: 'Управление типами событий',
     description: 'На этой странице вы можете создавать и управлять различными типами ваших встреч.',
-    target: 'h1',
+    target: '[data-onboarding="event-types-title"]',
+    fallback: 'h1',
     page: '/dashboard/event-types',
     position: 'bottom',
     showNavigation: true
@@ -55,7 +60,8 @@ const tourSteps: TourStep[] = [
     id: 'new-event-btn',
     title: 'Создать новое событие',
     description: 'Нажмите эту кнопку, чтобы создать новый тип события.',
-    target: 'a[href="/dashboard/event-types/new"]',
+    target: '[data-onboarding="new-event-button"]',
+    fallback: 'a[href="/dashboard/event-types/new"]',
     page: '/dashboard/event-types',
     position: 'bottom'
   },
@@ -65,7 +71,8 @@ const tourSteps: TourStep[] = [
     id: 'bookings-page',
     title: 'Управление бронированиями',
     description: 'Здесь отображаются все ваши запланированные встречи и бронирования.',
-    target: 'h1',
+    target: '[data-onboarding="bookings-title"]',
+    fallback: 'h1',
     page: '/dashboard/bookings',
     position: 'bottom',
     showNavigation: true
@@ -74,7 +81,8 @@ const tourSteps: TourStep[] = [
     id: 'bookings-list',
     title: 'Список встреч',
     description: 'В этой области будут отображаться все ваши предстоящие встречи.',
-    target: '.space-y-4, .text-center',
+    target: '[data-onboarding="bookings-content"]',
+    fallback: '.bg-white.rounded-lg.border',
     page: '/dashboard/bookings',
     position: 'top'
   },
@@ -84,7 +92,8 @@ const tourSteps: TourStep[] = [
     id: 'availability-page',
     title: 'Настройка доступности',
     description: 'Настройте свои рабочие часы и дни, когда вы доступны для встреч.',
-    target: 'h1',
+    target: '[data-onboarding="availability-title"]',
+    fallback: 'h1',
     page: '/dashboard/availability',
     position: 'bottom',
     showNavigation: true
@@ -93,7 +102,8 @@ const tourSteps: TourStep[] = [
     id: 'availability-settings',
     title: 'Рабочие часы',
     description: 'Здесь вы можете установить свои рабочие часы для каждого дня недели.',
-    target: '.space-y-4, .grid',
+    target: '[data-onboarding="availability-settings"]',
+    fallback: '.bg-white.rounded-lg.border',
     page: '/dashboard/availability',
     position: 'top'
   },
@@ -103,7 +113,8 @@ const tourSteps: TourStep[] = [
     id: 'settings-page',
     title: 'Настройки профиля',
     description: 'Управляйте настройками своего профиля и аккаунта.',
-    target: 'h1',
+    target: '[data-onboarding="settings-title"]',
+    fallback: 'h1',
     page: '/dashboard/settings',
     position: 'bottom',
     showNavigation: true
@@ -112,7 +123,8 @@ const tourSteps: TourStep[] = [
     id: 'profile-form',
     title: 'Информация профиля',
     description: 'Здесь вы можете обновить информацию своего профиля.',
-    target: 'form, .space-y-4',
+    target: '[data-onboarding="profile-form"]',
+    fallback: 'form',
     page: '/dashboard/settings',
     position: 'top'
   },
@@ -122,7 +134,8 @@ const tourSteps: TourStep[] = [
     id: 'tour-complete',
     title: 'Экскурсия завершена!',
     description: 'Отлично! Теперь вы знаете основные возможности системы. Начните с создания своего первого события.',
-    target: 'a[href="/dashboard/event-types/new"]',
+    target: '[data-onboarding="create-event-button"]',
+    fallback: 'a[href="/dashboard/event-types/new"]',
     page: '/dashboard',
     position: 'bottom',
     showNavigation: true
@@ -147,24 +160,31 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
 
   const currentTourStep = tourSteps[currentStep]
 
-  // Функция для поиска элемента на странице
-  const findTargetElement = useCallback((selector: string) => {
-    // Пробуем найти элемент несколько раз с задержкой
+  // Улучшенная функция для поиска элемента на странице
+  const findTargetElement = useCallback((selector: string, fallback?: string) => {
     let attempts = 0
-    const maxAttempts = 10
+    const maxAttempts = 15
     
     const tryFind = () => {
-      const element = document.querySelector(selector) as HTMLElement
+      // Сначала пробуем основной селектор
+      let element = document.querySelector(selector) as HTMLElement
+      
+      // Если не найден, пробуем fallback
+      if (!element && fallback) {
+        element = document.querySelector(fallback) as HTMLElement
+      }
+      
       if (element) {
+        console.log(`✅ Найден элемент: ${selector}${fallback ? ` (fallback: ${fallback})` : ''}`)
         setTargetElement(element)
         return true
       }
       
       attempts++
       if (attempts < maxAttempts) {
-        setTimeout(tryFind, 200)
+        setTimeout(tryFind, 300)
       } else {
-        console.log(`Element not found: ${selector}`)
+        console.log(`❌ Элемент не найден: ${selector}${fallback ? ` (fallback: ${fallback})` : ''}`)
         setTargetElement(null)
       }
       return false
@@ -232,10 +252,10 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
   // Эффект для поиска элемента при смене шага или страницы
   useEffect(() => {
     if (currentTourStep && pathname === currentTourStep.page) {
-      // Небольшая задержка для загрузки страницы
+      // Увеличиваем задержку для загрузки страницы
       setTimeout(() => {
-        findTargetElement(currentTourStep.target)
-      }, 500)
+        findTargetElement(currentTourStep.target, currentTourStep.fallback)
+      }, 800)
     }
   }, [currentStep, pathname, currentTourStep, findTargetElement])
 

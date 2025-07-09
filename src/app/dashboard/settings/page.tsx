@@ -147,7 +147,7 @@ export default function SettingsPage() {
     return (
       <div className="max-w-2xl mx-auto space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Настройки</h1>
+          <h1 className="text-2xl font-bold text-gray-900" data-onboarding="settings-title">Настройки</h1>
           <p className="text-gray-600">Управляйте профилем и настройками аккаунта</p>
         </div>
         <div className="bg-white rounded-lg border p-6">
@@ -163,7 +163,7 @@ export default function SettingsPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Настройки</h1>
+        <h1 className="text-2xl font-bold text-gray-900" data-onboarding="settings-title">Настройки</h1>
         <p className="text-gray-600">Управляйте профилем и настройками аккаунта</p>
       </div>
 
@@ -182,7 +182,7 @@ export default function SettingsPage() {
       <div className="bg-white rounded-lg border p-6">
         <h2 className="text-lg font-semibold mb-6">Профиль</h2>
         
-        <form onSubmit={saveProfile} className="space-y-4">
+        <form onSubmit={saveProfile} className="space-y-4" data-onboarding="profile-form">
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
               Имя пользователя

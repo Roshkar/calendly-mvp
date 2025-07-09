@@ -1,0 +1,20 @@
+[33mb3b3a84[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m fix: исправлена проблема с уникальностью username при регистрации
+[33m66e2cce[m fix: исправлена TypeScript ошибка в операциях обновления БД
+[33m12ab6f0[m fix: исправлена TypeScript ошибка в useFirstLogin
+[33m7373919[m fix: исправлены ошибки деплоя
+[33m615475a[m feat: добавлен guided onboarding с подсветкой элементов для первого логина
+[33m8d1fe2f[m fix: удалена ссылка на telegram и добавлено ESLint правило
+[33m9d193a0[m feat: добавлен онбординг и демо-страница
+[33m70d454b[m Fix Google OAuth redirect URL issue
+[33m6c9e9dd[m Add Google OAuth authentication via Supabase
+[33m6b060b7[m Remove Telegram authentication completely
+[33m14e23c0[m Add deep iframe analysis for Telegram auth troubleshooting
+[33m5dff351[m Add enhanced Telegram auth logging and fallback redirect
+[33m65a7530[m Fix Telegram auth logic and add comprehensive network diagnostics
+[33me940edd[m feat: добавлена серверная верификация Telegram с bot token
+[33m1e8ce81[m fix: добавлена детальная диагностика проблем с Telegram авторизацией
+[33m9db24fb[m docs: обновлено руководство по настройке Telegram авторизации
+[33m905c707[m feat: улучшена Telegram авторизация с детальной диагностикой и отладкой
+[33m56e4f44[m fix: исправлены все ESLint ошибки с неэкранированными кавычками в JSX
+[33m05eb41c[m Fix ESLint errors: escape quotes in JSX and use const instead of let
+[33m8d2e180[m fix: исправлена Telegram авторизация и добавлена отладка

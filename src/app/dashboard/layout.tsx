@@ -81,7 +81,7 @@ export default function DashboardLayout({
           </nav>
 
           <div className="flex items-center space-x-4">
-            <a href="/dashboard/event-types/new" className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 flex items-center space-x-1">
+            <a href="/dashboard/event-types/new" className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 flex items-center space-x-1" data-onboarding="create-event-button">
               <span>+</span>
               <span>Создать событие</span>
             </a>

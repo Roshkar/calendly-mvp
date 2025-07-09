@@ -136,10 +136,10 @@ export default function BookingsPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Бронирования</h1>
+          <h1 className="text-2xl font-bold text-gray-900" data-onboarding="bookings-title">Бронирования</h1>
           <p className="text-gray-600">Управляйте своими встречами</p>
         </div>
-        <div className="bg-white rounded-lg border p-6">
+        <div className="bg-white rounded-lg border p-6" data-onboarding="bookings-content">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
             <p className="mt-4 text-gray-600">Загрузка бронирований...</p>
@@ -153,10 +153,10 @@ export default function BookingsPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Бронирования</h1>
+          <h1 className="text-2xl font-bold text-gray-900" data-onboarding="bookings-title">Бронирования</h1>
           <p className="text-gray-600">Управляйте своими встречами</p>
         </div>
-        <div className="bg-white rounded-lg border p-6">
+        <div className="bg-white rounded-lg border p-6" data-onboarding="bookings-content">
           <div className="text-center py-12">
             <div className="text-red-600 text-lg font-medium">Ошибка загрузки</div>
             <p className="text-gray-600 mt-2">{error}</p>
@@ -175,7 +175,7 @@ export default function BookingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Бронирования</h1>
+        <h1 className="text-2xl font-bold text-gray-900" data-onboarding="bookings-title">Бронирования</h1>
         <p className="text-gray-600">Управляйте своими встречами</p>
       </div>
 
@@ -205,7 +205,7 @@ export default function BookingsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg border">
+      <div className="bg-white rounded-lg border" data-onboarding="bookings-content">
         <div className="p-6">
           <h2 className="text-lg font-semibold mb-4">Ваши встречи</h2>
           
