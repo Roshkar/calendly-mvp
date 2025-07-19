@@ -40,7 +40,7 @@ const tourSteps: TourStep[] = [
     title: 'Статистика',
     description: 'Здесь отображается статистика ваших событий и встреч.',
     target: '[data-onboarding="stats-cards"]',
-    fallback: '.grid.grid-cols-1.md\\:grid-cols-3 ',
+    fallback: '.grid.grid-cols-1.md\\:grid-cols-3',
     page: '/dashboard',
     position: 'bottom'
   },
@@ -155,16 +155,28 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
   const [tooltipWidth, setTooltipWidth] = useState(320)
   const [isAutoPlay, setIsAutoPlay] = useState(false)
   const [autoPlayInterval, setAutoPlayInterval] = useState<NodeJS.Timeout | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
   
   const router = useRouter()
   const pathname = usePathname()
 
   const currentTourStep = tourSteps[currentStep]
 
+  // Определяем мобильное устройство
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   // Улучшенная функция для поиска элемента на странице
   const findTargetElement = useCallback((selector: string, fallback?: string) => {
     let attempts = 0
-    const maxAttempts = 15
+    const maxAttempts = 20 // Увеличиваем количество попыток
     
     const tryFind = () => {
       // Сначала пробуем основной селектор
@@ -183,7 +195,7 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
       
       attempts++
       if (attempts < maxAttempts) {
-        setTimeout(tryFind, 300)
+        setTimeout(tryFind, 500) // Увеличиваем интервал
       } else {
         console.log(`❌ Элемент не найден: ${selector}${fallback ? ` (fallback: ${fallback})` : ''}`)
         setTargetElement(null)
@@ -194,148 +206,76 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
     tryFind()
   }, [])
 
-  // Улучшенное вычисление позиции тултипа с адаптивным позиционированием
-  const calculateTooltipPosition = useCallback((element: HTMLElement, preferredPosition: string) => {
+  // Функция для расчета позиции тултипа
+  const calculateTooltipPosition = useCallback((element: HTMLElement, position: string) => {
     const rect = element.getBoundingClientRect()
-    const viewportWidth = window.innerWidth
-    const viewportHeight = window.innerHeight
-    const scrollX = window.scrollX
-    const scrollY = window.scrollY
-    
-    // Адаптивная ширина тултипа
-    const maxTooltipWidth = Math.min(320, viewportWidth * 0.9)
-    const tooltipHeight = 200 // Примерная высота с запасом
-    const padding = 16
-    const arrowSize = 10
-
-    // Сохраняем вычисленную ширину в состояние
-    setTooltipWidth(maxTooltipWidth)
+    const tooltipWidth = isMobile ? 280 : 320
+    const tooltipHeight = 200 // Примерная высота
+    const padding = 20
 
     let top = 0
     let left = 0
-    let actualPosition = preferredPosition
 
-    // Функция для проверки помещается ли тултип в позиции
-    const checkFitsInPosition = (pos: string, calcTop: number, calcLeft: number) => {
-      switch (pos) {
-        case 'top':
-          return calcTop >= padding && calcLeft >= padding && calcLeft + maxTooltipWidth <= viewportWidth - padding
-        case 'bottom':
-          return calcTop + tooltipHeight <= viewportHeight - padding && calcLeft >= padding && calcLeft + maxTooltipWidth <= viewportWidth - padding
-        case 'left':
-          return calcLeft >= padding && calcTop >= padding && calcTop + tooltipHeight <= viewportHeight - padding
-        case 'right':
-          return calcLeft + maxTooltipWidth <= viewportWidth - padding && calcTop >= padding && calcTop + tooltipHeight <= viewportHeight - padding
-        default:
-          return false
-      }
+    switch (position) {
+      case 'top':
+        top = rect.top - tooltipHeight - padding
+        left = rect.left + (rect.width / 2) - (tooltipWidth / 2)
+        break
+      case 'bottom':
+        top = rect.bottom + padding
+        left = rect.left + (rect.width / 2) - (tooltipWidth / 2)
+        break
+      case 'left':
+        top = rect.top + (rect.height / 2) - (tooltipHeight / 2)
+        left = rect.left - tooltipWidth - padding
+        break
+      case 'right':
+        top = rect.top + (rect.height / 2) - (tooltipHeight / 2)
+        left = rect.right + padding
+        break
     }
 
-    // Функция для вычисления позиции по направлению
-    const calculatePosition = (pos: string) => {
-      let calcTop = 0
-      let calcLeft = 0
-
-      switch (pos) {
-        case 'top':
-          calcTop = rect.top + scrollY - tooltipHeight - arrowSize
-          calcLeft = rect.left + scrollX + (rect.width / 2) - (maxTooltipWidth / 2)
-          break
-        case 'bottom':
-          calcTop = rect.bottom + scrollY + arrowSize
-          calcLeft = rect.left + scrollX + (rect.width / 2) - (maxTooltipWidth / 2)
-          break
-        case 'left':
-          calcTop = rect.top + scrollY + (rect.height / 2) - (tooltipHeight / 2)
-          calcLeft = rect.left + scrollX - maxTooltipWidth - arrowSize
-          break
-        case 'right':
-          calcTop = rect.top + scrollY + (rect.height / 2) - (tooltipHeight / 2)
-          calcLeft = rect.right + scrollX + arrowSize
-          break
-      }
-
-      return { top: calcTop, left: calcLeft }
+    // Проверяем границы экрана
+    if (left < padding) left = padding
+    if (left + tooltipWidth > window.innerWidth - padding) {
+      left = window.innerWidth - tooltipWidth - padding
     }
-
-    // Пробуем предпочтительную позицию
-    let position = calculatePosition(preferredPosition)
-    
-    // Если не помещается, пробуем другие позиции в порядке приоритета
-    if (!checkFitsInPosition(preferredPosition, position.top, position.left)) {
-      const alternativePositions = ['bottom', 'top', 'right', 'left'].filter(p => p !== preferredPosition)
-      
-      for (const altPos of alternativePositions) {
-        const altPosition = calculatePosition(altPos)
-        if (checkFitsInPosition(altPos, altPosition.top, altPosition.left)) {
-          position = altPosition
-          actualPosition = altPos
-          break
-        }
-      }
+    if (top < padding) top = padding
+    if (top + tooltipHeight > window.innerHeight - padding) {
+      top = window.innerHeight - tooltipHeight - padding
     }
-
-    // Финальная корректировка позиции чтобы точно не выйти за границы
-    top = Math.max(padding, Math.min(position.top, viewportHeight - tooltipHeight - padding))
-    left = Math.max(padding, Math.min(position.left, viewportWidth - maxTooltipWidth - padding))
-
-    // Для мобильных устройств (меньше 768px) центрируем по горизонтали
-    if (viewportWidth < 768) {
-      left = (viewportWidth - maxTooltipWidth) / 2
-      // На мобильных всегда показываем внизу экрана
-      if (rect.bottom + tooltipHeight + padding > viewportHeight) {
-        top = viewportHeight - tooltipHeight - padding - 20
-      }
-    }
-
-    console.log(`📍 Позиционирование тултипа: ${preferredPosition} → ${actualPosition}, top: ${top}, left: ${left}, width: ${maxTooltipWidth}`)
 
     setTooltipPosition({ top, left })
-  }, [])
-
-  // Эффект для обновления позиции при изменении элемента
-  useEffect(() => {
-    if (targetElement) {
-      calculateTooltipPosition(targetElement, currentTourStep.position)
-      
-      // Прокручиваем к элементу
-      targetElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'center'
-      })
-    }
-  }, [targetElement, currentTourStep.position, calculateTooltipPosition])
-
-  // Эффект для обработки изменения размера окна
-  useEffect(() => {
-    const handleResize = () => {
-      if (targetElement) {
-        calculateTooltipPosition(targetElement, currentTourStep.position)
-      }
-    }
-
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [targetElement, currentTourStep.position, calculateTooltipPosition])
-
-  // Проверяем мобильное устройство
-  const isMobile = tooltipWidth < 400
+    setTooltipWidth(tooltipWidth)
+  }, [isMobile])
 
   // Эффект для поиска элемента при смене шага или страницы
   useEffect(() => {
     if (currentTourStep && pathname === currentTourStep.page) {
       // Увеличиваем задержку для загрузки страницы
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         findTargetElement(currentTourStep.target, currentTourStep.fallback)
-      }, 800)
+      }, 1000) // Увеличиваем задержку до 1 секунды
+
+      return () => clearTimeout(timer)
     }
   }, [currentStep, pathname, currentTourStep, findTargetElement])
+
+  // Эффект для расчета позиции тултипа
+  useEffect(() => {
+    if (targetElement && currentTourStep) {
+      calculateTooltipPosition(targetElement, currentTourStep.position)
+    }
+  }, [targetElement, currentTourStep, calculateTooltipPosition])
 
   // Эффект для навигации между страницами
   useEffect(() => {
     if (currentTourStep && pathname !== currentTourStep.page) {
-      router.push(currentTourStep.page)
+      const timer = setTimeout(() => {
+        router.push(currentTourStep.page)
+      }, 500) // Добавляем задержку для плавности
+
+      return () => clearTimeout(timer)
     }
   }, [currentStep, currentTourStep, pathname, router])
 
@@ -360,7 +300,7 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
           setIsAutoPlay(false)
           handleComplete()
         }
-      }, 4000) // 4 секунды на шаг
+      }, 5000) // Увеличиваем время до 5 секунд
       
       setAutoPlayInterval(interval)
       return () => clearInterval(interval)
@@ -462,28 +402,19 @@ export default function GuidedOnboarding({ onComplete, onSkip }: GuidedOnboardin
           </div>
 
           {/* Управление */}
-          <div className={`flex items-center ${isMobile ? 'flex-col gap-3' : 'justify-between'}`}>
-            <div className={`flex items-center space-x-2 ${isMobile ? 'order-2' : ''}`}>
+          <div className={`flex items-center justify-between ${isMobile ? 'flex-col space-y-3' : ''}`}>
+            {/* Автовоспроизведение */}
+            <div className={`flex items-center space-x-2 ${isMobile ? 'order-2 w-full justify-center' : ''}`}>
               <button
                 onClick={toggleAutoPlay}
-                className={`flex items-center space-x-1 px-3 py-1 rounded-md transition-colors ${isMobile ? 'text-xs' : 'text-sm'} ${
-                  isAutoPlay 
-                    ? 'bg-blue-100 text-blue-700' 
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
+                className={`flex items-center space-x-1 px-3 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors ${isMobile ? 'text-xs' : 'text-sm'}`}
               >
                 {isAutoPlay ? <Pause size={isMobile ? 12 : 14} /> : <Play size={isMobile ? 12 : 14} />}
                 <span>{isAutoPlay ? 'Пауза' : 'Авто'}</span>
               </button>
-              
-              <button
-                onClick={handleSkip}
-                className={`text-gray-500 hover:text-gray-700 transition-colors ${isMobile ? 'text-xs' : 'text-sm'}`}
-              >
-                Пропустить
-              </button>
             </div>
 
+            {/* Навигация */}
             <div className={`flex items-center space-x-2 ${isMobile ? 'order-1 w-full justify-between' : ''}`}>
               <button
                 onClick={handlePrev}

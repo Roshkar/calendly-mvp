@@ -9,6 +9,8 @@ export interface EventType {
   is_active: boolean
   location_type: 'online' | 'in_person' | 'phone'
   location_details: string | null
+  event_type_category: 'individual' | 'group'
+  max_participants: number
   created_at: string
   updated_at: string
 }
@@ -21,4 +23,6 @@ export interface CreateEventTypeData {
   color?: string
   location_type: 'online' | 'in_person' | 'phone'
   location_details?: string
+  event_type_category: 'individual' | 'group'
+  max_participants?: number
 } 

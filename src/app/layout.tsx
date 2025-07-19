@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Calendly MVP - Schedule Meetings Effortlessly',
-  description: 'Simple and intuitive meeting scheduling application',
+  title: 'Calendly MVP - Планирование встреч',
+  description: 'Современное приложение для планирования встреч',
 }
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body className={inter.className}>{children}</body>
     </html>
   )

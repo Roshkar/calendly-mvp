@@ -89,15 +89,29 @@ export default function EventTypesPage() {
     const baseUrl = window.location.origin
     const username = userProfile?.username || 'test-user'
     
-    // Тестируем query параметры (обходной путь)
-    const queryBookingUrl = `${baseUrl}/booking?event=${eventType.slug}`
+    // Используем правильную структуру ссылок
+    const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
     
-    console.log('🔗 Тестируем ссылку с query параметрами:', queryBookingUrl)
+    console.log('🔗 Тестируем ссылку:', bookingUrl)
     console.log('📊 Данные события:', eventType)
     console.log('👤 Профиль пользователя:', userProfile)
     
     // Открываем ссылку в новой вкладке
-    window.open(queryBookingUrl, '_blank')
+    window.open(bookingUrl, '_blank')
+  }
+
+  const getEventTypeIcon = (eventType) => {
+    if (eventType.event_type_category === 'group') {
+      return '👥'
+    }
+    return '👤'
+  }
+
+  const getEventTypeLabel = (eventType) => {
+    if (eventType.event_type_category === 'group') {
+      return `Групповое (до ${eventType.max_participants} чел.)`
+    }
+    return 'Индивидуальное'
   }
 
   if (isLoading) {
@@ -186,117 +200,121 @@ export default function EventTypesPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg border">
-        <div className="p-6">
-          <h2 className="text-lg font-semibold mb-4">Ваши события</h2>
-          
-          {eventTypes.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                📅
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Нет событий</h3>
-              <p className="text-gray-600 mb-4">Создайте свое первое событие для начала работы</p>
-              <a 
-                href="/dashboard/event-types/new"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-              >
-                Создать событие
-              </a>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {eventTypes.map((eventType) => (
-                <div key={eventType.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3">
-                        <div 
-                          className="w-4 h-4 rounded-full" 
-                          style={{ backgroundColor: eventType.color }}
-                        ></div>
-                        <h3 className="text-lg font-medium text-gray-900">{eventType.name}</h3>
-                      </div>
-                      
-                      {eventType.description && (
-                        <p className="text-gray-600 mt-2">{eventType.description}</p>
-                      )}
-                      
-                      <div className="flex items-center space-x-4 mt-3 text-sm text-gray-500">
-                        <span>📅 {eventType.duration_minutes} мин</span>
-                        <span>
-                          {eventType.location_type === 'online' && '💻 Онлайн'}
-                          {eventType.location_type === 'in_person' && '🏢 Лично'}
-                          {eventType.location_type === 'phone' && '📞 Телефон'}
-                        </span>
-                        {eventType.location_details && (
-                          <span>• {eventType.location_details}</span>
-                        )}
-                      </div>
-                      
-                      <div className="mt-3">
-                        <div className="flex items-center space-x-2">
-                          <div className={`w-2 h-2 rounded-full ${eventType.is_active ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                          <span className="text-sm text-gray-600">
-                            {eventType.is_active ? 'Активно' : 'Неактивно'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-col items-end space-y-2">
-                      {/* Предварительный просмотр ссылки */}
-                      <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded max-w-xs truncate">
-                        booking?event={eventType.slug}
-                      </div>
-                      
-                      <div className="flex flex-col items-end space-y-2">
-                        <button 
-                          onClick={() => testBookingLink(eventType)}
-                          className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
-                        >
-                          🧪 Тест ссылки
-                        </button>
-                        
-                        <div className="flex items-center space-x-2">
-                                                  <button 
-                          onClick={() => {
-                            const baseUrl = window.location.origin
-                            // Используем query параметры для обхода проблем с маршрутизацией
-                            const bookingUrl = `${baseUrl}/booking?event=${eventType.slug}`
-                            navigator.clipboard.writeText(bookingUrl)
-                              
-                              // Улучшенное уведомление
-                              const button = event.target
-                              const originalText = button.textContent
-                              button.textContent = '✓ Скопировано!'
-                              button.style.color = '#10b981'
-                              
-                              setTimeout(() => {
-                                button.textContent = originalText
-                                button.style.color = ''
-                              }, 2000)
-                            }}
-                            className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
-                          >
-                            📋 Копировать ссылку
-                          </button>
-                          <button 
-                            onClick={() => handleDelete(eventType.id, eventType.name)}
-                            className="text-red-600 hover:text-red-800 text-sm font-medium"
-                          >
-                            🗑️ Удалить
-                          </button>
-                        </div>
-                      </div>
+      {eventTypes.length === 0 ? (
+        <div className="bg-white rounded-lg border p-6">
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">📅</div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Нет событий</h3>
+            <p className="text-gray-600 mb-6">Создайте свое первое событие для начала работы</p>
+            <a 
+              href="/dashboard/event-types/new"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 inline-block"
+            >
+              Создать событие
+            </a>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {eventTypes.map((eventType) => (
+            <div key={eventType.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3">
+                    <div 
+                      className="w-4 h-4 rounded-full" 
+                      style={{ backgroundColor: eventType.color }}
+                    ></div>
+                    <h3 className="text-lg font-medium text-gray-900">{eventType.name}</h3>
+                    {/* Иконка типа события */}
+                    <span className="text-lg" title={getEventTypeLabel(eventType)}>
+                      {getEventTypeIcon(eventType)}
+                    </span>
+                  </div>
+                  
+                  {eventType.description && (
+                    <p className="text-gray-600 mt-2">{eventType.description}</p>
+                  )}
+                  
+                  <div className="flex items-center space-x-4 mt-3 text-sm text-gray-500">
+                    <span>📅 {eventType.duration_minutes} мин</span>
+                    <span>
+                      {eventType.location_type === 'online' && '💻 Онлайн'}
+                      {eventType.location_type === 'in_person' && '🏢 Лично'}
+                      {eventType.location_type === 'phone' && '📞 Телефон'}
+                    </span>
+                    {eventType.location_details && (
+                      <span>• {eventType.location_details}</span>
+                    )}
+                    {/* Тип события */}
+                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                      {getEventTypeLabel(eventType)}
+                    </span>
+                  </div>
+                  
+                  <div className="mt-3">
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-2 h-2 rounded-full ${eventType.is_active ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                      <span className="text-sm text-gray-600">
+                        {eventType.is_active ? 'Активно' : 'Неактивно'}
+                      </span>
                     </div>
                   </div>
                 </div>
-              ))}
+                
+                <div className="flex flex-col items-end space-y-2">
+                  {/* Предварительный просмотр ссылки */}
+                  <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded max-w-xs truncate">
+                    book/{userProfile?.username || 'username'}/{eventType.slug}
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <button 
+                      onClick={() => testBookingLink(eventType)}
+                      className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
+                    >
+                      🧪 Тест ссылки
+                    </button>
+                    
+                    <div className="flex items-center space-x-2">
+                      <button 
+                        onClick={() => {
+                          const baseUrl = window.location.origin
+                          const username = userProfile?.username || 'test-user'
+                          // Используем правильную структуру ссылок
+                          const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
+                          navigator.clipboard.writeText(bookingUrl)
+                            
+                          // Улучшенное уведомление
+                          const button = event.target
+                          const originalText = button.textContent
+                          button.textContent = '✓ Скопировано!'
+                          button.style.color = '#10b981'
+                          
+                          setTimeout(() => {
+                            button.textContent = originalText
+                            button.style.color = ''
+                          }, 2000)
+                        }}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+                      >
+                        📋 Копировать ссылку
+                      </button>
+                      
+                      <button 
+                        onClick={() => handleDelete(eventType.id, eventType.name)}
+                        className="text-red-600 hover:text-red-800 text-sm font-medium transition-colors"
+                      >
+                        🗑️ Удалить
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
+          ))}
         </div>
-      </div>
+      )}
     </div>
   )
 } 
