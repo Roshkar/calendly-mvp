@@ -5,8 +5,8 @@ import { supabase } from '@/lib/supabase/client'
 import Link from 'next/link'
 
 export default function UserProfilePage({ params }: { params: { username: string } }) {
-  const [userProfile, setUserProfile] = useState(null)
-  const [eventTypes, setEventTypes] = useState([])
+  const [userProfile, setUserProfile] = useState<any>(null)
+  const [eventTypes, setEventTypes] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -47,7 +47,7 @@ export default function UserProfilePage({ params }: { params: { username: string
         setEventTypes(events || [])
       }
 
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error loading profile:', err)
       setError(err.message)
     } finally {
@@ -55,14 +55,14 @@ export default function UserProfilePage({ params }: { params: { username: string
     }
   }
 
-  const getEventTypeIcon = (eventType) => {
+  const getEventTypeIcon = (eventType: any) => {
     if (eventType.event_type_category === 'group') {
       return '👥'
     }
     return '👤'
   }
 
-  const getEventTypeLabel = (eventType) => {
+  const getEventTypeLabel = (eventType: any) => {
     if (eventType.event_type_category === 'group') {
       return `Групповое (до ${eventType.max_participants} чел.)`
     }
@@ -198,7 +198,7 @@ export default function UserProfilePage({ params }: { params: { username: string
                   </div>
 
                   <Link
-                    href={`/booking?event=${eventType.slug}`}
+                    href={`/book/${params.username}/${eventType.slug}`}
                     className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center block"
                   >
                     Забронировать время
