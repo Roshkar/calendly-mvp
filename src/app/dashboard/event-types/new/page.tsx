@@ -65,6 +65,40 @@ export default function NewEventTypePage() {
       setDebugInfo(prev => prev + `✅ Пользователь авторизован: ${user.email}\n`)
       setDebugInfo(prev => prev + `✅ User ID: ${user.id}\n`)
 
+      // Проверяем, есть ли профиль пользователя
+      setDebugInfo(prev => prev + 'Проверяем профиль пользователя...\n')
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      if (profileError && profileError.code === 'PGRST116') {
+        // Профиль не найден - создаем его
+        setDebugInfo(prev => prev + 'Профиль не найден, создаем новый...\n')
+        const { error: createProfileError } = await supabase
+          .from('profiles')
+          .insert([{
+            id: user.id,
+            email: user.email,
+            username: user.email?.split('@')[0] || 'user',
+            first_name: user.user_metadata?.full_name?.split(' ')[0] || 'User',
+            last_name: user.user_metadata?.full_name?.split(' ')[1] || '',
+            timezone: 'Europe/Moscow'
+          }])
+
+        if (createProfileError) {
+          setDebugInfo(prev => prev + `❌ Ошибка создания профиля: ${createProfileError.message}\n`)
+          throw new Error(`Ошибка создания профиля: ${createProfileError.message}`)
+        }
+        setDebugInfo(prev => prev + '✅ Профиль создан\n')
+      } else if (profileError) {
+        setDebugInfo(prev => prev + `❌ Ошибка проверки профиля: ${profileError.message}\n`)
+        throw new Error(`Ошибка проверки профиля: ${profileError.message}`)
+      } else {
+        setDebugInfo(prev => prev + '✅ Профиль найден\n')
+      }
+
       // Создаем slug из названия
       const baseSlug = formData.name
         .toLowerCase()
