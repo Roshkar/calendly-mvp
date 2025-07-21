@@ -9,7 +9,9 @@ export default function NewEventTypePage() {
     name: '',
     description: '',
     duration: '',
-    location: ''
+    location: '',
+    eventTypeCategory: 'individual',
+    maxParticipants: 1
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState(null)
@@ -165,6 +167,8 @@ export default function NewEventTypePage() {
         duration_minutes: parseInt(formData.duration),
         location_type,
         location_details: location_details || null,
+        event_type_category: formData.eventTypeCategory,
+        max_participants: parseInt(formData.maxParticipants),
         color: '#3174ad',
         is_active: true
       }
@@ -192,7 +196,9 @@ export default function NewEventTypePage() {
         name: '',
         description: '',
         duration: '',
-        location: ''
+        location: '',
+        eventTypeCategory: 'individual',
+        maxParticipants: 1
       })
       
       // Перенаправляем через 3 секунды
@@ -390,6 +396,47 @@ export default function NewEventTypePage() {
                 <option value="office">В офисе</option>
               </select>
             </div>
+
+            <div>
+              <label htmlFor="eventTypeCategory" className="block text-sm font-medium text-gray-700 mb-2">
+                Тип события
+              </label>
+              <select
+                id="eventTypeCategory"
+                name="eventTypeCategory"
+                value={formData.eventTypeCategory}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="individual">👤 Индивидуальное (1-на-1)</option>
+                <option value="group">👥 Групповое</option>
+              </select>
+            </div>
+
+            {formData.eventTypeCategory === 'group' && (
+              <div>
+                <label htmlFor="maxParticipants" className="block text-sm font-medium text-gray-700 mb-2">
+                  Максимальное количество участников
+                </label>
+                <select
+                  id="maxParticipants"
+                  name="maxParticipants"
+                  value={formData.maxParticipants}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="2">2 участника</option>
+                  <option value="3">3 участника</option>
+                  <option value="4">4 участника</option>
+                  <option value="5">5 участников</option>
+                  <option value="6">6 участников</option>
+                  <option value="8">8 участников</option>
+                  <option value="10">10 участников</option>
+                  <option value="15">15 участников</option>
+                  <option value="20">20 участников</option>
+                </select>
+              </div>
+            )}
 
             <div className="flex justify-between pt-6">
               <button
