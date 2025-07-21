@@ -25,7 +25,7 @@ export default function RegisterPage() {
     setMessage('')
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -39,7 +39,28 @@ export default function RegisterPage() {
 
       if (error) {
         setError(error.message)
-      } else {
+      } else if (data.user) {
+        // Создаем профиль пользователя
+        try {
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert([{
+              id: data.user.id,
+              email: data.user.email,
+              username: username,
+              first_name: firstName,
+              last_name: lastName,
+              timezone: 'Europe/Moscow'
+            }])
+
+          if (profileError) {
+            console.error('Profile creation error:', profileError)
+            // Не показываем ошибку пользователю, так как регистрация прошла успешно
+          }
+        } catch (profileErr) {
+          console.error('Profile creation failed:', profileErr)
+        }
+
         setMessage('Проверьте email для подтверждения регистрации')
       }
     } catch (err) {
