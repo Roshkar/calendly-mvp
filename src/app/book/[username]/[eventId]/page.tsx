@@ -75,7 +75,7 @@ export default function BookingPage({ params }: { params: { username: string; ev
     loadEventData()
   }, [loadEventData])
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
@@ -83,7 +83,7 @@ export default function BookingPage({ params }: { params: { username: string; ev
     }))
   }
 
-  const handleBooking = async (e) => {
+  const handleBooking = async (e: any) => {
     e.preventDefault()
     
     if (!selectedDate || !selectedTime) {
