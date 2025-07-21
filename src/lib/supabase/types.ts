@@ -54,6 +54,8 @@ export interface Database {
           is_active: boolean
           location_type: string
           location_details: string | null
+          event_type_category: string
+          max_participants: number
           created_at: string
           updated_at: string
         }
@@ -68,6 +70,8 @@ export interface Database {
           is_active?: boolean
           location_type?: string
           location_details?: string | null
+          event_type_category?: string
+          max_participants?: number
           created_at?: string
           updated_at?: string
         }
@@ -82,6 +86,8 @@ export interface Database {
           is_active?: boolean
           location_type?: string
           location_details?: string | null
+          event_type_category?: string
+          max_participants?: number
           created_at?: string
           updated_at?: string
         }
@@ -90,6 +96,52 @@ export interface Database {
             foreignKeyName: "event_types_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      bookings: {
+        Row: {
+          id: string
+          event_type_id: string
+          invitee_name: string
+          invitee_email: string
+          start_time: string
+          end_time: string
+          timezone: string
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          event_type_id: string
+          invitee_name: string
+          invitee_email: string
+          start_time: string
+          end_time: string
+          timezone?: string
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          event_type_id?: string
+          invitee_name?: string
+          invitee_email?: string
+          start_time?: string
+          end_time?: string
+          timezone?: string
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_event_type_id_fkey"
+            columns: ["event_type_id"]
+            referencedRelation: "event_types"
             referencedColumns: ["id"]
           }
         ]

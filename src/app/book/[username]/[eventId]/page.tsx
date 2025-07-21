@@ -10,8 +10,8 @@ export default function BookingPage({ params }: { params: { username: string; ev
   const [userProfile, setUserProfile] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [selectedDate, setSelectedDate] = useState(null)
-  const [selectedTime, setSelectedTime] = useState(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+  const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -129,7 +129,7 @@ export default function BookingPage({ params }: { params: { username: string; ev
     }
   }
 
-  const addMinutes = (time, minutes) => {
+  const addMinutes = (time: string, minutes: number) => {
     const [hours, mins] = time.split(':').map(Number)
     const totalMinutes = hours * 60 + mins + minutes
     const newHours = Math.floor(totalMinutes / 60)
@@ -168,14 +168,14 @@ export default function BookingPage({ params }: { params: { username: string; ev
     return slots
   }
 
-  const getEventTypeIcon = (eventType) => {
+  const getEventTypeIcon = (eventType: any) => {
     if (eventType.event_type_category === 'group') {
       return '👥'
     }
     return '👤'
   }
 
-  const getEventTypeLabel = (eventType) => {
+  const getEventTypeLabel = (eventType: any) => {
     if (eventType.event_type_category === 'group') {
       return `Групповое (до ${eventType.max_participants} чел.)`
     }
