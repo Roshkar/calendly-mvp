@@ -5,6 +5,11 @@ import { supabase } from '@/lib/supabase/client'
 
 export default function BookingPage({ params }: { params: { username: string; eventId: string } }) {
   console.log('🔍 BookingPage загружена с параметрами:', params)
+  console.log('🔍 URL:', typeof window !== 'undefined' ? window.location.href : 'SSR')
+  console.log('🔍 Event ID format check:', params.eventId)
+  
+  // Simple test to ensure the component is rendering
+  console.log('🔍 Component is rendering...')
   
   const [eventData, setEventData] = useState<any>(null)
   const [userProfile, setUserProfile] = useState<any>(null)
@@ -194,7 +199,8 @@ export default function BookingPage({ params }: { params: { username: string; ev
                 <p className="text-blue-700 text-sm">
                   🔍 Страница бронирования загружается<br/>
                   Пользователь: {params.username}<br/>
-                  Событие ID: {params.eventId}
+                  Событие ID: {params.eventId}<br/>
+                  URL: {typeof window !== 'undefined' ? window.location.href : 'SSR'}
                 </p>
               </div>
             </div>
