@@ -44,6 +44,8 @@ export default function UserProfilePage({ params }: { params: { username: string
         console.error('Error loading events:', eventsError)
         setEventTypes([])
       } else {
+        console.log('🔍 Loaded events:', events)
+        console.log('🔍 First event data:', events?.[0])
         setEventTypes(events || [])
       }
 
@@ -197,6 +199,9 @@ export default function UserProfilePage({ params }: { params: { username: string
                     </div>
                   </div>
 
+                  <div className="mb-2 p-2 bg-yellow-100 text-xs">
+                    Debug: short_id = "{eventType.short_id}" | id = {eventType.id} | name = "{eventType.name}"
+                  </div>
                   <Link
                     href={`/book/${params.username}/${eventType.short_id}`}
                     className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center block"
