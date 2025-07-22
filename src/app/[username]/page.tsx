@@ -198,14 +198,14 @@ export default function UserProfilePage({ params }: { params: { username: string
                   </div>
 
                   <Link
-                    href={`/book/${params.username}/${eventType.id}`}
+                    href={`/book/${params.username}/${eventType.short_id}`}
                     className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center block"
                   >
                     Забронировать время
                   </Link>
                   <div className="mt-2 text-xs text-gray-500">
-                    Event ID: {eventType.id}<br/>
-                    Booking URL: /book/{params.username}/{eventType.id}
+                    Short ID: {eventType.short_id}<br/>
+                    Booking URL: /book/{params.username}/{eventType.short_id}
                   </div>
                 </div>
               ))}

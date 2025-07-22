@@ -48,6 +48,7 @@ export interface Database {
           user_id: string
           name: string
           slug: string
+          short_id: string
           description: string | null
           duration_minutes: number
           color: string
@@ -64,6 +65,7 @@ export interface Database {
           user_id: string
           name: string
           slug: string
+          short_id: string
           description?: string | null
           duration_minutes?: number
           color?: string
@@ -80,6 +82,7 @@ export interface Database {
           user_id?: string
           name?: string
           slug?: string
+          short_id?: string
           description?: string | null
           duration_minutes?: number
           color?: string

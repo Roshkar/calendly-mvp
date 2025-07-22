@@ -50,11 +50,11 @@ export default function BookingPage({ params }: { params: { username: string; ev
       setUserProfile(profile)
       setDebugInfo(prev => prev + `✅ Пользователь найден: ${profile.username}\n`)
 
-      // Теперь находим событие по ID и user_id
+      // Теперь находим событие по short_id и user_id
       const { data: event, error: eventError } = await supabase
         .from('event_types')
         .select('*')
-        .eq('id', params.eventId)
+        .eq('short_id', params.eventId)
         .eq('user_id', profile.id)
         .eq('is_active', true)
         .single()

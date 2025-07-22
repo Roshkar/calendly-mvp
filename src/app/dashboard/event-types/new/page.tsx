@@ -28,6 +28,15 @@ export default function NewEventTypePage() {
       .trim()
   }
 
+  const generateShortId = () => {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
+    let result = ''
+    for (let i = 0; i < 6; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    return result
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     
@@ -101,43 +110,40 @@ export default function NewEventTypePage() {
         setDebugInfo(prev => prev + '✅ Профиль найден\n')
       }
 
-      // Создаем slug из названия
-      const baseSlug = formData.name
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .trim()
-
-      // Проверяем уникальность slug
-      setDebugInfo(prev => prev + `Проверяем уникальность slug: ${baseSlug}\n`)
+      // Генерируем короткий ID
+      setDebugInfo(prev => prev + 'Генерируем короткий ID...\n')
       
-      let slug = baseSlug
-      let counter = 1
+      let shortId = generateShortId()
       let isUnique = false
+      let attempts = 0
       
-      while (!isUnique) {
+      while (!isUnique && attempts < 10) {
         const { data: existingEvent, error: checkError } = await supabase
           .from('event_types')
           .select('id')
           .eq('user_id', user.id)
-          .eq('slug', slug)
+          .eq('short_id', shortId)
           .single()
 
         if (checkError && checkError.code === 'PGRST116') {
-          // Событие не найдено - slug уникален
+          // Событие не найдено - ID уникален
           isUnique = true
-          setDebugInfo(prev => prev + `✅ Slug уникален: ${slug}\n`)
+          setDebugInfo(prev => prev + `✅ Короткий ID уникален: ${shortId}\n`)
         } else if (existingEvent) {
-          // Slug уже существует - добавляем счетчик
-          counter++
-          slug = `${baseSlug}-${counter}`
-          setDebugInfo(prev => prev + `Slug занят, пробуем: ${slug}\n`)
+          // ID уже существует - генерируем новый
+          shortId = generateShortId()
+          attempts++
+          setDebugInfo(prev => prev + `ID занят, генерируем новый: ${shortId}\n`)
         } else if (checkError) {
-          throw new Error('Ошибка проверки slug: ' + checkError.message)
+          throw new Error('Ошибка проверки ID: ' + checkError.message)
         }
       }
 
-      setDebugInfo(prev => prev + `✅ Финальный slug: ${slug}\n`)
+      if (!isUnique) {
+        throw new Error('Не удалось сгенерировать уникальный ID после 10 попыток')
+      }
+
+      setDebugInfo(prev => prev + `✅ Финальный короткий ID: ${shortId}\n`)
 
       // Преобразуем location в нужный формат
       let location_type = 'online'
@@ -162,7 +168,8 @@ export default function NewEventTypePage() {
       const eventData = {
         user_id: user.id,
         name: formData.name,
-        slug,
+        slug: formData.name.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').trim(),
+        short_id: shortId,
         description: formData.description || null,
         duration_minutes: parseInt(formData.duration),
         location_type,
@@ -468,4 +475,5 @@ export default function NewEventTypePage() {
       </div>
     </div>
   )
+} 
 } 
