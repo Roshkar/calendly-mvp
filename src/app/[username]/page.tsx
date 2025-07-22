@@ -203,6 +203,10 @@ export default function UserProfilePage({ params }: { params: { username: string
                   >
                     Забронировать время
                   </Link>
+                  <div className="mt-2 text-xs text-gray-500">
+                    Event ID: {eventType.id}<br/>
+                    Booking URL: /book/{params.username}/{eventType.id}
+                  </div>
                 </div>
               ))}
             </div>
