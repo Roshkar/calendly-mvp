@@ -12,12 +12,12 @@ export default function BookingPage() {
   console.log('🔍 Event short_id:', eventShortId)
   console.log('🔍 URL:', typeof window !== 'undefined' ? window.location.href : 'SSR')
   
-  const [eventData, setEventData] = useState(null)
-  const [userProfile, setUserProfile] = useState(null)
+  const [eventData, setEventData] = useState<any>(null)
+  const [userProfile, setUserProfile] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [selectedDate, setSelectedDate] = useState(null)
-  const [selectedTime, setSelectedTime] = useState(null)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+  const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
