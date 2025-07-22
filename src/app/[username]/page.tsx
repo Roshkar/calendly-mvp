@@ -44,6 +44,7 @@ export default function UserProfilePage({ params }: { params: { username: string
         console.error('Error loading events:', eventsError)
         setEventTypes([])
       } else {
+        console.log('🔍 Loaded events:', events)
         setEventTypes(events || [])
       }
 
@@ -204,8 +205,9 @@ export default function UserProfilePage({ params }: { params: { username: string
                     Забронировать время
                   </Link>
                   <div className="mt-2 text-xs text-gray-500">
-                    Short ID: {eventType.short_id}<br/>
-                    Booking URL: /book/{params.username}/{eventType.short_id}
+                    Short ID: {eventType.short_id || 'NOT FOUND'}<br/>
+                    Event Name: {eventType.name}<br/>
+                    Booking URL: /book/{params.username}/{eventType.short_id || eventType.name}
                   </div>
                 </div>
               ))}
