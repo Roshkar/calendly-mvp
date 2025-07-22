@@ -46,6 +46,8 @@ export default function UserProfilePage({ params }: { params: { username: string
       } else {
         console.log('🔍 Loaded events:', events)
         console.log('🔍 First event short_id:', events?.[0]?.short_id)
+        console.log('🔍 First event full data:', events?.[0])
+        console.log('🔍 All event short_ids:', events?.map(e => ({ id: e.id, name: e.name, short_id: e.short_id })))
         setEventTypes(events || [])
       }
 
@@ -207,7 +209,8 @@ export default function UserProfilePage({ params }: { params: { username: string
                   </Link>
                   <div className="mt-2 text-xs text-gray-500">
                     Short ID: {eventType.short_id || 'NOT FOUND'}<br/>
-                    Booking URL: /book/{params.username}/{eventType.short_id}
+                    Event ID: {eventType.id}<br/>
+                    Booking URL: /book/{params.username}/{eventType.short_id || 'MISSING_SHORT_ID'}
                   </div>
                 </div>
               ))}
