@@ -47,7 +47,6 @@ export interface Database {
           id: string
           user_id: string
           name: string
-          slug: string | null
           short_id: string
           description: string | null
           duration_minutes: number
@@ -64,7 +63,6 @@ export interface Database {
           id?: string
           user_id: string
           name: string
-          slug?: string | null
           short_id: string
           description?: string | null
           duration_minutes?: number
@@ -81,7 +79,6 @@ export interface Database {
           id?: string
           user_id?: string
           name?: string
-          slug?: string | null
           short_id?: string
           description?: string | null
           duration_minutes?: number

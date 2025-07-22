@@ -45,6 +45,7 @@ export default function UserProfilePage({ params }: { params: { username: string
         setEventTypes([])
       } else {
         console.log('🔍 Loaded events:', events)
+        console.log('🔍 First event short_id:', events?.[0]?.short_id)
         setEventTypes(events || [])
       }
 
