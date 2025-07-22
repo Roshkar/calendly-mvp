@@ -89,12 +89,11 @@ export default function EventTypesPage() {
 
   const testBookingLink = (eventType) => {
     const baseUrl = window.location.origin
-    const username = userProfile?.username || 'test-user'
     
-    // Используем правильную структуру ссылок
-    const bookingUrl = `${baseUrl}/book/${username}/${eventType.short_id}`
+    // Используем query параметры как в main branch
+    const bookingUrl = `${baseUrl}/booking?event=${eventType.short_id}`
     
-    console.log('🔗 Тестируем ссылку:', bookingUrl)
+    console.log('🔗 Тестируем ссылку с query параметрами:', bookingUrl)
     console.log('📊 Данные события:', eventType)
     console.log('👤 Профиль пользователя:', userProfile)
     
@@ -265,10 +264,10 @@ export default function EventTypesPage() {
                 </div>
                 
                 <div className="flex flex-col items-end space-y-2">
-                  {/* Предварительный просмотр ссылки */}
-                  <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded max-w-xs truncate">
-                    book/{userProfile?.username || 'username'}/{eventType.short_id}
-                  </div>
+                                        {/* Предварительный просмотр ссылки */}
+                      <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded max-w-xs truncate">
+                        booking?event={eventType.short_id}
+                      </div>
                   
                   <div className="flex items-center space-x-2">
                     <button 
@@ -282,9 +281,8 @@ export default function EventTypesPage() {
                       <button 
                         onClick={() => {
                           const baseUrl = window.location.origin
-                          const username = userProfile?.username || 'test-user'
-                          // Используем правильную структуру ссылок
-                          const bookingUrl = `${baseUrl}/book/${username}/${eventType.short_id}`
+                          // Используем query параметры для обхода проблем с маршрутизацией
+                          const bookingUrl = `${baseUrl}/booking?event=${eventType.short_id}`
                           navigator.clipboard.writeText(bookingUrl)
                             
                           // Улучшенное уведомление
