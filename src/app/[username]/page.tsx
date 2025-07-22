@@ -5,7 +5,6 @@ import { supabase } from '@/lib/supabase/client'
 import Link from 'next/link'
 
 export default function UserProfilePage({ params }: { params: { username: string } }) {
-  console.log('🔍 UserProfilePage loaded with params:', params)
   const [userProfile, setUserProfile] = useState<any>(null)
   const [eventTypes, setEventTypes] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -16,7 +15,6 @@ export default function UserProfilePage({ params }: { params: { username: string
   }, [params.username])
 
   const loadUserProfile = async () => {
-    console.log('🔍 loadUserProfile called')
     try {
       setIsLoading(true)
       setError(null)
@@ -35,7 +33,6 @@ export default function UserProfilePage({ params }: { params: { username: string
       setUserProfile(profile)
 
       // Загружаем активные события пользователя
-      console.log('🔍 Loading events for user:', profile.id)
       const { data: events, error: eventsError } = await supabase
         .from('event_types')
         .select('*')
@@ -47,30 +44,13 @@ export default function UserProfilePage({ params }: { params: { username: string
         console.error('Error loading events:', eventsError)
         setEventTypes([])
       } else {
-        console.log('🔍 Loaded events:', events)
-        console.log('🔍 First event short_id:', events?.[0]?.short_id)
-        console.log('🔍 First event full data:', events?.[0])
-        console.log('🔍 All event short_ids:', events?.map(e => ({ id: e.id, name: e.name, short_id: e.short_id })))
-        
-        // Проверяем, что у всех событий есть short_id
-        const eventsWithShortId = events?.filter(e => e.short_id) || []
-        const eventsWithoutShortId = events?.filter(e => !e.short_id) || []
-        
-        console.log('🔍 Events with short_id:', eventsWithShortId.length)
-        console.log('🔍 Events without short_id:', eventsWithoutShortId.length)
-        
-        if (eventsWithoutShortId.length > 0) {
-          console.error('❌ Events missing short_id:', eventsWithoutShortId)
-        }
-        
         setEventTypes(events || [])
       }
 
     } catch (err: any) {
-      console.error('❌ Error loading profile:', err)
+      console.error('Error loading profile:', err)
       setError(err.message)
     } finally {
-      console.log('🔍 loadUserProfile finished, isLoading:', false)
       setIsLoading(false)
     }
   }
@@ -172,10 +152,6 @@ export default function UserProfilePage({ params }: { params: { username: string
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              <div className="col-span-2 bg-yellow-100 p-4 rounded-lg">
-                <p className="text-sm">Debug: Found {eventTypes.length} events</p>
-                <p className="text-sm">First event short_id: {eventTypes[0]?.short_id || 'NOT FOUND'}</p>
-              </div>
               {eventTypes.map((eventType) => (
                 <div key={eventType.id} className="bg-white rounded-lg border p-6 hover:shadow-md transition-shadow">
                   <div className="flex items-start justify-between mb-4">
@@ -221,24 +197,12 @@ export default function UserProfilePage({ params }: { params: { username: string
                     </div>
                   </div>
 
-                  {eventType.short_id ? (
-                    <>
-                      <Link
-                        href={`/book/${params.username}/${eventType.short_id}`}
-                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center block"
-                      >
-                        Забронировать время
-                      </Link>
-                      <div className="mt-2 text-xs text-gray-500">
-                        Short ID: {eventType.short_id}<br/>
-                        Booking URL: /book/{params.username}/{eventType.short_id}
-                      </div>
-                    </>
-                  ) : (
-                    <div className="w-full bg-red-100 text-red-700 py-2 px-4 rounded-lg text-center block">
-                      ❌ Ошибка: отсутствует Short ID
-                    </div>
-                  )}
+                  <Link
+                    href={`/book/${params.username}/${eventType.short_id}`}
+                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center block"
+                  >
+                    Забронировать время
+                  </Link>
                 </div>
               ))}
             </div>
