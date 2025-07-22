@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase/client'
 import Link from 'next/link'
 
 export default function UserProfilePage({ params }: { params: { username: string } }) {
+  console.log('🔍 UserProfilePage loaded with params:', params)
   const [userProfile, setUserProfile] = useState<any>(null)
   const [eventTypes, setEventTypes] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -15,6 +16,7 @@ export default function UserProfilePage({ params }: { params: { username: string
   }, [params.username])
 
   const loadUserProfile = async () => {
+    console.log('🔍 loadUserProfile called')
     try {
       setIsLoading(true)
       setError(null)
@@ -65,9 +67,10 @@ export default function UserProfilePage({ params }: { params: { username: string
       }
 
     } catch (err: any) {
-      console.error('Error loading profile:', err)
+      console.error('❌ Error loading profile:', err)
       setError(err.message)
     } finally {
+      console.log('🔍 loadUserProfile finished, isLoading:', false)
       setIsLoading(false)
     }
   }
@@ -169,6 +172,10 @@ export default function UserProfilePage({ params }: { params: { username: string
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
+              <div className="col-span-2 bg-yellow-100 p-4 rounded-lg">
+                <p className="text-sm">Debug: Found {eventTypes.length} events</p>
+                <p className="text-sm">First event short_id: {eventTypes[0]?.short_id || 'NOT FOUND'}</p>
+              </div>
               {eventTypes.map((eventType) => (
                 <div key={eventType.id} className="bg-white rounded-lg border p-6 hover:shadow-md transition-shadow">
                   <div className="flex items-start justify-between mb-4">
