@@ -64,10 +64,10 @@ export default function BookingPage() {
       setUserProfile(event.profiles)
       setDebugInfo(prev => prev + `✅ Событие загружено: ${event.name}\n`)
 
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error loading event data:', err)
-      setError(err.message)
-      setDebugInfo(prev => prev + `❌ Ошибка: ${err.message}\n`)
+      setError(err.message || 'Произошла ошибка при загрузке события')
+      setDebugInfo(prev => prev + `❌ Ошибка: ${err.message || 'Неизвестная ошибка'}\n`)
     } finally {
       setIsLoading(false)
     }
@@ -123,10 +123,10 @@ export default function BookingPage() {
 
       setSuccess(true)
 
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error creating booking:', err)
-      setError(err.message)
-      setDebugInfo(prev => prev + `❌ Ошибка бронирования: ${err.message}\n`)
+      setError(err.message || 'Произошла ошибка при создании бронирования')
+      setDebugInfo(prev => prev + `❌ Ошибка бронирования: ${err.message || 'Неизвестная ошибка'}\n`)
     } finally {
       setIsSubmitting(false)
     }
