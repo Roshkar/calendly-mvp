@@ -51,6 +51,9 @@ export default function BookingPage({ params }: { params: { username: string; ev
       setDebugInfo(prev => prev + `✅ Пользователь найден: ${profile.username}\n`)
 
       // Теперь находим событие по short_id и user_id
+      console.log('🔍 Searching for event with short_id:', params.eventId)
+      console.log('🔍 User ID:', profile.id)
+      
       const { data: event, error: eventError } = await supabase
         .from('event_types')
         .select('*')
@@ -61,6 +64,17 @@ export default function BookingPage({ params }: { params: { username: string; ev
 
       if (eventError) {
         setDebugInfo(prev => prev + `❌ Событие не найдено: ${eventError.message}\n`)
+        
+        // Debug: показываем все события пользователя
+        const { data: allEvents, error: allEventsError } = await supabase
+          .from('event_types')
+          .select('id, name, short_id, is_active')
+          .eq('user_id', profile.id)
+        
+        if (!allEventsError) {
+          setDebugInfo(prev => prev + `🔍 Все события пользователя: ${JSON.stringify(allEvents, null, 2)}\n`)
+        }
+        
         throw new Error(`Событие не найдено или неактивно`)
       }
 
