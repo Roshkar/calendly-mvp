@@ -17,17 +17,8 @@ export default function NewEventTypePage() {
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(false)
   const [debugInfo, setDebugInfo] = useState('')
-  const [previewSlug, setPreviewSlug] = useState('')
 
   // Функция для генерации preview slug
-  const generatePreviewSlug = (name) => {
-    return name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .trim()
-  }
-
   const generateShortId = () => {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
     let result = ''
@@ -168,7 +159,6 @@ export default function NewEventTypePage() {
       const eventData = {
         user_id: user.id,
         name: formData.name,
-        slug: formData.name.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').trim(),
         short_id: shortId,
         description: formData.description || null,
         duration_minutes: parseInt(formData.duration),
@@ -229,10 +219,7 @@ export default function NewEventTypePage() {
       [name]: value
     }))
     
-    // Обновляем preview slug при изменении названия
-    if (name === 'name') {
-      setPreviewSlug(generatePreviewSlug(value))
-    }
+    // No longer need slug preview
   }
 
   const testConnection = async () => {
@@ -338,14 +325,7 @@ export default function NewEventTypePage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
-              {previewSlug && (
-                <div className="mt-2 text-xs text-gray-500">
-                  <span className="font-medium">Ссылка будет:</span> 
-                  <span className="bg-gray-100 px-2 py-1 rounded ml-1">
-                    /book/[username]/{previewSlug}
-                  </span>
-                </div>
-              )}
+
             </div>
 
             <div>

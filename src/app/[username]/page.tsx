@@ -35,7 +35,7 @@ export default function UserProfilePage({ params }: { params: { username: string
       // Загружаем активные события пользователя
       const { data: events, error: eventsError } = await supabase
         .from('event_types')
-        .select('id, name, slug, short_id, description, duration_minutes, color, is_active, location_type, location_details, event_type_category, max_participants, created_at')
+        .select('id, name, short_id, description, duration_minutes, color, is_active, location_type, location_details, event_type_category, max_participants, created_at')
         .eq('user_id', profile.id)
         .eq('is_active', true)
         .order('created_at', { ascending: false })
@@ -206,8 +206,7 @@ export default function UserProfilePage({ params }: { params: { username: string
                   </Link>
                   <div className="mt-2 text-xs text-gray-500">
                     Short ID: {eventType.short_id || 'NOT FOUND'}<br/>
-                    Event Name: {eventType.name}<br/>
-                    Booking URL: /book/{params.username}/{eventType.short_id || eventType.name}
+                    Booking URL: /book/{params.username}/{eventType.short_id}
                   </div>
                 </div>
               ))}
