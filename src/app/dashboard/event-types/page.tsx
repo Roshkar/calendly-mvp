@@ -53,6 +53,8 @@ export default function EventTypesPage() {
         return
       }
 
+      console.log('🔍 Loaded event types:', data)
+      console.log('🔍 First event type:', data?.[0])
       setEventTypes(data || [])
     } catch (err) {
       console.error('Error:', err)
@@ -90,7 +92,7 @@ export default function EventTypesPage() {
     const username = userProfile?.username || 'test-user'
     
     // Используем правильную структуру ссылок
-    const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
+    const bookingUrl = `${baseUrl}/book/${username}/${eventType.short_id}`
     
     console.log('🔗 Тестируем ссылку:', bookingUrl)
     console.log('📊 Данные события:', eventType)
@@ -265,7 +267,7 @@ export default function EventTypesPage() {
                 <div className="flex flex-col items-end space-y-2">
                   {/* Предварительный просмотр ссылки */}
                   <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded max-w-xs truncate">
-                    book/{userProfile?.username || 'username'}/{eventType.slug}
+                    book/{userProfile?.username || 'username'}/{eventType.short_id}
                   </div>
                   
                   <div className="flex items-center space-x-2">
@@ -282,7 +284,7 @@ export default function EventTypesPage() {
                           const baseUrl = window.location.origin
                           const username = userProfile?.username || 'test-user'
                           // Используем правильную структуру ссылок
-                          const bookingUrl = `${baseUrl}/book/${username}/${eventType.slug}`
+                          const bookingUrl = `${baseUrl}/book/${username}/${eventType.short_id}`
                           navigator.clipboard.writeText(bookingUrl)
                             
                           // Улучшенное уведомление
