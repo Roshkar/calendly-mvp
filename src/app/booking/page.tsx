@@ -147,18 +147,26 @@ export default function BookingPage() {
     for (let i = 1; i <= 14; i++) {
       const date = new Date(today)
       date.setDate(today.getDate() + i)
-      dates.push(date.toISOString().split('T')[0])
+      dates.push({
+        date: date.toISOString().split('T')[0],
+        display: date.toLocaleDateString('ru-RU', { 
+          weekday: 'short', 
+          day: 'numeric', 
+          month: 'short' 
+        })
+      })
     }
     
     return dates
   }
 
   const getAvailableTimeSlots = () => {
-    // Простые временные слоты с 9:00 до 18:00
     const slots = []
-    for (let hour = 9; hour < 18; hour++) {
-      slots.push(`${hour.toString().padStart(2, '0')}:00`)
-      slots.push(`${hour.toString().padStart(2, '0')}:30`)
+    for (let hour = 9; hour <= 17; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
+        slots.push(time)
+      }
     }
     return slots
   }
@@ -243,45 +251,51 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg border p-6">
-          {/* Event Info */}
-          <div className="mb-6">
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="bg-white rounded-lg border p-6">
             <div className="flex items-center space-x-3 mb-4">
-              <div 
-                className="w-4 h-4 rounded-full" 
-                style={{ backgroundColor: eventData.color }}
-              ></div>
-              <h1 className="text-2xl font-bold text-gray-900">{eventData.name}</h1>
-              <span className="text-lg" title={getEventTypeLabel(eventData)}>
-                {getEventTypeIcon(eventData)}
-              </span>
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <span className="text-xl">👤</span>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold">
+                  {userProfile?.first_name} {userProfile?.last_name} (@{userProfile?.username})
+                </h2>
+                <p className="text-gray-600">Организатор встречи</p>
+              </div>
             </div>
             
-            {eventData.description && (
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              {eventData?.name}
+            </h1>
+
+            {eventData?.description && (
               <p className="text-gray-600 mb-4">{eventData.description}</p>
             )}
             
-            <div className="space-y-2 text-sm text-gray-600">
+            <div className="space-y-3 text-sm text-gray-600">
               <div className="flex items-center space-x-2">
                 <span>⏰</span>
-                <span>{eventData.duration_minutes} минут</span>
+                <span>{eventData?.duration_minutes} минут</span>
               </div>
-              
               <div className="flex items-center space-x-2">
                 <span>
-                  {eventData.location_type === 'online' && '💻'}
-                  {eventData.location_type === 'in_person' && '🏢'}
-                  {eventData.location_type === 'phone' && '📞'}
+                  {eventData?.location_type === 'online' && '💻'}
+                  {eventData?.location_type === 'in_person' && '🏢'}
+                  {eventData?.location_type === 'phone' && '📞'}
                 </span>
                 <span>
-                  {eventData.location_details || 
-                   (eventData.location_type === 'online' ? 'Онлайн встреча' : 
-                    eventData.location_type === 'phone' ? 'Телефонный звонок' : 'Личная встреча')}
+                  {eventData?.location_details || 
+                   (eventData?.location_type === 'online' ? 'Онлайн встреча' : 
+                    eventData?.location_type === 'phone' ? 'Телефонный звонок' : 'Личная встреча')}
                 </span>
               </div>
-              
+              <div className="flex items-center space-x-2">
+                <span>🌍</span>
+                <span>{userProfile?.timezone || 'Europe/Moscow'}</span>
+              </div>
               <div className="flex items-center space-x-2">
                 <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
                   {getEventTypeLabel(eventData)}
@@ -290,107 +304,112 @@ export default function BookingPage() {
             </div>
           </div>
 
-          {/* Booking Form */}
-          <form onSubmit={handleBooking} className="space-y-6">
-            {/* Date Selection */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Выберите дату
-              </label>
-              <select
-                value={selectedDate || ''}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              >
-                <option value="">Выберите дату...</option>
-                {getAvailableDates().map((date) => (
-                  <option key={date} value={date}>
-                    {new Date(date).toLocaleDateString('ru-RU', { 
-                      weekday: 'long', 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
-                  </option>
+          <div className="bg-white rounded-lg border p-6">
+            <h3 className="text-lg font-semibold mb-4">Выберите дату и время</h3>
+            
+            <div className="mb-6">
+              <h4 className="font-medium mb-3">Доступные даты</h4>
+              <div className="grid grid-cols-2 gap-2">
+                {getAvailableDates().map((dateObj) => (
+                  <button
+                    key={dateObj.date}
+                    onClick={() => setSelectedDate(dateObj.date)}
+                    className={`p-2 text-sm border rounded text-left ${
+                      selectedDate === dateObj.date
+                        ? 'border-blue-500 bg-blue-50 text-blue-700'
+                        : 'border-gray-300 hover:border-blue-300'
+                    }`}
+                  >
+                    {dateObj.display}
+                  </button>
                 ))}
-              </select>
-            </div>
-
-            {/* Time Selection */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Выберите время
-              </label>
-              <select
-                value={selectedTime || ''}
-                onChange={(e) => setSelectedTime(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              >
-                <option value="">Выберите время...</option>
-                {getAvailableTimeSlots().map((time) => (
-                  <option key={time} value={time}>
-                    {time}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Contact Information */}
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Имя *
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email *
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Дополнительная информация
-                </label>
-                <textarea
-                  name="note"
-                  value={formData.note}
-                  onChange={handleInputChange}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Расскажите о цели встречи..."
-                />
               </div>
             </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? 'Создание бронирования...' : 'Забронировать встречу'}
-            </button>
-          </form>
+            {selectedDate && (
+              <div className="mb-6">
+                <h4 className="font-medium mb-3">Доступное время</h4>
+                <div className="grid grid-cols-3 gap-2">
+                  {getAvailableTimeSlots().map((time) => (
+                    <button
+                      key={time}
+                      onClick={() => setSelectedTime(time)}
+                      className={`p-2 text-sm border rounded ${
+                        selectedTime === time
+                          ? 'border-blue-500 bg-blue-50 text-blue-700'
+                          : 'border-gray-300 hover:border-blue-300'
+                      }`}
+                    >
+                      {time}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {selectedDate && selectedTime && (
+              <form onSubmit={handleBooking} className="space-y-4">
+                <div className="p-3 bg-green-50 border border-green-200 rounded-md">
+                  <p className="text-sm text-green-700">
+                    <strong>Выбрано:</strong> {selectedDate} в {selectedTime}
+                  </p>
+                </div>
+
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                    Ваше имя *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="note" className="block text-sm font-medium text-gray-700 mb-1">
+                    Комментарий (опционально)
+                  </label>
+                  <textarea
+                    id="note"
+                    name="note"
+                    value={formData.note}
+                    onChange={handleInputChange}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Расскажите о цели встречи..."
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? 'Бронирование...' : 'Забронировать встречу'}
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </div>
     </div>
