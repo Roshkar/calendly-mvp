@@ -77,7 +77,7 @@ export default function BookingPage() {
     loadEventData()
   }, [loadEventData])
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
@@ -85,7 +85,7 @@ export default function BookingPage() {
     }))
   }
 
-  const handleBooking = async (e) => {
+  const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (!selectedDate || !selectedTime) {
@@ -132,7 +132,7 @@ export default function BookingPage() {
     }
   }
 
-  const addMinutes = (time, minutes) => {
+  const addMinutes = (time: string, minutes: number) => {
     const [hours, mins] = time.split(':').map(Number)
     const totalMinutes = hours * 60 + mins + minutes
     const newHours = Math.floor(totalMinutes / 60)
@@ -163,14 +163,14 @@ export default function BookingPage() {
     return slots
   }
 
-  const getEventTypeIcon = (eventType) => {
+  const getEventTypeIcon = (eventType: any) => {
     if (eventType.event_type_category === 'group') {
       return '👥'
     }
     return '👤'
   }
 
-  const getEventTypeLabel = (eventType) => {
+  const getEventTypeLabel = (eventType: any) => {
     if (eventType.event_type_category === 'group') {
       return `Групповое (до ${eventType.max_participants} чел.)`
     }
