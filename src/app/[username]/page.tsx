@@ -33,9 +33,10 @@ export default function UserProfilePage({ params }: { params: { username: string
       setUserProfile(profile)
 
       // Загружаем активные события пользователя
+      console.log('🔍 Loading events for user:', profile.id)
       const { data: events, error: eventsError } = await supabase
         .from('event_types')
-        .select('id, name, short_id, description, duration_minutes, color, is_active, location_type, location_details, event_type_category, max_participants, created_at')
+        .select('*')
         .eq('user_id', profile.id)
         .eq('is_active', true)
         .order('created_at', { ascending: false })
@@ -48,6 +49,18 @@ export default function UserProfilePage({ params }: { params: { username: string
         console.log('🔍 First event short_id:', events?.[0]?.short_id)
         console.log('🔍 First event full data:', events?.[0])
         console.log('🔍 All event short_ids:', events?.map(e => ({ id: e.id, name: e.name, short_id: e.short_id })))
+        
+        // Проверяем, что у всех событий есть short_id
+        const eventsWithShortId = events?.filter(e => e.short_id) || []
+        const eventsWithoutShortId = events?.filter(e => !e.short_id) || []
+        
+        console.log('🔍 Events with short_id:', eventsWithShortId.length)
+        console.log('🔍 Events without short_id:', eventsWithoutShortId.length)
+        
+        if (eventsWithoutShortId.length > 0) {
+          console.error('❌ Events missing short_id:', eventsWithoutShortId)
+        }
+        
         setEventTypes(events || [])
       }
 
@@ -201,17 +214,24 @@ export default function UserProfilePage({ params }: { params: { username: string
                     </div>
                   </div>
 
-                  <Link
-                    href={`/book/${params.username}/${eventType.short_id}`}
-                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center block"
-                  >
-                    Забронировать время
-                  </Link>
-                  <div className="mt-2 text-xs text-gray-500">
-                    Short ID: {eventType.short_id || 'NOT FOUND'}<br/>
-                    Event ID: {eventType.id}<br/>
-                    Booking URL: /book/{params.username}/{eventType.short_id || 'MISSING_SHORT_ID'}
-                  </div>
+                  {eventType.short_id ? (
+                    <>
+                      <Link
+                        href={`/book/${params.username}/${eventType.short_id}`}
+                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center block"
+                      >
+                        Забронировать время
+                      </Link>
+                      <div className="mt-2 text-xs text-gray-500">
+                        Short ID: {eventType.short_id}<br/>
+                        Booking URL: /book/{params.username}/{eventType.short_id}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="w-full bg-red-100 text-red-700 py-2 px-4 rounded-lg text-center block">
+                      ❌ Ошибка: отсутствует Short ID
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
