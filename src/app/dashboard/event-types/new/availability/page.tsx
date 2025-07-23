@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
 
@@ -10,6 +10,11 @@ interface AvailabilitySlot {
   endTime: string
 }
 
+interface WorkingHours {
+  start: string
+  end: string
+}
+
 export default function EventAvailabilityPage() {
   const router = useRouter()
   const [eventTypeId, setEventTypeId] = useState<string | null>(null)
@@ -17,6 +22,12 @@ export default function EventAvailabilityPage() {
   const [slots, setSlots] = useState<AvailabilitySlot[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  
+  // Calendar and time selection
+  const [selectedDates, setSelectedDates] = useState<string[]>([])
+  const [workingHours, setWorkingHours] = useState<WorkingHours>({ start: '09:00', end: '17:00' })
+  const [timeInterval, setTimeInterval] = useState(30) // minutes
+  const [selectionMode, setSelectionMode] = useState<'calendar' | 'manual'>('calendar')
 
   useEffect(() => {
     // Get event type ID from URL params or localStorage
@@ -46,7 +57,98 @@ export default function EventAvailabilityPage() {
     }
   }
 
-  const addSlot = () => {
+  const getCalendarDates = () => {
+    const dates = []
+    const today = new Date()
+    
+    // Generate next 30 days
+    for (let i = 1; i <= 30; i++) {
+      const date = new Date(today)
+      date.setDate(today.getDate() + i)
+      dates.push({
+        date: date.toISOString().split('T')[0],
+        display: date.toLocaleDateString('ru-RU', { 
+          weekday: 'short', 
+          day: 'numeric', 
+          month: 'short' 
+        }),
+        dayOfWeek: date.getDay()
+      })
+    }
+    
+    return dates
+  }
+
+  const toggleDate = (date: string) => {
+    setSelectedDates(prev => 
+      prev.includes(date) 
+        ? prev.filter(d => d !== date)
+        : [...prev, date]
+    )
+  }
+
+  const selectAllWeekdays = () => {
+    const calendarDates = getCalendarDates()
+    const weekdays = calendarDates
+      .filter(d => d.dayOfWeek >= 1 && d.dayOfWeek <= 5) // Monday to Friday
+      .map(d => d.date)
+    setSelectedDates(weekdays)
+  }
+
+  const clearSelection = () => {
+    setSelectedDates([])
+  }
+
+  const generateTimeSlots = () => {
+    const slots = []
+    const [startHour, startMin] = workingHours.start.split(':').map(Number)
+    const [endHour, endMin] = workingHours.end.split(':').map(Number)
+    
+    let currentHour = startHour
+    let currentMin = startMin
+    
+    while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
+      const time = `${currentHour.toString().padStart(2, '0')}:${currentMin.toString().padStart(2, '0')}`
+      slots.push(time)
+      
+      currentMin += timeInterval
+      if (currentMin >= 60) {
+        currentMin = 0
+        currentHour++
+      }
+    }
+    
+    return slots
+  }
+
+  const generateSlotsFromSelection = () => {
+    if (selectedDates.length === 0) return
+    
+    const timeSlots = generateTimeSlots()
+    const newSlots: AvailabilitySlot[] = []
+    
+    selectedDates.forEach(date => {
+      timeSlots.forEach(startTime => {
+        newSlots.push({
+          date,
+          startTime,
+          endTime: calculateEndTime(startTime, eventData?.duration_minutes || 30)
+        })
+      })
+    })
+    
+    setSlots(newSlots)
+  }
+
+  const calculateEndTime = (startTime: string, durationMinutes: number) => {
+    const [hours, minutes] = startTime.split(':').map(Number)
+    const totalMinutes = hours * 60 + minutes + durationMinutes
+    const newHours = Math.floor(totalMinutes / 60)
+    const newMinutes = totalMinutes % 60
+    return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`
+  }
+
+  const addManualSlot = () => {
     const today = new Date()
     const tomorrow = new Date(today)
     tomorrow.setDate(today.getDate() + 1)
@@ -63,19 +165,17 @@ export default function EventAvailabilityPage() {
   const updateSlot = (index: number, field: keyof AvailabilitySlot, value: string) => {
     const updatedSlots = [...slots]
     updatedSlots[index] = { ...updatedSlots[index], [field]: value }
+    
+    // Recalculate end time if start time changed
+    if (field === 'startTime' && eventData) {
+      updatedSlots[index].endTime = calculateEndTime(value, eventData.duration_minutes)
+    }
+    
     setSlots(updatedSlots)
   }
 
   const removeSlot = (index: number) => {
     setSlots(slots.filter((_, i) => i !== index))
-  }
-
-  const calculateEndTime = (startTime: string, durationMinutes: number) => {
-    const [hours, minutes] = startTime.split(':').map(Number)
-    const totalMinutes = hours * 60 + minutes + durationMinutes
-    const newHours = Math.floor(totalMinutes / 60)
-    const newMinutes = totalMinutes % 60
-    return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,20 +186,27 @@ export default function EventAvailabilityPage() {
     setError(null)
 
     try {
+      console.log('Creating slots:', slots)
+      
       // Create availability slots
       const slotsToInsert = slots.map(slot => ({
         event_type_id: eventTypeId,
         date: slot.date,
         start_time: slot.startTime,
-        end_time: calculateEndTime(slot.startTime, eventData.duration_minutes),
+        end_time: slot.endTime,
         is_active: true
       }))
+
+      console.log('Slots to insert:', slotsToInsert)
 
       const { error } = await supabase
         .from('availability_slots')
         .insert(slotsToInsert)
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase error:', error)
+        throw error
+      }
 
       // Clear localStorage
       localStorage.removeItem('newEventTypeId')
@@ -107,21 +214,11 @@ export default function EventAvailabilityPage() {
       // Redirect to event types page
       router.push('/dashboard/event-types')
     } catch (err: any) {
-      setError('Error creating availability slots: ' + err.message)
+      console.error('Error details:', err)
+      setError('Error creating availability slots: ' + (err.message || 'Unknown error'))
     } finally {
       setIsSubmitting(false)
     }
-  }
-
-  const getAvailableTimeSlots = () => {
-    const slots = []
-    for (let hour = 9; hour <= 17; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
-        const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
-        slots.push(time)
-      }
-    }
-    return slots
   }
 
   if (error) {
@@ -163,14 +260,14 @@ export default function EventAvailabilityPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         <div className="bg-white rounded-lg border p-6">
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               Настройка доступности для "{eventData.name}"
             </h1>
             <p className="text-gray-600">
-              Укажите даты и время, когда вы доступны для встреч
+              Выберите даты и время, когда вы доступны для встреч
             </p>
           </div>
 
@@ -186,90 +283,249 @@ export default function EventAvailabilityPage() {
           </div>
 
           <form onSubmit={handleSubmit}>
+            {/* Selection Mode Tabs */}
             <div className="mb-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Слоты доступности</h3>
+              <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
                 <button
                   type="button"
-                  onClick={addSlot}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                  onClick={() => setSelectionMode('calendar')}
+                  className={`flex-1 py-2 px-4 rounded-md text-sm font-medium ${
+                    selectionMode === 'calendar'
+                      ? 'bg-white text-blue-600 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
                 >
-                  + Добавить слот
+                  📅 Календарь
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectionMode('manual')}
+                  className={`flex-1 py-2 px-4 rounded-md text-sm font-medium ${
+                    selectionMode === 'manual'
+                      ? 'bg-white text-blue-600 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  ✏️ Ручное добавление
                 </button>
               </div>
+            </div>
 
-              {slots.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <p>Нет добавленных слотов</p>
-                  <p className="text-sm">Нажмите "Добавить слот" чтобы начать</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {slots.map((slot, index) => (
-                    <div key={index} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex justify-between items-start mb-3">
-                        <h4 className="font-medium">Слот {index + 1}</h4>
-                        <button
-                          type="button"
-                          onClick={() => removeSlot(index)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          Удалить
-                        </button>
+            {selectionMode === 'calendar' ? (
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Calendar Selection */}
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Выберите даты</h3>
+                    <div className="space-x-2">
+                      <button
+                        type="button"
+                        onClick={selectAllWeekdays}
+                        className="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                      >
+                        Все будни
+                      </button>
+                      <button
+                        type="button"
+                        onClick={clearSelection}
+                        className="text-sm bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700"
+                      >
+                        Очистить
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-7 gap-1 mb-4">
+                    {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(day => (
+                      <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
+                        {day}
                       </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    ))}
+                  </div>
+                  
+                  <div className="grid grid-cols-7 gap-1 max-h-96 overflow-y-auto">
+                    {getCalendarDates().map((dateObj) => (
+                      <button
+                        key={dateObj.date}
+                        type="button"
+                        onClick={() => toggleDate(dateObj.date)}
+                        className={`p-2 text-sm border rounded text-center ${
+                          selectedDates.includes(dateObj.date)
+                            ? 'border-blue-500 bg-blue-50 text-blue-700'
+                            : 'border-gray-300 hover:border-blue-300'
+                        }`}
+                      >
+                        <div className="font-medium">{dateObj.display.split(' ')[1]}</div>
+                        <div className="text-xs text-gray-500">{dateObj.display.split(' ')[0]}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Time Settings */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Настройки времени</h3>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Рабочие часы
+                      </label>
+                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Дата
-                          </label>
+                          <label className="block text-xs text-gray-500 mb-1">Начало</label>
                           <input
-                            type="date"
-                            value={slot.date}
-                            onChange={(e) => updateSlot(index, 'date', e.target.value)}
-                            min={new Date().toISOString().split('T')[0]}
+                            type="time"
+                            value={workingHours.start}
+                            onChange={(e) => setWorkingHours(prev => ({ ...prev, start: e.target.value }))}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
                           />
                         </div>
-                        
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Время начала
-                          </label>
-                          <select
-                            value={slot.startTime}
-                            onChange={(e) => updateSlot(index, 'startTime', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                          >
-                            {getAvailableTimeSlots().map((time) => (
-                              <option key={time} value={time}>
-                                {time}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Время окончания
-                          </label>
+                          <label className="block text-xs text-gray-500 mb-1">Конец</label>
                           <input
-                            type="text"
-                            value={calculateEndTime(slot.startTime, eventData.duration_minutes)}
-                            disabled
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600"
+                            type="time"
+                            value={workingHours.end}
+                            onChange={(e) => setWorkingHours(prev => ({ ...prev, end: e.target.value }))}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
                       </div>
                     </div>
-                  ))}
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Интервал слотов
+                      </label>
+                      <select
+                        value={timeInterval}
+                        onChange={(e) => setTimeInterval(Number(e.target.value))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value={15}>15 минут</option>
+                        <option value={30}>30 минут</option>
+                        <option value={45}>45 минут</option>
+                        <option value={60}>1 час</option>
+                      </select>
+                    </div>
+                    
+                    <div className="p-4 bg-gray-50 rounded-md">
+                      <h4 className="font-medium mb-2">Предварительный просмотр</h4>
+                      <p className="text-sm text-gray-600 mb-2">
+                        Выбрано дат: {selectedDates.length}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Слотов будет создано: {selectedDates.length * generateTimeSlots().length}
+                      </p>
+                    </div>
+                    
+                    <button
+                      type="button"
+                      onClick={generateSlotsFromSelection}
+                      disabled={selectedDates.length === 0}
+                      className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Создать слоты из выбора
+                    </button>
+                  </div>
                 </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              /* Manual Mode */
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">Ручное добавление слотов</h3>
+                  <button
+                    type="button"
+                    onClick={addManualSlot}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                  >
+                    + Добавить слот
+                  </button>
+                </div>
 
-            <div className="flex justify-between">
+                {slots.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <p>Нет добавленных слотов</p>
+                    <p className="text-sm">Нажмите "Добавить слот" чтобы начать</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {slots.map((slot, index) => (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4">
+                        <div className="flex justify-between items-start mb-3">
+                          <h4 className="font-medium">Слот {index + 1}</h4>
+                          <button
+                            type="button"
+                            onClick={() => removeSlot(index)}
+                            className="text-red-600 hover:text-red-800"
+                          >
+                            Удалить
+                          </button>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Дата
+                            </label>
+                            <input
+                              type="date"
+                              value={slot.date}
+                              onChange={(e) => updateSlot(index, 'date', e.target.value)}
+                              min={new Date().toISOString().split('T')[0]}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              required
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Время начала
+                            </label>
+                            <input
+                              type="time"
+                              value={slot.startTime}
+                              onChange={(e) => updateSlot(index, 'startTime', e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              required
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Время окончания
+                            </label>
+                            <input
+                              type="text"
+                              value={slot.endTime}
+                              disabled
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Summary and Submit */}
+            {slots.length > 0 && (
+              <div className="mt-8 p-4 bg-green-50 border border-green-200 rounded-md">
+                <h3 className="font-semibold text-green-900 mb-2">
+                  Готово к созданию: {slots.length} слотов
+                </h3>
+                <div className="text-sm text-green-800 space-y-1">
+                  <p>• {new Set(slots.map(s => s.date)).size} уникальных дат</p>
+                  <p>• Временные слоты: {slots[0]?.startTime} - {slots[0]?.endTime}</p>
+                  <p>• Длительность события: {eventData.duration_minutes} минут</p>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6 flex justify-between">
               <button
                 type="button"
                 onClick={() => router.push('/dashboard/event-types')}
