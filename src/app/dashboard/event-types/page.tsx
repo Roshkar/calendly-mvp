@@ -226,7 +226,15 @@ export default function EventTypesPage() {
                       className="w-4 h-4 rounded-full" 
                       style={{ backgroundColor: eventType.color }}
                     ></div>
-                    <h3 className="text-lg font-medium text-gray-900">{eventType.name}</h3>
+                    <button
+                      onClick={() => {
+                        localStorage.setItem('newEventTypeId', eventType.id)
+                        window.location.href = '/dashboard/event-types/new/availability'
+                      }}
+                      className="text-lg font-medium text-gray-900 hover:text-blue-600 transition-colors cursor-pointer"
+                    >
+                      {eventType.name}
+                    </button>
                     {/* Иконка типа события */}
                     <span className="text-lg" title={getEventTypeLabel(eventType)}>
                       {getEventTypeIcon(eventType)}
@@ -270,6 +278,16 @@ export default function EventTypesPage() {
                       </div>
                   
                   <div className="flex items-center space-x-2">
+                    <button 
+                      onClick={() => {
+                        localStorage.setItem('newEventTypeId', eventType.id)
+                        window.location.href = '/dashboard/event-types/new/availability'
+                      }}
+                      className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                    >
+                      📅 Настроить время
+                    </button>
+                    
                     <button 
                       onClick={() => testBookingLink(eventType)}
                       className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
