@@ -65,6 +65,11 @@ export default function EventAvailabilityPage() {
     for (let i = 1; i <= 30; i++) {
       const date = new Date(today)
       date.setDate(today.getDate() + i)
+      
+      // Convert getDay() (0=Sunday, 1=Monday) to Russian calendar order (0=Monday, 6=Sunday)
+      let dayOfWeek = date.getDay()
+      dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1 // Sunday becomes 6, Monday becomes 0
+      
       dates.push({
         date: date.toISOString().split('T')[0],
         display: date.toLocaleDateString('ru-RU', { 
@@ -72,7 +77,7 @@ export default function EventAvailabilityPage() {
           day: 'numeric', 
           month: 'short' 
         }),
-        dayOfWeek: date.getDay()
+        dayOfWeek: dayOfWeek
       })
     }
     
@@ -115,7 +120,7 @@ export default function EventAvailabilityPage() {
     const weekdays = calendarDates
       .filter(d => {
         console.log(`Date: ${d.date}, Day: ${d.dayOfWeek}, Display: ${d.display}`) // Debug each date
-        return d.dayOfWeek >= 1 && d.dayOfWeek <= 5 // Monday to Friday
+        return d.dayOfWeek >= 0 && d.dayOfWeek <= 4 // Monday (0) to Friday (4) in Russian calendar
       })
       .map(d => d.date)
     
