@@ -188,6 +188,12 @@ export default function NewEventTypePage() {
 
       setDebugInfo(prev => prev + `✅ Событие создано: ${JSON.stringify(data, null, 2)}\n`)
 
+      // Store the new event type ID for availability setup
+      if (data && data[0]) {
+        localStorage.setItem('newEventTypeId', data[0].id)
+        setDebugInfo(prev => prev + `✅ ID события сохранен: ${data[0].id}\n`)
+      }
+
       setSuccess(true)
       setFormData({
         name: '',
@@ -198,10 +204,10 @@ export default function NewEventTypePage() {
         maxParticipants: 1
       })
       
-      // Перенаправляем через 3 секунды
+      // Перенаправляем на настройку доступности
       setTimeout(() => {
-        window.location.href = '/dashboard/event-types'
-      }, 3000)
+        window.location.href = '/dashboard/event-types/new/availability'
+      }, 2000)
 
     } catch (err) {
       console.error('Error creating event:', err)

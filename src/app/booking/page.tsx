@@ -88,7 +88,7 @@ export default function BookingPage() {
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!selectedDate || !selectedTime) {
+    if (!selectedDate || !selectedTime || !selectedSlot) {
       alert('Пожалуйста, выберите дату и время')
       return
     }
@@ -104,6 +104,7 @@ export default function BookingPage() {
 
       const bookingData = {
         event_type_id: eventData.id,
+        availability_slot_id: selectedSlot.slotId,
         invitee_name: formData.name,
         invitee_email: formData.email,
         start_time: `${selectedDate}T${selectedTime}:00`,
@@ -140,35 +141,79 @@ export default function BookingPage() {
     return `${newHours.toString().padStart(2, '0')}:${newMins.toString().padStart(2, '0')}`
   }
 
-  const getAvailableDates = () => {
-    const dates = []
-    const today = new Date()
-    
-    for (let i = 1; i <= 14; i++) {
-      const date = new Date(today)
-      date.setDate(today.getDate() + i)
-      dates.push({
-        date: date.toISOString().split('T')[0],
-        display: date.toLocaleDateString('ru-RU', { 
-          weekday: 'short', 
-          day: 'numeric', 
-          month: 'short' 
-        })
+  const [availableSlots, setAvailableSlots] = useState<any[]>([])
+  const [selectedSlot, setSelectedSlot] = useState<any>(null)
+
+  const loadAvailableSlots = async () => {
+    if (!eventData) return
+
+    try {
+      const { data: slots, error } = await supabase
+        .from('availability_slots')
+        .select(`
+          *,
+          event_types!inner(*)
+        `)
+        .eq('event_type_id', eventData.id)
+        .eq('is_active', true)
+        .gte('date', new Date().toISOString().split('T')[0])
+        .order('date', { ascending: true })
+        .order('start_time', { ascending: true })
+
+      if (error) throw error
+
+      // Filter slots based on availability
+      const availableSlots = slots.filter(slot => {
+        if (eventData.event_type_category === 'individual') {
+          // For individual events, check if slot is not booked
+          return !slot.bookings || slot.bookings.length === 0
+        } else {
+          // For group events, check if there's still space
+          return slot.current_participants < eventData.max_participants
+        }
       })
+
+      setAvailableSlots(availableSlots)
+    } catch (err: any) {
+      console.error('Error loading available slots:', err)
     }
+  }
+
+  useEffect(() => {
+    if (eventData) {
+      loadAvailableSlots()
+    }
+  }, [eventData])
+
+  const getAvailableDates = () => {
+    // Get unique dates from available slots
+    const uniqueDates = [...new Set(availableSlots.map(slot => slot.date))]
     
-    return dates
+    return uniqueDates.map(date => ({
+      date,
+      display: new Date(date).toLocaleDateString('ru-RU', { 
+        weekday: 'short', 
+        day: 'numeric', 
+        month: 'short' 
+      })
+    }))
   }
 
   const getAvailableTimeSlots = () => {
-    const slots = []
-    for (let hour = 9; hour <= 17; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
-        const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
-        slots.push(time)
-      }
-    }
-    return slots
+    if (!selectedDate) return []
+    
+    // Get slots for the selected date
+    const dateSlots = availableSlots.filter(slot => slot.date === selectedDate)
+    
+    return dateSlots.map(slot => ({
+      time: slot.start_time,
+      slotId: slot.id,
+      currentParticipants: slot.current_participants,
+      maxParticipants: eventData.max_participants,
+      isAvailable: eventData.event_type_category === 'individual' 
+        ? slot.current_participants === 0
+        : slot.current_participants < eventData.max_participants
+    }))
   }
 
   const getEventTypeIcon = (eventType: any) => {
@@ -330,20 +375,34 @@ export default function BookingPage() {
               <div className="mb-6">
                 <h4 className="font-medium mb-3">Доступное время</h4>
                 <div className="grid grid-cols-3 gap-2">
-                  {getAvailableTimeSlots().map((time) => (
+                  {getAvailableTimeSlots().map((slot) => (
                     <button
-                      key={time}
-                      onClick={() => setSelectedTime(time)}
+                      key={slot.slotId}
+                      onClick={() => {
+                        setSelectedTime(slot.time)
+                        setSelectedSlot(slot)
+                      }}
+                      disabled={!slot.isAvailable}
                       className={`p-2 text-sm border rounded ${
-                        selectedTime === time
+                        selectedTime === slot.time
                           ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-300 hover:border-blue-300'
+                          : slot.isAvailable
+                          ? 'border-gray-300 hover:border-blue-300'
+                          : 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
                       }`}
                     >
-                      {time}
+                      <div>{slot.time}</div>
+                      {eventData.event_type_category === 'group' && (
+                        <div className="text-xs text-gray-500">
+                          {slot.currentParticipants}/{slot.maxParticipants}
+                        </div>
+                      )}
                     </button>
                   ))}
                 </div>
+                {getAvailableTimeSlots().length === 0 && (
+                  <p className="text-gray-500 text-sm">Нет доступных слотов на эту дату</p>
+                )}
               </div>
             )}
 

@@ -100,10 +100,54 @@ export interface Database {
           }
         ]
       }
+      availability_slots: {
+        Row: {
+          id: string
+          event_type_id: string
+          date: string
+          start_time: string
+          end_time: string
+          is_active: boolean
+          current_participants: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          event_type_id: string
+          date: string
+          start_time: string
+          end_time: string
+          is_active?: boolean
+          current_participants?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          event_type_id?: string
+          date?: string
+          start_time?: string
+          end_time?: string
+          is_active?: boolean
+          current_participants?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "availability_slots_event_type_id_fkey"
+            columns: ["event_type_id"]
+            referencedRelation: "event_types"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       bookings: {
         Row: {
           id: string
           event_type_id: string
+          availability_slot_id: string | null
           invitee_name: string
           invitee_email: string
           start_time: string
@@ -116,6 +160,7 @@ export interface Database {
         Insert: {
           id?: string
           event_type_id: string
+          availability_slot_id?: string | null
           invitee_name: string
           invitee_email: string
           start_time: string
@@ -128,6 +173,7 @@ export interface Database {
         Update: {
           id?: string
           event_type_id?: string
+          availability_slot_id?: string | null
           invitee_name?: string
           invitee_email?: string
           start_time?: string
@@ -142,6 +188,12 @@ export interface Database {
             foreignKeyName: "bookings_event_type_id_fkey"
             columns: ["event_type_id"]
             referencedRelation: "event_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_availability_slot_id_fkey"
+            columns: ["availability_slot_id"]
+            referencedRelation: "availability_slots"
             referencedColumns: ["id"]
           }
         ]
