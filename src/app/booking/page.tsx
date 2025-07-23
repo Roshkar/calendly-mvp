@@ -148,32 +148,53 @@ export default function BookingPage() {
     if (!eventData) return
 
     try {
-      const { data: slots, error } = await supabase
+      // First, get all availability slots for this event
+      const { data: slots, error: slotsError } = await supabase
         .from('availability_slots')
-        .select(`
-          *,
-          event_types!inner(*)
-        `)
+        .select('*')
         .eq('event_type_id', eventData.id)
         .eq('is_active', true)
         .gte('date', new Date().toISOString().split('T')[0])
         .order('date', { ascending: true })
         .order('start_time', { ascending: true })
 
-      if (error) throw error
+      if (slotsError) throw slotsError
 
-      // Filter slots based on availability using current_participants
+      // Then, get all bookings for these slots to check availability
+      const slotIds = slots.map(slot => slot.id)
+      const { data: bookings, error: bookingsError } = await supabase
+        .from('bookings')
+        .select('availability_slot_id')
+        .in('availability_slot_id', slotIds)
+
+      if (bookingsError) throw bookingsError
+
+      // Count bookings per slot
+      const bookingCounts = bookings.reduce((acc: any, booking) => {
+        acc[booking.availability_slot_id] = (acc[booking.availability_slot_id] || 0) + 1
+        return acc
+      }, {})
+
+      // Filter slots based on availability
       const availableSlots = slots.filter(slot => {
+        const currentParticipants = bookingCounts[slot.id] || 0
+        
         if (eventData.event_type_category === 'individual') {
           // For individual events, slot is available if no participants
-          return slot.current_participants === 0
+          return currentParticipants === 0
         } else {
           // For group events, check if there's still space
-          return slot.current_participants < eventData.max_participants
+          return currentParticipants < eventData.max_participants
         }
       })
 
-      setAvailableSlots(availableSlots)
+      // Add participant count to each slot
+      const slotsWithParticipants = availableSlots.map(slot => ({
+        ...slot,
+        current_participants: bookingCounts[slot.id] || 0
+      }))
+
+      setAvailableSlots(slotsWithParticipants)
     } catch (err: any) {
       console.error('Error loading available slots:', err)
     }
