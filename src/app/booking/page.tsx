@@ -187,7 +187,7 @@ export default function BookingPage() {
 
   const getAvailableDates = () => {
     // Get unique dates from available slots
-    const uniqueDates = [...new Set(availableSlots.map(slot => slot.date))]
+    const uniqueDates = Array.from(new Set(availableSlots.map(slot => slot.date)))
     
     return uniqueDates.map(date => ({
       date,
