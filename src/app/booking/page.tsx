@@ -171,7 +171,9 @@ export default function BookingPage() {
 
       // Count bookings per slot
       const bookingCounts = bookings.reduce((acc: any, booking) => {
-        acc[booking.availability_slot_id] = (acc[booking.availability_slot_id] || 0) + 1
+        if (booking.availability_slot_id) {
+          acc[booking.availability_slot_id] = (acc[booking.availability_slot_id] || 0) + 1
+        }
         return acc
       }, {})
 
