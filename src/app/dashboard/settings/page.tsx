@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase/client'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState({
@@ -163,8 +164,8 @@ export default function SettingsPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900" data-onboarding="settings-title">Настройки</h1>
-        <p className="text-gray-600">Управляйте профилем и настройками аккаунта</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white" data-onboarding="settings-title">Настройки</h1>
+        <p className="text-gray-600 dark:text-gray-400">Управляйте профилем и настройками аккаунта</p>
       </div>
 
       {error && (
@@ -179,8 +180,8 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border p-6">
-        <h2 className="text-lg font-semibold mb-6">Профиль</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h2 className="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Профиль</h2>
         
         <form onSubmit={saveProfile} className="space-y-4" data-onboarding="profile-form">
           <div>
@@ -262,6 +263,10 @@ export default function SettingsPage() {
               <option value="Europe/London">Лондон (GMT+0)</option>
               <option value="America/New_York">Нью-Йорк (GMT-5)</option>
             </select>
+          </div>
+
+          <div>
+            <ThemeToggle />
           </div>
 
           <div className="pt-4">

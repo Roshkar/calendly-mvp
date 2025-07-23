@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
 import { useFirstLogin } from '@/hooks/useFirstLogin'
 import GuidedOnboarding from '@/components/ui/guided-onboarding'
+import { ThemeToggleButton } from '@/components/theme-toggle'
 
 export default function DashboardLayout({
   children,
@@ -52,35 +53,37 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white border-b shadow-sm">
+      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <a href="/dashboard" className="flex items-center space-x-2">
             <span className="text-2xl">📅</span>
-            <h1 className="text-xl font-bold text-gray-900">Calendly MVP</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Calendly MVP</h1>
           </a>
           
           <nav className="hidden md:flex items-center space-x-6">
-            <a href="/dashboard/event-types" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
+            <a href="/dashboard/event-types" className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
               <span>📅</span>
               <span>События</span>
             </a>
-            <a href="/dashboard/bookings" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
+            <a href="/dashboard/bookings" className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
               <span>📋</span>
               <span>Бронирования</span>
             </a>
-            <a href="/dashboard/availability" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
+            <a href="/dashboard/availability" className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
               <span>⏰</span>
               <span>Доступность</span>
             </a>
-            <a href="/dashboard/settings" className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
+            <a href="/dashboard/settings" className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
               <span>⚙️</span>
               <span>Настройки</span>
             </a>
           </nav>
 
           <div className="flex items-center space-x-4">
+            <ThemeToggleButton />
+            
             <a href="/dashboard/event-types/new" className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 flex items-center space-x-1" data-onboarding="create-event-button">
               <span>+</span>
               <span>Создать событие</span>
@@ -101,7 +104,7 @@ export default function DashboardLayout({
             <button 
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="text-gray-600 hover:text-gray-900 flex items-center space-x-1 px-3 py-1 rounded hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white flex items-center space-x-1 px-3 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span>{isLoggingOut ? '⏳' : '🚪'}</span>
               <span>{isLoggingOut ? 'Выходим...' : 'Выйти'}</span>
