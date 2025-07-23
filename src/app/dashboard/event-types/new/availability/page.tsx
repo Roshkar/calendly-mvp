@@ -374,20 +374,20 @@ export default function EventAvailabilityPage() {
                   <div className="grid grid-cols-7 gap-1 max-h-96 overflow-y-auto">
                     {getCalendarGrid().map((dateObj, index) => (
                       <div
-                        key={dateObj.isEmpty ? `empty-${index}` : dateObj.date}
+                        key={dateObj.isEmpty ? `empty-${index}` : (dateObj as any).date}
                         className={`p-2 text-sm border rounded text-center ${
                           dateObj.isEmpty 
                             ? 'border-gray-100 bg-gray-50'
-                            : selectedDates.includes(dateObj.date)
+                            : selectedDates.includes((dateObj as any).date)
                             ? 'border-blue-500 bg-blue-50 text-blue-700 cursor-pointer'
                             : 'border-gray-300 hover:border-blue-300 cursor-pointer'
                         }`}
-                        onClick={() => !dateObj.isEmpty && toggleDate(dateObj.date)}
+                        onClick={() => !dateObj.isEmpty && toggleDate((dateObj as any).date)}
                       >
                         {!dateObj.isEmpty && (
                           <>
-                            <div className="font-medium">{dateObj.display.split(' ')[1]}</div>
-                            <div className="text-xs text-gray-500">{dateObj.display.split(' ')[0]}</div>
+                            <div className="font-medium">{(dateObj as any).display.split(' ')[1]}</div>
+                            <div className="text-xs text-gray-500">{(dateObj as any).display.split(' ')[0]}</div>
                           </>
                         )}
                       </div>
