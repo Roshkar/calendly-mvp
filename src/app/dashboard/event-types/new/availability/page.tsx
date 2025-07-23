@@ -79,6 +79,27 @@ export default function EventAvailabilityPage() {
     return dates
   }
 
+  const getCalendarGrid = () => {
+    const dates = getCalendarDates()
+    const grid = []
+    
+    // Get the first date's day of week to calculate padding
+    const firstDate = dates[0]
+    const firstDayOfWeek = firstDate.dayOfWeek
+    
+    // Add empty cells for days before the first date
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      grid.push({ isEmpty: true })
+    }
+    
+    // Add all the dates
+    dates.forEach(dateObj => {
+      grid.push({ ...dateObj, isEmpty: false })
+    })
+    
+    return grid
+  }
+
   const toggleDate = (date: string) => {
     setSelectedDates(prev => 
       prev.includes(date) 
@@ -351,20 +372,25 @@ export default function EventAvailabilityPage() {
                   </div>
                   
                   <div className="grid grid-cols-7 gap-1 max-h-96 overflow-y-auto">
-                    {getCalendarDates().map((dateObj) => (
-                      <button
-                        key={dateObj.date}
-                        type="button"
-                        onClick={() => toggleDate(dateObj.date)}
+                    {getCalendarGrid().map((dateObj, index) => (
+                      <div
+                        key={dateObj.isEmpty ? `empty-${index}` : dateObj.date}
                         className={`p-2 text-sm border rounded text-center ${
-                          selectedDates.includes(dateObj.date)
-                            ? 'border-blue-500 bg-blue-50 text-blue-700'
-                            : 'border-gray-300 hover:border-blue-300'
+                          dateObj.isEmpty 
+                            ? 'border-gray-100 bg-gray-50'
+                            : selectedDates.includes(dateObj.date)
+                            ? 'border-blue-500 bg-blue-50 text-blue-700 cursor-pointer'
+                            : 'border-gray-300 hover:border-blue-300 cursor-pointer'
                         }`}
+                        onClick={() => !dateObj.isEmpty && toggleDate(dateObj.date)}
                       >
-                        <div className="font-medium">{dateObj.display.split(' ')[1]}</div>
-                        <div className="text-xs text-gray-500">{dateObj.display.split(' ')[0]}</div>
-                      </button>
+                        {!dateObj.isEmpty && (
+                          <>
+                            <div className="font-medium">{dateObj.display.split(' ')[1]}</div>
+                            <div className="text-xs text-gray-500">{dateObj.display.split(' ')[0]}</div>
+                          </>
+                        )}
+                      </div>
                     ))}
                   </div>
                 </div>
