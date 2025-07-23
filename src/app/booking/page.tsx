@@ -301,7 +301,10 @@ export default function BookingPage() {
             <div className="text-green-600 text-6xl mb-4">✅</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Бронирование подтверждено!</h2>
             <p className="text-gray-600 mb-4">
-              Ваша встреча с {userProfile.first_name} {userProfile.last_name} запланирована на {selectedDate} в {selectedTime}.
+              {eventData?.event_type_category === 'group' 
+                ? `Ваша групповая встреча с ${userProfile.first_name} ${userProfile.last_name} запланирована на ${selectedDate} в ${selectedTime}.`
+                : `Ваша встреча с ${userProfile.first_name} ${userProfile.last_name} запланирована на ${selectedDate} в ${selectedTime}.`
+              }
             </p>
             <p className="text-sm text-gray-500 mb-6">
               Подтверждение отправлено на {formData.email}
@@ -325,13 +328,15 @@ export default function BookingPage() {
           <div className="bg-white rounded-lg border p-6">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <span className="text-xl">👤</span>
+                <span className="text-xl">{getEventTypeIcon(eventData)}</span>
               </div>
               <div>
                 <h2 className="text-lg font-semibold">
                   {userProfile?.first_name} {userProfile?.last_name} (@{userProfile?.username})
                 </h2>
-                <p className="text-gray-600">Организатор встречи</p>
+                <p className="text-gray-600">
+                  {eventData?.event_type_category === 'group' ? 'Организатор групповой встречи' : 'Организатор встречи'}
+                </p>
               </div>
             </div>
             
@@ -396,7 +401,14 @@ export default function BookingPage() {
 
             {selectedDate && (
               <div className="mb-6">
-                <h4 className="font-medium mb-3">Доступное время</h4>
+                <h4 className="font-medium mb-3">
+                  Доступное время
+                  {eventData?.event_type_category === 'group' && (
+                    <span className="text-sm font-normal text-gray-500 ml-2">
+                      (показывает количество участников)
+                    </span>
+                  )}
+                </h4>
                 <div className="grid grid-cols-3 gap-2">
                   {getAvailableTimeSlots().map((slot) => (
                     <button
