@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import Link from 'next/link'
 
@@ -10,11 +10,7 @@ export default function UserProfilePage({ params }: { params: { username: string
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    loadUserProfile()
-  }, [params.username])
-
-  const loadUserProfile = async () => {
+  const loadUserProfile = useCallback(async () => {
     try {
       setIsLoading(true)
       setError(null)
@@ -55,7 +51,11 @@ export default function UserProfilePage({ params }: { params: { username: string
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [params.username])
+
+  useEffect(() => {
+    loadUserProfile()
+  }, [loadUserProfile])
 
   const getEventTypeIcon = (eventType: any) => {
     if (eventType.event_type_category === 'group') {

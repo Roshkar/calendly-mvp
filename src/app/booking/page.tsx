@@ -144,7 +144,7 @@ export default function BookingPage() {
   const [availableSlots, setAvailableSlots] = useState<any[]>([])
   const [selectedSlot, setSelectedSlot] = useState<any>(null)
 
-  const loadAvailableSlots = async () => {
+  const loadAvailableSlots = useCallback(async () => {
     if (!eventData) return
 
     try {
@@ -177,13 +177,13 @@ export default function BookingPage() {
     } catch (err: any) {
       console.error('Error loading available slots:', err)
     }
-  }
+  }, [eventData])
 
   useEffect(() => {
     if (eventData) {
       loadAvailableSlots()
     }
-  }, [eventData])
+  }, [eventData, loadAvailableSlots])
 
   const getAvailableDates = () => {
     // Get unique dates from available slots
