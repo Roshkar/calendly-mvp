@@ -162,11 +162,11 @@ export default function BookingPage() {
 
       if (error) throw error
 
-      // Filter slots based on availability
+      // Filter slots based on availability using current_participants
       const availableSlots = slots.filter(slot => {
         if (eventData.event_type_category === 'individual') {
-          // For individual events, check if slot is not booked
-          return !slot.bookings || slot.bookings.length === 0
+          // For individual events, slot is available if no participants
+          return slot.current_participants === 0
         } else {
           // For group events, check if there's still space
           return slot.current_participants < eventData.max_participants
