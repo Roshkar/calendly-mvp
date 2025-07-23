@@ -107,8 +107,8 @@ export default function BookingPage() {
         availability_slot_id: selectedSlot.slotId,
         invitee_name: formData.name,
         invitee_email: formData.email,
-        start_time: `${selectedDate}T${selectedTime}:00`,
-        end_time: `${selectedDate}T${addMinutes(selectedTime, eventData.duration_minutes)}:00`,
+        start_time: `${selectedDate}T${selectedTime}`,
+        end_time: `${selectedDate}T${addMinutes(selectedTime, eventData.duration_minutes)}`,
         timezone: userProfile?.timezone || 'Europe/Moscow',
         status: 'confirmed'
       }

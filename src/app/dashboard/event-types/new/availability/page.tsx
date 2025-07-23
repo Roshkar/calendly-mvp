@@ -89,9 +89,16 @@ export default function EventAvailabilityPage() {
 
   const selectAllWeekdays = () => {
     const calendarDates = getCalendarDates()
+    console.log('Calendar dates:', calendarDates.slice(0, 10)) // Debug first 10 dates
+    
     const weekdays = calendarDates
-      .filter(d => d.dayOfWeek >= 1 && d.dayOfWeek <= 5) // Monday to Friday
+      .filter(d => {
+        console.log(`Date: ${d.date}, Day: ${d.dayOfWeek}, Display: ${d.display}`) // Debug each date
+        return d.dayOfWeek >= 1 && d.dayOfWeek <= 5 // Monday to Friday
+      })
       .map(d => d.date)
+    
+    console.log('Selected weekdays:', weekdays) // Debug selected dates
     setSelectedDates(weekdays)
   }
 
