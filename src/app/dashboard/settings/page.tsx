@@ -46,7 +46,7 @@ export default function SettingsPage() {
       // Загружаем профиль
       const { data: profileData, error: fetchError } = await supabase
         .from('profiles')
-        .select('*, google_access_token, google_token_expires_at, google_refresh_token')
+        .select('*')
         .eq('id', user.id)
         .single()
 
@@ -84,7 +84,7 @@ export default function SettingsPage() {
           first_name: profileData.first_name || '',
           last_name: profileData.last_name || '',
           timezone: profileData.timezone || 'Europe/Moscow',
-          google_connected: Boolean(profileData.google_refresh_token)
+          google_connected: Boolean((profileData as any).google_refresh_token)
         })
         setDebugInfo(prev => prev + '✅ Профиль загружен\n')
       }

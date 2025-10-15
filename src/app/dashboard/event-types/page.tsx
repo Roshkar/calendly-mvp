@@ -101,6 +101,24 @@ export default function EventTypesPage() {
     window.open(bookingUrl, '_blank')
   }
 
+  const toggleGoogleMeet = async (eventTypeId, checked) => {
+    try {
+      const { error } = await supabase
+        .from('event_types')
+        .update({ create_google_meet: checked })
+        .eq('id', eventTypeId)
+
+      if (error) {
+        alert('Ошибка сохранения настройки Google Meet: ' + error.message)
+        return
+      }
+
+      setEventTypes(prev => prev.map(et => et.id === eventTypeId ? { ...et, create_google_meet: checked } : et))
+    } catch (err) {
+      alert('Неожиданная ошибка при обновлении настройки Google Meet')
+    }
+  }
+
   const getEventTypeIcon = (eventType) => {
     if (eventType.event_type_category === 'group') {
       return '👥'
@@ -267,6 +285,16 @@ export default function EventTypesPage() {
                       <span className="text-sm text-gray-600">
                         {eventType.is_active ? 'Активно' : 'Неактивно'}
                       </span>
+                      <span className="mx-2">•</span>
+                      <label className="flex items-center space-x-2 text-sm text-gray-700">
+                        <input
+                          type="checkbox"
+                          checked={Boolean(eventType.create_google_meet)}
+                          onChange={e => toggleGoogleMeet(eventType.id, e.target.checked)}
+                          className="h-4 w-4"
+                        />
+                        <span>Google Meet</span>
+                      </label>
                     </div>
                   </div>
                 </div>
