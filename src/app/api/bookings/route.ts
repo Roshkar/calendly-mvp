@@ -1,7 +1,7 @@
 'use server'
 
 import { NextResponse } from 'next/server'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createRouteHandlerSupabaseClient } from '@/lib/supabase/server'
 import { createGoogleCalendarEvent } from '@/lib/google'
 
 export async function POST(request: Request) {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       timezone,
     } = body
 
-    const supabase = createServerSupabaseClient()
+    const supabase = createRouteHandlerSupabaseClient()
 
     // Fetch event type and organizer
     const { data: eventType, error: eventTypeError } = await supabase
