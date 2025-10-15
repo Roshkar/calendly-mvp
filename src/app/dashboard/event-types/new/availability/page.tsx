@@ -52,6 +52,10 @@ export default function EventAvailabilityPage() {
 
       if (error) throw error
       setEventData(data)
+      // Set default interval to event duration (clamped 15..240)
+      const dur = Number(data?.duration_minutes) || 30
+      const clamped = Math.max(15, Math.min(240, dur))
+      setTimeInterval(clamped)
     } catch (err: any) {
       setError('Error loading event type: ' + err.message)
     }
@@ -440,11 +444,20 @@ export default function EventAvailabilityPage() {
                         onChange={(e) => setTimeInterval(Number(e.target.value))}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
-                        <option value={15}>15 минут</option>
-                        <option value={30}>30 минут</option>
-                        <option value={45}>45 минут</option>
-                        <option value={60}>1 час</option>
+                        {/* Ensure default equals duration if not in list */}
+                        {(() => {
+                          const opts = [15, 30, 45, 60, 90, 120, 180, 240]
+                          const unique = opts.includes(eventData.duration_minutes)
+                            ? opts
+                            : [eventData.duration_minutes, ...opts]
+                          return unique.map(v => (
+                            <option key={v} value={v}>
+                              {v < 60 ? `${v} минут` : `${Math.round(v/60)} ч`}{v === eventData.duration_minutes ? ' (по умолчанию)' : ''}
+                            </option>
+                          ))
+                        })()}
                       </select>
+                      <p className="text-xs text-gray-500 mt-1">По умолчанию = длительность встречи. Максимум 4 часа.</p>
                     </div>
                     
                     <div className="p-4 bg-gray-50 rounded-md">
