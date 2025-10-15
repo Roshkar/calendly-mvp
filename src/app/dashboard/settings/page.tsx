@@ -33,19 +33,11 @@ export default function SettingsPage() {
       const { data: { user }, error: userError } = await supabase.auth.getUser()
       
       if (userError) {
-        // Обрабатываем отсутствие сессии без падения страницы
-        if (userError.message?.includes('Auth session missing')) {
-          setError('Пожалуйста, войдите в аккаунт')
-          setIsLoading(false)
-          return
-        }
         throw new Error('Ошибка аутентификации: ' + userError.message)
       }
 
       if (!user) {
-        setError('Пожалуйста, войдите в аккаунт')
-        setIsLoading(false)
-        return
+        throw new Error('Пользователь не авторизован')
       }
 
       setUser(user)
@@ -176,20 +168,7 @@ export default function SettingsPage() {
     )
   }
 
-  if (error && error.includes('войдите')) {
-    return (
-      <div className="max-w-2xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900" data-onboarding="settings-title">Настройки</h1>
-          <p className="text-gray-600">Управляйте профилем и настройками аккаунта</p>
-        </div>
-        <div className="bg-white rounded-lg border p-6 text-center">
-          <p className="mb-4">Пожалуйста, войдите в аккаунт, чтобы открыть настройки</p>
-          <a href="/login" className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Войти</a>
-        </div>
-      </div>
-    )
-  }
+  
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
