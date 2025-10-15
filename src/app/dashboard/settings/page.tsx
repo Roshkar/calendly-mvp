@@ -10,7 +10,8 @@ export default function SettingsPage() {
     username: '',
     first_name: '',
     last_name: '',
-    timezone: 'Europe/Moscow'
+    timezone: 'Europe/Moscow',
+    google_connected: false
   })
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -45,7 +46,7 @@ export default function SettingsPage() {
       // Загружаем профиль
       const { data: profileData, error: fetchError } = await supabase
         .from('profiles')
-        .select('*')
+        .select('*, google_access_token, google_token_expires_at, google_refresh_token')
         .eq('id', user.id)
         .single()
 
@@ -78,7 +79,13 @@ export default function SettingsPage() {
           throw new Error('Ошибка загрузки профиля: ' + fetchError.message)
         }
       } else {
-        setProfile(profileData)
+        setProfile({
+          username: profileData.username,
+          first_name: profileData.first_name || '',
+          last_name: profileData.last_name || '',
+          timezone: profileData.timezone || 'Europe/Moscow',
+          google_connected: Boolean(profileData.google_refresh_token)
+        })
         setDebugInfo(prev => prev + '✅ Профиль загружен\n')
       }
 
@@ -287,6 +294,29 @@ export default function SettingsPage() {
           <p><strong>User ID:</strong> {user?.id}</p>
           <p><strong>Создан:</strong> {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Неизвестно'}</p>
           <p><strong>Последний вход:</strong> {user?.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleDateString() : 'Неизвестно'}</p>
+          <div className="pt-4">
+            <div className="flex items-center justify-between p-3 border rounded-md">
+              <div>
+                <div className="font-medium">Google Calendar</div>
+                <div className="text-xs text-gray-500">Нужен доступ offline + календарь</div>
+              </div>
+              <button
+                onClick={async () => {
+                  const { error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                      redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/dashboard/settings` : undefined,
+                      queryParams: { access_type: 'offline', prompt: 'consent', scope: 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events' },
+                    },
+                  })
+                  if (error) alert('Ошибка Google OAuth: ' + error.message)
+                }}
+                className={`px-3 py-2 rounded-md text-sm ${profile.google_connected ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'}`}
+              >
+                {profile.google_connected ? 'Подключено' : 'Подключить'}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -11,7 +11,8 @@ export default function NewEventTypePage() {
     duration: '',
     location: '',
     eventTypeCategory: 'individual',
-    maxParticipants: 1
+    maxParticipants: 1,
+    createGoogleMeet: false
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState(null)
@@ -167,7 +168,8 @@ export default function NewEventTypePage() {
         event_type_category: formData.eventTypeCategory,
         max_participants: parseInt(formData.maxParticipants),
         color: '#3174ad',
-        is_active: true
+        is_active: true,
+        create_google_meet: formData.createGoogleMeet
       }
 
       setDebugInfo(prev => prev + `✅ Данные подготовлены: ${JSON.stringify(eventData, null, 2)}\n`)
@@ -201,7 +203,8 @@ export default function NewEventTypePage() {
         duration: '',
         location: '',
         eventTypeCategory: 'individual',
-        maxParticipants: 1
+        maxParticipants: 1,
+        createGoogleMeet: false
       })
       
       // Перенаправляем на настройку доступности
@@ -389,6 +392,20 @@ export default function NewEventTypePage() {
                 <option value="office">В офисе</option>
               </select>
             </div>
+
+          <div className="flex items-center space-x-2">
+            <input
+              id="createGoogleMeet"
+              name="createGoogleMeet"
+              type="checkbox"
+              checked={formData.createGoogleMeet}
+              onChange={(e) => setFormData(prev => ({ ...prev, createGoogleMeet: e.target.checked }))}
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+            />
+            <label htmlFor="createGoogleMeet" className="text-sm text-gray-700">
+              Создавать Google Meet для этого типа события
+            </label>
+          </div>
 
             <div>
               <label htmlFor="eventTypeCategory" className="block text-sm font-medium text-gray-700 mb-2">

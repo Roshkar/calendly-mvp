@@ -113,15 +113,13 @@ export default function BookingPage() {
         status: 'confirmed'
       }
 
-      const { data, error: bookingError } = await supabase
-        .from('bookings')
-        .insert([bookingData])
-        .select()
-
-      if (bookingError) {
-        throw new Error('Ошибка при создании бронирования: ' + bookingError.message)
-      }
-
+      const resp = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookingData),
+      })
+      const result = await resp.json()
+      if (!resp.ok) throw new Error(result.error || 'Ошибка при создании бронирования')
       setSuccess(true)
 
     } catch (err: any) {

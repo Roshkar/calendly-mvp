@@ -17,6 +17,9 @@ export interface Database {
           last_name: string | null
           avatar_url: string | null
           timezone: string
+          google_refresh_token: string | null
+          google_access_token: string | null
+          google_token_expires_at: string | null
           created_at: string
           updated_at: string
         }
@@ -27,6 +30,9 @@ export interface Database {
           last_name?: string | null
           avatar_url?: string | null
           timezone?: string
+          google_refresh_token?: string | null
+          google_access_token?: string | null
+          google_token_expires_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -37,6 +43,9 @@ export interface Database {
           last_name?: string | null
           avatar_url?: string | null
           timezone?: string
+          google_refresh_token?: string | null
+          google_access_token?: string | null
+          google_token_expires_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -56,6 +65,7 @@ export interface Database {
           location_details: string | null
           event_type_category: string
           max_participants: number
+          create_google_meet: boolean
           created_at: string
           updated_at: string
         }
@@ -72,6 +82,7 @@ export interface Database {
           location_details?: string | null
           event_type_category?: string
           max_participants?: number
+          create_google_meet?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -88,6 +99,7 @@ export interface Database {
           location_details?: string | null
           event_type_category?: string
           max_participants?: number
+          create_google_meet?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -154,6 +166,8 @@ export interface Database {
           end_time: string
           timezone: string
           status: string
+          meeting_url: string | null
+          external_event_id: string | null
           created_at: string
           updated_at: string
         }
@@ -167,6 +181,8 @@ export interface Database {
           end_time: string
           timezone?: string
           status?: string
+          meeting_url?: string | null
+          external_event_id?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -180,6 +196,8 @@ export interface Database {
           end_time?: string
           timezone?: string
           status?: string
+          meeting_url?: string | null
+          external_event_id?: string | null
           created_at?: string
           updated_at?: string
         }
