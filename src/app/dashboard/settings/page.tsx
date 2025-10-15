@@ -308,7 +308,12 @@ export default function SettingsPage() {
                     provider: 'google',
                     options: {
                       redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/dashboard/settings` : undefined,
-                      queryParams: { access_type: 'offline', prompt: 'consent', scope: 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events' },
+                      queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent',
+                        include_granted_scopes: 'true',
+                        scope: 'openid email profile https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events'
+                      },
                     },
                   })
                   if (error) alert('Ошибка Google OAuth: ' + error.message)
