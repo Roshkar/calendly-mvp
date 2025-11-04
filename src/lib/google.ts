@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createRouteHandlerSupabaseClient } from '@/lib/supabase/server'
 
 interface RefreshTokenResponse {
   access_token: string
@@ -8,7 +8,7 @@ interface RefreshTokenResponse {
 }
 
 export async function getValidGoogleAccessToken(userId: string) {
-  const supabase = createServerSupabaseClient()
+  const supabase = createRouteHandlerSupabaseClient()
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('google_access_token, google_refresh_token, google_token_expires_at')
