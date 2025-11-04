@@ -21,8 +21,64 @@ export default function SettingsPage() {
   const [debugInfo, setDebugInfo] = useState('')
 
   useEffect(() => {
+    handleOAuthCallback()
     loadProfile()
   }, [])
+
+  const handleOAuthCallback = async () => {
+    // Проверяем наличие OAuth callback params
+    const urlParams = new URLSearchParams(window.location.search)
+    const code = urlParams.get('code')
+    
+    if (code) {
+      try {
+        setDebugInfo('Обрабатываем OAuth callback...\n')
+        
+        // Получаем сессию с provider токенами
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+        
+        if (sessionError || !session) {
+          setDebugInfo(prev => prev + '❌ Ошибка получения сессии\n')
+          return
+        }
+        
+        // Проверяем наличие Google provider токенов
+        const providerToken = (session.provider_token as string) || null
+        const providerRefreshToken = (session.provider_refresh_token as string) || null
+        
+        if (providerRefreshToken) {
+          setDebugInfo(prev => prev + '✅ Найден Google refresh token\n')
+          
+          // Сохраняем токены в профиль
+          const { error: updateError } = await supabase
+            .from('profiles')
+            .update({
+              google_refresh_token: providerRefreshToken,
+              google_access_token: providerToken,
+              google_token_expires_at: session.expires_at ? new Date(session.expires_at * 1000).toISOString() : null
+            })
+            .eq('id', session.user.id)
+          
+          if (updateError) {
+            setDebugInfo(prev => prev + `❌ Ошибка сохранения токенов: ${updateError.message}\n`)
+          } else {
+            setDebugInfo(prev => prev + '✅ Google токены сохранены в профиль\n')
+            // Обновляем состояние
+            setProfile(prev => ({ ...prev, google_connected: true }))
+            // Очищаем URL от OAuth params
+            window.history.replaceState({}, '', '/dashboard/settings')
+            // Перезагружаем профиль для обновления UI
+            setTimeout(() => loadProfile(), 500)
+          }
+        } else {
+          setDebugInfo(prev => prev + '⚠️ Google refresh token не найден в сессии\n')
+        }
+      } catch (err: any) {
+        console.error('OAuth callback error:', err)
+        setDebugInfo(prev => prev + `❌ Ошибка обработки OAuth: ${err.message}\n`)
+      }
+    }
+  }
 
   const loadProfile = async () => {
     try {
@@ -79,14 +135,15 @@ export default function SettingsPage() {
           throw new Error('Ошибка загрузки профиля: ' + fetchError.message)
         }
       } else {
+        const hasGoogleToken = Boolean((profileData as any).google_refresh_token)
         setProfile({
           username: profileData.username,
           first_name: profileData.first_name || '',
           last_name: profileData.last_name || '',
           timezone: profileData.timezone || 'Europe/Moscow',
-          google_connected: Boolean((profileData as any).google_refresh_token)
+          google_connected: hasGoogleToken
         })
-        setDebugInfo(prev => prev + '✅ Профиль загружен\n')
+        setDebugInfo(prev => prev + `✅ Профиль загружен\n${hasGoogleToken ? '✅ Google Calendar подключен\n' : '⚠️ Google Calendar не подключен\n'}`)
       }
 
     } catch (err) {

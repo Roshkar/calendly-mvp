@@ -55,6 +55,7 @@ export async function POST(request: Request) {
 
     if (eventType.create_google_meet) {
       try {
+        console.log('Creating Google Meet for event:', eventType.name, 'organizer:', eventType.user_id)
         const { hangoutLink, eventId } = await createGoogleCalendarEvent({
           organizerUserId: eventType.user_id,
           summary: eventType.name,
@@ -64,11 +65,13 @@ export async function POST(request: Request) {
           timezone: timezone || 'Europe/Moscow',
           attendeeEmail: invitee_email,
         })
+        console.log('Google Meet created:', { hangoutLink, eventId })
         meeting_url = hangoutLink
         external_event_id = eventId
       } catch (err: any) {
         // Log but do not fail booking creation
         console.error('Google event creation failed:', err?.message || err)
+        console.error('Full error:', err)
       }
     }
 

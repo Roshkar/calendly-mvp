@@ -9,24 +9,37 @@ interface RefreshTokenResponse {
 
 export async function getValidGoogleAccessToken(userId: string) {
   const supabase = createServerSupabaseClient()
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('google_access_token, google_refresh_token, google_token_expires_at')
     .eq('id', userId)
     .single()
 
-  if (!profile) return null
+  if (profileError || !profile) {
+    console.error('Profile not found or error:', profileError)
+    return null
+  }
+
+  console.log('Profile tokens:', { 
+    hasRefreshToken: !!profile.google_refresh_token,
+    hasAccessToken: !!profile.google_access_token,
+    expiresAt: profile.google_token_expires_at 
+  })
 
   const now = new Date()
   const isExpired = !profile.google_token_expires_at || new Date(profile.google_token_expires_at) <= now
 
   if (!isExpired && profile.google_access_token) {
+    console.log('Using existing access token')
     return profile.google_access_token
   }
 
   if (!profile.google_refresh_token) {
+    console.error('No refresh token found in profile')
     return null
   }
+  
+  console.log('Refreshing access token...')
 
   const clientId = process.env.GOOGLE_CLIENT_ID
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET
