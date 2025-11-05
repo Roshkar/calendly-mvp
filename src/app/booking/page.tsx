@@ -113,13 +113,30 @@ export default function BookingPage() {
         status: 'confirmed'
       }
 
+      console.log('📤 [CLIENT] Sending booking request:', bookingData)
       const resp = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bookingData),
       })
       const result = await resp.json()
+      console.log('📥 [CLIENT] Booking API response:', result)
+      
+      if (result.debug) {
+        console.log('🔍 [CLIENT] Google Meet debug info:', result.debug)
+        setDebugInfo(prev => prev + `\n🔍 Google Meet Debug:\n${JSON.stringify(result.debug, null, 2)}\n`)
+      }
+      
       if (!resp.ok) throw new Error(result.error || 'Ошибка при создании бронирования')
+      
+      if (result.booking?.meeting_url) {
+        console.log('✅ [CLIENT] Google Meet created:', result.booking.meeting_url)
+        setDebugInfo(prev => prev + `✅ Google Meet создан: ${result.booking.meeting_url}\n`)
+      } else if (result.debug?.error) {
+        console.warn('⚠️ [CLIENT] Google Meet not created:', result.debug.error)
+        setDebugInfo(prev => prev + `⚠️ Google Meet не создан: ${result.debug.error}\n`)
+      }
+      
       setSuccess(true)
 
     } catch (err: any) {

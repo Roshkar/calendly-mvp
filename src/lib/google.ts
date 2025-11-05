@@ -83,8 +83,15 @@ export async function createGoogleCalendarEvent(params: {
   timezone: string
   attendeeEmail: string
 }) {
+  console.log('🟢 [GOOGLE] Starting createGoogleCalendarEvent for organizer:', params.organizerUserId)
   const accessToken = await getValidGoogleAccessToken(params.organizerUserId)
-  if (!accessToken) return { hangoutLink: null, eventId: null }
+  
+  if (!accessToken) {
+    console.error('❌ [GOOGLE] No valid access token obtained')
+    return { hangoutLink: null, eventId: null }
+  }
+  
+  console.log('✅ [GOOGLE] Access token obtained, length:', accessToken.length)
 
   const eventPayload = {
     summary: params.summary,
@@ -100,7 +107,11 @@ export async function createGoogleCalendarEvent(params: {
     },
   }
 
-  const resp = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1&sendUpdates=all', {
+  console.log('🟢 [GOOGLE] Event payload:', JSON.stringify(eventPayload, null, 2))
+  console.log('🟢 [GOOGLE] Sending request to Google Calendar API...')
+
+  const apiUrl = 'https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1&sendUpdates=all'
+  const resp = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -109,12 +120,21 @@ export async function createGoogleCalendarEvent(params: {
     body: JSON.stringify(eventPayload),
   })
 
+  console.log('🟢 [GOOGLE] Response status:', resp.status, resp.statusText)
+
   if (!resp.ok) {
     const text = await resp.text()
-    throw new Error('Failed to create Google Calendar event: ' + text)
+    console.error('❌ [GOOGLE] Google API error response:', text)
+    throw new Error(`Failed to create Google Calendar event (${resp.status}): ${text}`)
   }
+  
   const data = await resp.json()
+  console.log('✅ [GOOGLE] Google API response:', JSON.stringify(data, null, 2))
+  
   const hangoutLink = data?.hangoutLink || data?.conferenceData?.entryPoints?.find((e: any) => e.entryPointType === 'video')?.uri || null
+  console.log('✅ [GOOGLE] Extracted hangoutLink:', hangoutLink)
+  console.log('✅ [GOOGLE] Event ID:', data?.id)
+  
   return { hangoutLink, eventId: data?.id || null }
 }
 
